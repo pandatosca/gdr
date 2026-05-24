@@ -42,9 +42,6 @@
       </div>
 
       <div class="hidden items-center gap-3 lg:flex">
-        <button type="button" onclick="openAdminDialog()" class="rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-extrabold text-white transition hover:bg-white/16 nav-admin-button">
-          Admin
-        </button>
         <button type="button" onclick="openPostDialog()" class="rounded-full bg-amber-400 px-5 py-2.5 text-sm font-extrabold text-forest-950 shadow-lg shadow-black/10 transition hover:bg-amber-300">
           Kirim Kabar
         </button>
@@ -64,7 +61,6 @@
         <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#kegiatan">Kegiatan</a>
         <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#berita">Berita</a>
         <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#kontak">Kontak</a>
-        <button type="button" onclick="openAdminDialog()" class="rounded-xl border border-slate-200 px-4 py-3 text-left font-extrabold">Admin</button>
         <button type="button" onclick="openPostDialog()" class="rounded-xl bg-forest-700 px-4 py-3 text-left font-extrabold text-white">Kirim Kabar Warga</button>
       </div>
     </div>
@@ -85,21 +81,21 @@
           <h1 class="text-balance text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl">Grand Depok Residence</h1>
           <p class="mt-4 text-2xl font-medium tracking-[0.08em] text-white/90">RT 09 RW 12</p>
           <p class="mt-6 max-w-2xl text-lg leading-8 text-white/76">
-            Portal lingkungan untuk informasi, kegiatan, fasilitas, kabar warga, dan akses cepat ke pengurus.
+            <span data-copy="heroSubtitle">Portal lingkungan untuk informasi, kegiatan, fasilitas, kabar warga, dan akses cepat ke pengurus.</span>
           </p>
           <div class="mt-9 flex flex-col gap-3 sm:flex-row">
-            <a href="#berita" class="inline-flex items-center justify-center rounded-full bg-amber-400 px-6 py-3.5 text-sm font-extrabold text-forest-950 shadow-xl shadow-black/10 transition hover:-translate-y-0.5 hover:bg-amber-300">Lihat Berita</a>
-            <button type="button" onclick="openPostDialog()" class="inline-flex items-center justify-center rounded-full border border-white/24 bg-white/10 px-6 py-3.5 text-sm font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-white/16">Kirim Kabar</button>
+            <a href="#berita" class="inline-flex items-center justify-center rounded-full bg-amber-400 px-6 py-3.5 text-sm font-extrabold text-forest-950 shadow-xl shadow-black/10 transition hover:-translate-y-0.5 hover:bg-amber-300" data-copy="heroPrimaryCta">Lihat Berita</a>
+            <button type="button" onclick="openPostDialog()" class="inline-flex items-center justify-center rounded-full border border-white/24 bg-white/10 px-6 py-3.5 text-sm font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-white/16" data-copy="heroSecondaryCta">Kirim Kabar</button>
           </div>
         </div>
 
-        <div class="rounded-[2rem] border border-white/16 bg-white/[0.10] p-5 shadow-2xl shadow-black/25">
-          <div class="rounded-[1.5rem] bg-white p-5 text-slate-950">
+        <div class="rounded-[2rem] border border-white/16 bg-white/[0.10] p-4 shadow-2xl shadow-black/25 sm:p-5">
+          <div class="rounded-[1.5rem] bg-white p-4 text-slate-950 sm:p-5">
             <div class="rounded-[1.1rem] bg-gradient-to-br from-forest-800 via-forest-700 to-amber-500 p-6 text-white">
               <div class="flex items-start justify-between gap-4">
                 <div>
-                  <p class="text-sm font-extrabold uppercase tracking-[0.22em] text-amber-100">Lingkungan aktif</p>
-                  <h2 class="mt-4 max-w-sm text-3xl font-extrabold leading-tight">Hijau, tertib, dan dekat dengan kebutuhan harian warga.</h2>
+                  <p class="text-sm font-extrabold uppercase tracking-[0.22em] text-amber-100" data-copy="heroCardEyebrow">Lingkungan aktif</p>
+                  <h2 class="mt-4 max-w-sm text-3xl font-extrabold leading-tight" data-copy="heroCardTitle">Hijau, tertib, dan dekat dengan kebutuhan harian warga.</h2>
                 </div>
                 <img src="./assets/logo3.svg" alt="" class="h-12 w-12 shrink-0">
               </div>
@@ -108,10 +104,6 @@
                 <div class="rounded-2xl bg-white/12 p-4"><div class="text-3xl font-extrabold">12+</div><div class="mt-1 text-xs font-semibold text-white/72">Fasilitas</div></div>
                 <div class="rounded-2xl bg-white/12 p-4"><div class="text-3xl font-extrabold">RT</div><div class="mt-1 text-xs font-semibold text-white/72">09 RW 12</div></div>
               </div>
-            </div>
-            <div class="mt-5 rounded-2xl border border-forest-100 bg-forest-50 p-5">
-              <p class="text-xs font-bold uppercase tracking-[0.18em] text-forest-700">Catatan admin</p>
-              <p class="mt-2 text-sm font-semibold leading-6 text-slate-700">Foto hero, tentang, fasilitas, kegiatan, mushola, dan QRIS bisa diganti dari panel Admin.</p>
             </div>
           </div>
         </div>
@@ -130,9 +122,9 @@
     <section id="tentang" class="bg-white py-20 sm:py-24">
       <div class="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[.9fr_1.1fr] lg:px-8">
         <div>
-          <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-600">Tentang GDR</p>
-          <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl">Lingkungan yang nyaman untuk tumbuh bersama.</h2>
-          <p class="mt-5 text-base leading-8 text-slate-600">Grand Depok Residence RT 09 RW 12 menempatkan kenyamanan warga sebagai pusat aktivitas. Informasi dibuat mudah ditemukan, kegiatan terdokumentasi, dan komunikasi warga dibuat lebih dekat.</p>
+          <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-600" data-copy="aboutEyebrow">Tentang GDR</p>
+          <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="aboutTitle">Lingkungan yang nyaman untuk tumbuh bersama.</h2>
+          <p class="mt-5 text-base leading-8 text-slate-600" data-copy="aboutBody">Grand Depok Residence RT 09 RW 12 menempatkan kenyamanan warga sebagai pusat aktivitas. Informasi dibuat mudah ditemukan, kegiatan terdokumentasi, dan komunikasi warga dibuat lebih dekat.</p>
           <div class="mt-8 grid gap-4 sm:grid-cols-3">
             <div class="rounded-2xl border border-slate-200 bg-stone-50 p-5"><h3 class="font-extrabold">Tertib</h3><p class="mt-2 text-sm leading-6 text-slate-600">Agenda dan pengumuman tersusun jelas.</p></div>
             <div class="rounded-2xl border border-slate-200 bg-stone-50 p-5"><h3 class="font-extrabold">Aman</h3><p class="mt-2 text-sm leading-6 text-slate-600">Akses pengurus dan keamanan lebih mudah.</p></div>
@@ -147,10 +139,10 @@
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div class="max-w-2xl">
-            <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-300">Fasilitas</p>
-            <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl">Kebutuhan harian warga dalam jangkauan dekat.</h2>
+            <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-300" data-copy="facilitiesEyebrow">Fasilitas</p>
+            <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="facilitiesTitle">Kebutuhan harian warga dalam jangkauan dekat.</h2>
           </div>
-          <p class="max-w-xl text-base leading-8 text-white/68">Setiap fasilitas memakai foto yang bisa diganti dari panel Admin agar tampilan selalu relevan dengan kondisi terbaru.</p>
+          <p class="max-w-xl text-base leading-8 text-white/68" data-copy="facilitiesBody">Setiap fasilitas memakai foto yang bisa diganti dari panel Admin agar tampilan selalu relevan dengan kondisi terbaru.</p>
         </div>
         <div id="facility-grid" class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4"></div>
       </div>
@@ -159,9 +151,9 @@
     <section id="kegiatan" class="bg-stone-50 py-20 sm:py-24">
       <div class="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[.9fr_1.1fr] lg:px-8">
         <div>
-          <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-forest-700">Kegiatan</p>
-          <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl">Agenda warga yang membuat lingkungan terasa hidup.</h2>
-          <p class="mt-5 text-base leading-8 text-slate-600">Daftar kegiatan bisa ditambah dan dihapus oleh admin. Cocok untuk jadwal kerja bakti, olahraga, kajian, atau agenda sosial.</p>
+          <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-forest-700" data-copy="activitiesEyebrow">Kegiatan</p>
+          <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="activitiesTitle">Agenda warga yang membuat lingkungan terasa hidup.</h2>
+          <p class="mt-5 text-base leading-8 text-slate-600" data-copy="activitiesBody">Daftar kegiatan bisa ditambah dan dihapus oleh admin. Cocok untuk jadwal kerja bakti, olahraga, kajian, atau agenda sosial.</p>
           <div id="activities-photo" class="image-cover mt-8 min-h-[320px] rounded-[2rem] border border-slate-200 bg-stone-100 shadow-sm"></div>
         </div>
         <div id="activities-list" class="grid content-start gap-4"></div>
@@ -172,10 +164,10 @@
       <div class="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[1.1fr_.9fr] lg:px-8">
         <div id="mushola-photo" class="image-cover min-h-[460px] rounded-[2rem] border border-slate-200 bg-stone-100 shadow-sm"></div>
         <div class="flex flex-col justify-center rounded-[2rem] bg-forest-800 p-8 text-white shadow-xl">
-          <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-200">Mushola</p>
-          <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl">Ruang ibadah yang dekat dengan keseharian warga.</h2>
-          <p class="mt-5 text-base leading-8 text-white/72">Mushola menjadi titik temu untuk shalat berjamaah, kajian, pengajian anak, dan kegiatan sosial.</p>
-          <button type="button" onclick="openQrisDialog()" class="mt-8 inline-flex w-fit items-center justify-center rounded-full bg-amber-400 px-6 py-3.5 text-sm font-extrabold text-forest-950 shadow-lg transition hover:bg-amber-300">Kotak Amal</button>
+          <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-200" data-copy="musholaEyebrow">Mushola</p>
+          <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="musholaTitle">Ruang ibadah yang dekat dengan keseharian warga.</h2>
+          <p class="mt-5 text-base leading-8 text-white/72" data-copy="musholaBody">Mushola menjadi titik temu untuk shalat berjamaah, kajian, pengajian anak, dan kegiatan sosial.</p>
+          <button type="button" onclick="openQrisDialog()" class="mt-8 inline-flex w-fit items-center justify-center rounded-full bg-amber-400 px-6 py-3.5 text-sm font-extrabold text-forest-950 shadow-lg transition hover:bg-amber-300" data-copy="musholaCta">Kotak Amal</button>
         </div>
       </div>
     </section>
@@ -184,9 +176,9 @@
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div class="max-w-2xl">
-            <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-forest-700">Berita warga</p>
-            <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl">Kabar terbaru dari lingkungan.</h2>
-            <p class="mt-4 text-sm font-semibold leading-7 text-slate-500">Posting warga akan masuk antrean moderasi dan baru tampil setelah admin approve.</p>
+            <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-forest-700" data-copy="newsEyebrow">Berita warga</p>
+            <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="newsTitle">Kabar terbaru dari lingkungan.</h2>
+            <p class="mt-4 text-sm font-semibold leading-7 text-slate-500" data-copy="newsBody">Posting warga akan masuk antrean moderasi dan baru tampil setelah admin approve.</p>
           </div>
           <button type="button" onclick="openPostDialog()" class="inline-flex w-full items-center justify-center rounded-full bg-forest-700 px-6 py-3.5 text-sm font-extrabold text-white shadow-lg transition hover:bg-forest-800 sm:w-auto">Kirim Kabar Warga</button>
         </div>
@@ -210,10 +202,16 @@
     <section id="kontak" class="bg-white py-20 sm:py-24">
       <div class="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[.72fr_1.28fr] lg:px-8">
         <div class="rounded-[2rem] bg-forest-800 p-8 text-white">
-          <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-200">Kontak</p>
-          <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl">Perlu koordinasi dengan pengurus?</h2>
-          <p class="mt-5 text-base leading-8 text-white/72">Gunakan WhatsApp resmi pengurus untuk pengumuman, perizinan kegiatan, keamanan, dan informasi lingkungan.</p>
-          <a href="https://wa.me/6281288696521?text=Halo%20Pengurus%20GDR%2C%20saya%20ingin%20bertanya%20tentang%20lingkungan%20RT%2009%20RW%2012." target="_blank" rel="noreferrer" class="mt-8 inline-flex w-full items-center justify-center rounded-full bg-[#25D366] px-6 py-3.5 text-sm font-extrabold text-white shadow-lg transition hover:brightness-95 sm:w-auto">WhatsApp +62 812-8869-6521</a>
+          <div class="grid h-12 w-12 place-items-center rounded-2xl bg-white/12 text-amber-200">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.8 8.8 0 0 1-3.9-.9L3 20l1.2-4.7A8.2 8.2 0 0 1 3 11.5a8.5 8.5 0 0 1 18 0Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.4 8.4c.2-.5.4-.6.7-.6h.6c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c.8 1.4 1.8 2.4 3.4 3.1l.5-.6c.2-.2.5-.3.8-.2l1.6.7c.3.1.4.3.4.6v.5c0 .5-.3.8-.8 1a5.7 5.7 0 0 1-5.2-1.2 9.9 9.9 0 0 1-3.6-5.1c-.2-.6.1-1.1.4-1.5Z" fill="currentColor"/></svg>
+          </div>
+          <p class="mt-6 text-sm font-extrabold uppercase tracking-[0.24em] text-amber-200" data-copy="contactEyebrow">Kontak</p>
+          <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="contactTitle">Perlu koordinasi dengan pengurus?</h2>
+          <p class="mt-5 text-base leading-8 text-white/72" data-copy="contactBody">Gunakan WhatsApp resmi pengurus untuk pengumuman, perizinan kegiatan, keamanan, dan informasi lingkungan.</p>
+          <a href="https://wa.me/6281288696521?text=Halo%20Pengurus%20GDR%2C%20saya%20ingin%20bertanya%20tentang%20lingkungan%20RT%2009%20RW%2012." target="_blank" rel="noreferrer" class="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3.5 text-sm font-extrabold text-white shadow-lg transition hover:brightness-95 sm:w-auto">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.8 8.8 0 0 1-3.9-.9L3 20l1.2-4.7A8.2 8.2 0 0 1 3 11.5a8.5 8.5 0 0 1 18 0Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            <span data-copy="contactCta">WhatsApp +62 812-8869-6521</span>
+          </a>
         </div>
         <div class="overflow-hidden rounded-[2rem] border border-slate-200 bg-stone-50 p-4 shadow-sm">
           <iframe
@@ -237,7 +235,12 @@
           <p class="text-sm font-semibold text-white/55">RT 09 RW 12 - Tanah Baru, Beji, Depok</p>
         </div>
       </div>
-      <p class="text-sm font-semibold text-white/50">Portal informasi warga dan komunikasi lingkungan.</p>
+      <div class="flex items-center gap-4">
+        <p class="text-sm font-semibold text-white/50" data-copy="footerBody">Portal informasi warga dan komunikasi lingkungan.</p>
+        <button type="button" onclick="openAdminDialog()" class="grid h-9 w-9 place-items-center rounded-full border border-white/10 text-white/45 transition hover:border-white/30 hover:text-white" aria-label="Admin">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 10V8a5 5 0 0 1 10 0v2M6 10h12v10H6V10Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
     </div>
   </footer>
 
@@ -280,7 +283,7 @@
       activities: "gdr-activities-v4",
       admin: "gdr-admin-v4"
     };
-    const ADMIN_PASS = "gdr09";
+    const ADMIN_PASS = "hik4rikU";
     let currentCategory = "semua";
 
     const defaults = {
@@ -299,7 +302,35 @@
           { id: "hall", title: "Balai warga", desc: "Rapat RT, koordinasi, dan kegiatan komunitas.", image: "./assets/facility-hall.jpg" },
           { id: "park", title: "Taman hijau", desc: "Area teduh untuk bersantai dan bertemu tetangga.", image: "./assets/facility-park.jpg" },
           { id: "channel", title: "Kanal warga", desc: "Ruang berbagi kabar yang bisa dikurasi pengurus.", image: "./assets/facility-channel.jpg" }
-        ]
+        ],
+        copy: {
+          heroSubtitle: "Portal lingkungan untuk informasi, kegiatan, fasilitas, kabar warga, dan akses cepat ke pengurus.",
+          heroPrimaryCta: "Lihat Berita",
+          heroSecondaryCta: "Kirim Kabar",
+          heroCardEyebrow: "Lingkungan aktif",
+          heroCardTitle: "Hijau, tertib, dan dekat dengan kebutuhan harian warga.",
+          aboutEyebrow: "Tentang GDR",
+          aboutTitle: "Lingkungan yang nyaman untuk tumbuh bersama.",
+          aboutBody: "Grand Depok Residence RT 09 RW 12 menempatkan kenyamanan warga sebagai pusat aktivitas. Informasi dibuat mudah ditemukan, kegiatan terdokumentasi, dan komunikasi warga dibuat lebih dekat.",
+          facilitiesEyebrow: "Fasilitas",
+          facilitiesTitle: "Kebutuhan harian warga dalam jangkauan dekat.",
+          facilitiesBody: "Setiap fasilitas memakai foto yang bisa diganti dari panel Admin agar tampilan selalu relevan dengan kondisi terbaru.",
+          activitiesEyebrow: "Kegiatan",
+          activitiesTitle: "Agenda warga yang membuat lingkungan terasa hidup.",
+          activitiesBody: "Daftar kegiatan bisa ditambah dan dihapus oleh admin. Cocok untuk jadwal kerja bakti, olahraga, kajian, atau agenda sosial.",
+          musholaEyebrow: "Mushola",
+          musholaTitle: "Ruang ibadah yang dekat dengan keseharian warga.",
+          musholaBody: "Mushola menjadi titik temu untuk shalat berjamaah, kajian, pengajian anak, dan kegiatan sosial.",
+          musholaCta: "Kotak Amal",
+          newsEyebrow: "Berita warga",
+          newsTitle: "Kabar terbaru dari lingkungan.",
+          newsBody: "Posting warga akan masuk antrean moderasi dan baru tampil setelah admin approve.",
+          contactEyebrow: "Kontak",
+          contactTitle: "Perlu koordinasi dengan pengurus?",
+          contactBody: "Gunakan WhatsApp resmi pengurus untuk pengumuman, perizinan kegiatan, keamanan, dan informasi lingkungan.",
+          contactCta: "WhatsApp +62 812-8869-6521",
+          footerBody: "Portal informasi warga dan komunikasi lingkungan."
+        }
       },
       activities: [
         { id: 1, label: "Minggu Pagi", title: "Senam dan olahraga warga", desc: "Ruang berkumpul sehat untuk keluarga, remaja, dan warga senior." },
@@ -336,7 +367,16 @@
       localStorage.setItem(key, JSON.stringify(value));
     }
 
-    function getSettings() { return readStore(STORAGE.settings, defaults.settings); }
+    function getSettings() {
+      const stored = readStore(STORAGE.settings, defaults.settings);
+      const merged = {
+        ...defaults.settings,
+        ...stored,
+        copy: { ...defaults.settings.copy, ...(stored.copy || {}) },
+        facilities: stored.facilities || defaults.settings.facilities
+      };
+      return merged;
+    }
     function saveSettings(value) { writeStore(STORAGE.settings, value); }
     function getNews() { return readStore(STORAGE.news, defaults.news); }
     function saveNews(value) { writeStore(STORAGE.news, value); }
@@ -371,12 +411,20 @@
       if (el) el.style.backgroundImage = image ? `url("${image}")` : "";
     }
 
+    function applyCopy(copy) {
+      document.querySelectorAll("[data-copy]").forEach((element) => {
+        const key = element.dataset.copy;
+        if (copy[key]) element.textContent = copy[key];
+      });
+    }
+
     function applySettings() {
       const settings = getSettings();
       setBg("hero-section", settings.heroImage);
       setBg("about-photo", settings.aboutImage);
       setBg("activities-photo", settings.activitiesImage);
       setBg("mushola-photo", settings.musholaImage);
+      applyCopy(settings.copy);
       renderFacilities();
       renderActivities();
       renderNews();
@@ -537,7 +585,7 @@
         <form id="admin-login-form" class="mt-8 max-w-md rounded-2xl border border-slate-200 bg-stone-50 p-5">
           <label class="grid gap-2 text-sm font-bold text-slate-700">Passcode admin<input id="admin-pass" type="password" class="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="Masukkan passcode"></label>
           <button class="mt-4 rounded-full bg-forest-700 px-6 py-3 text-sm font-extrabold text-white" type="submit">Masuk Admin</button>
-          <p class="mt-4 text-xs font-semibold leading-6 text-slate-500">Passcode default sementara: gdr09. Ganti ke backend untuk keamanan produksi.</p>
+          <p class="mt-4 text-xs font-semibold leading-6 text-slate-500">Akses admin tersembunyi di ikon lock footer. Untuk keamanan produksi, gunakan backend/database.</p>
         </form>
       `;
     }
@@ -545,10 +593,10 @@
     function adminContent(tab) {
       return `
         <div class="mt-8 flex flex-wrap gap-2">
-          ${["moderasi", "foto", "kegiatan"].map((key) => `<button type="button" onclick="renderAdminDialog('${key}')" class="rounded-full px-4 py-2 text-sm font-extrabold ${tab === key ? "bg-forest-700 text-white" : "border border-slate-200 text-slate-700"}">${key === "moderasi" ? "Moderasi" : key === "foto" ? "Foto Website" : "Kegiatan"}</button>`).join("")}
+          ${["moderasi", "teks", "foto", "kegiatan"].map((key) => `<button type="button" onclick="renderAdminDialog('${key}')" class="rounded-full px-4 py-2 text-sm font-extrabold ${tab === key ? "bg-forest-700 text-white" : "border border-slate-200 text-slate-700"}">${key === "moderasi" ? "Moderasi" : key === "teks" ? "Teks Halaman" : key === "foto" ? "Foto Website" : "Kegiatan"}</button>`).join("")}
           <button type="button" onclick="adminLogout()" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-extrabold text-slate-700">Keluar</button>
         </div>
-        <div class="mt-6">${tab === "moderasi" ? adminModerationContent() : tab === "foto" ? adminPhotoContent() : adminActivitiesContent()}</div>
+        <div class="mt-6">${tab === "moderasi" ? adminModerationContent() : tab === "teks" ? adminCopyContent() : tab === "foto" ? adminPhotoContent() : adminActivitiesContent()}</div>
       `;
     }
 
@@ -592,6 +640,59 @@
           </div>
           <button type="submit" class="w-fit rounded-full bg-forest-700 px-6 py-3 text-sm font-extrabold text-white">Simpan Foto</button>
         </form>
+      `;
+    }
+
+    function adminCopyContent() {
+      const settings = getSettings();
+      const fields = [
+        ["heroSubtitle", "Hero - deskripsi"],
+        ["heroPrimaryCta", "Hero - tombol utama"],
+        ["heroSecondaryCta", "Hero - tombol kedua"],
+        ["heroCardEyebrow", "Hero card - label"],
+        ["heroCardTitle", "Hero card - judul"],
+        ["aboutEyebrow", "Tentang - label"],
+        ["aboutTitle", "Tentang - judul"],
+        ["aboutBody", "Tentang - deskripsi"],
+        ["facilitiesEyebrow", "Fasilitas - label"],
+        ["facilitiesTitle", "Fasilitas - judul"],
+        ["facilitiesBody", "Fasilitas - deskripsi"],
+        ["activitiesEyebrow", "Kegiatan - label"],
+        ["activitiesTitle", "Kegiatan - judul"],
+        ["activitiesBody", "Kegiatan - deskripsi"],
+        ["musholaEyebrow", "Mushola - label"],
+        ["musholaTitle", "Mushola - judul"],
+        ["musholaBody", "Mushola - deskripsi"],
+        ["musholaCta", "Mushola - tombol"],
+        ["newsEyebrow", "Berita - label"],
+        ["newsTitle", "Berita - judul"],
+        ["newsBody", "Berita - deskripsi"],
+        ["contactEyebrow", "Kontak - label"],
+        ["contactTitle", "Kontak - judul"],
+        ["contactBody", "Kontak - deskripsi"],
+        ["contactCta", "Kontak - teks tombol"],
+        ["footerBody", "Footer - teks kanan"]
+      ];
+      return `
+        <form id="admin-copy-form" class="grid gap-4">
+          <div class="grid gap-4 md:grid-cols-2">
+            ${fields.map(([key, label]) => copyField(key, label, settings.copy[key] || "")).join("")}
+          </div>
+          <button type="submit" class="w-fit rounded-full bg-forest-700 px-6 py-3 text-sm font-extrabold text-white">Simpan Teks</button>
+        </form>
+      `;
+    }
+
+    function copyField(key, label, value) {
+      const escaped = String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+      const isLong = value.length > 70;
+      return `
+        <label class="grid gap-2 rounded-2xl border border-slate-200 bg-stone-50 p-4 text-sm font-bold text-slate-700">
+          ${label}
+          ${isLong
+            ? `<textarea data-copy-input="${key}" rows="4" class="rounded-xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-forest-500 focus:ring-4 focus:ring-forest-100">${escaped}</textarea>`
+            : `<input data-copy-input="${key}" value="${escaped.replaceAll('"', "&quot;")}" class="rounded-xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-forest-500 focus:ring-4 focus:ring-forest-100">`}
+        </label>
       `;
     }
 
@@ -712,6 +813,19 @@
         applySettings();
         renderAdminDialog("foto");
         showToast("Foto website disimpan.");
+      }
+
+      if (event.target.id === "admin-copy-form") {
+        event.preventDefault();
+        const settings = getSettings();
+        const inputs = [...event.target.querySelectorAll("[data-copy-input]")];
+        inputs.forEach((input) => {
+          settings.copy[input.dataset.copyInput] = input.value.trim();
+        });
+        saveSettings(settings);
+        applySettings();
+        renderAdminDialog("teks");
+        showToast("Teks halaman disimpan.");
       }
 
       if (event.target.id === "admin-activity-form") {
