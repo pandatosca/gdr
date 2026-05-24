@@ -142,7 +142,7 @@
             <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-300" data-copy="facilitiesEyebrow">Fasilitas</p>
             <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="facilitiesTitle">Kebutuhan harian warga dalam jangkauan dekat.</h2>
           </div>
-          <p class="max-w-xl text-base leading-8 text-white/68" data-copy="facilitiesBody">Setiap fasilitas memakai foto yang bisa diganti dari panel Admin agar tampilan selalu relevan dengan kondisi terbaru.</p>
+          <p class="max-w-xl text-base leading-8 text-white/68" data-copy="facilitiesBody">Fasilitas lingkungan disusun ringkas agar warga dan tamu mudah memahami ruang bersama yang tersedia.</p>
         </div>
         <div id="facility-grid" class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4"></div>
       </div>
@@ -153,7 +153,7 @@
         <div>
           <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-forest-700" data-copy="activitiesEyebrow">Kegiatan</p>
           <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="activitiesTitle">Agenda warga yang membuat lingkungan terasa hidup.</h2>
-          <p class="mt-5 text-base leading-8 text-slate-600" data-copy="activitiesBody">Daftar kegiatan bisa ditambah dan dihapus oleh admin. Cocok untuk jadwal kerja bakti, olahraga, kajian, atau agenda sosial.</p>
+          <p class="mt-5 text-base leading-8 text-slate-600" data-copy="activitiesBody">Beragam agenda warga membantu menjaga kebersihan, kesehatan, silaturahmi, dan kepedulian sosial di lingkungan.</p>
           <div id="activities-photo" class="image-cover mt-8 min-h-[320px] rounded-[2rem] border border-slate-200 bg-stone-100 shadow-sm"></div>
         </div>
         <div id="activities-list" class="grid content-start gap-4"></div>
@@ -178,7 +178,7 @@
           <div class="max-w-2xl">
             <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-forest-700" data-copy="newsEyebrow">Berita warga</p>
             <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="newsTitle">Kabar terbaru dari lingkungan.</h2>
-            <p class="mt-4 text-sm font-semibold leading-7 text-slate-500" data-copy="newsBody">Posting warga akan masuk antrean moderasi dan baru tampil setelah admin approve.</p>
+            <p class="mt-4 text-sm font-semibold leading-7 text-slate-500" data-copy="newsBody">Kabar lingkungan yang sudah dikurasi tampil di sini agar warga mudah mengikuti informasi terbaru.</p>
           </div>
           <button type="button" onclick="openPostDialog()" class="inline-flex w-full items-center justify-center rounded-full bg-forest-700 px-6 py-3.5 text-sm font-extrabold text-white shadow-lg transition hover:bg-forest-800 sm:w-auto">Kirim Kabar Warga</button>
         </div>
@@ -199,24 +199,21 @@
       </div>
     </section>
 
-    <section id="kontak" class="bg-white py-20 sm:py-24">
-      <div class="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[.72fr_1.28fr] lg:px-8">
-        <div class="rounded-[2rem] bg-forest-800 p-8 text-white">
-          <div class="grid h-12 w-12 place-items-center rounded-2xl bg-white/12 text-amber-200">
-            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.8 8.8 0 0 1-3.9-.9L3 20l1.2-4.7A8.2 8.2 0 0 1 3 11.5a8.5 8.5 0 0 1 18 0Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.4 8.4c.2-.5.4-.6.7-.6h.6c.2 0 .4.1.5.4l.7 1.7c.1.3.1.5-.1.7l-.4.5c.8 1.4 1.8 2.4 3.4 3.1l.5-.6c.2-.2.5-.3.8-.2l1.6.7c.3.1.4.3.4.6v.5c0 .5-.3.8-.8 1a5.7 5.7 0 0 1-5.2-1.2 9.9 9.9 0 0 1-3.6-5.1c-.2-.6.1-1.1.4-1.5Z" fill="currentColor"/></svg>
-          </div>
-          <p class="mt-6 text-sm font-extrabold uppercase tracking-[0.24em] text-amber-200" data-copy="contactEyebrow">Kontak</p>
+    <section id="kontak" class="bg-white py-14 sm:py-16">
+      <div class="mx-auto grid max-w-7xl gap-6 px-4 sm:px-6 lg:grid-cols-[.62fr_1.38fr] lg:px-8">
+        <div class="rounded-[2rem] bg-gradient-to-br from-forest-800 via-forest-700 to-emerald-600 p-7 text-white shadow-xl shadow-forest-900/10 sm:p-8">
+          <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-200" data-copy="contactEyebrow">Kontak</p>
           <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="contactTitle">Perlu koordinasi dengan pengurus?</h2>
           <p class="mt-5 text-base leading-8 text-white/72" data-copy="contactBody">Gunakan WhatsApp resmi pengurus untuk pengumuman, perizinan kegiatan, keamanan, dan informasi lingkungan.</p>
           <a href="https://wa.me/6281288696521?text=Halo%20Pengurus%20GDR%2C%20saya%20ingin%20bertanya%20tentang%20lingkungan%20RT%2009%20RW%2012." target="_blank" rel="noreferrer" class="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3.5 text-sm font-extrabold text-white shadow-lg transition hover:brightness-95 sm:w-auto">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.8 8.8 0 0 1-3.9-.9L3 20l1.2-4.7A8.2 8.2 0 0 1 3 11.5a8.5 8.5 0 0 1 18 0Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-            <span data-copy="contactCta">WhatsApp +62 812-8869-6521</span>
+            <span data-copy="contactCta">WhatsApp</span>
           </a>
         </div>
         <div class="overflow-hidden rounded-[2rem] border border-slate-200 bg-stone-50 p-4 shadow-sm">
           <iframe
             title="Peta Grand Depok Residence"
-            class="h-[480px] w-full rounded-[1.5rem]"
+            class="h-[340px] w-full rounded-[1.5rem] lg:h-[400px]"
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
             src="https://www.google.com/maps?q=Grand%20Depok%20Residence%20Tanah%20Baru%20Beji%20Depok&output=embed">
@@ -249,8 +246,8 @@
       <div class="flex items-start justify-between gap-4">
         <div>
           <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-forest-700">Kabar warga</p>
-          <h2 id="post-title-dialog" class="mt-2 text-2xl font-extrabold">Kirim kabar untuk admin approve</h2>
-          <p class="mt-2 text-sm font-semibold text-slate-500">Posting tidak langsung tampil. Admin akan meninjau dari panel Admin.</p>
+          <h2 id="post-title-dialog" class="mt-2 text-2xl font-extrabold">Kirim kabar untuk ditinjau</h2>
+          <p class="mt-2 text-sm font-semibold text-slate-500">Posting tidak langsung tampil. Pengurus akan meninjau sebelum kabar dipublikasikan.</p>
         </div>
         <button type="button" onclick="closeDialog('post-dialog')" class="grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Tutup"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
       </div>
@@ -265,7 +262,7 @@
         <label class="grid gap-2 text-sm font-bold text-slate-700">Isi kabar<textarea id="post-content" required rows="5" class="resize-y rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none transition focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="Tulis informasi singkat dan jelas."></textarea></label>
         <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
           <button type="button" onclick="closeDialog('post-dialog')" class="rounded-full border border-slate-200 px-6 py-3 text-sm font-extrabold text-slate-700 hover:bg-slate-50">Batal</button>
-          <button type="submit" class="rounded-full bg-forest-700 px-6 py-3 text-sm font-extrabold text-white shadow-lg hover:bg-forest-800">Kirim ke Admin</button>
+          <button type="submit" class="rounded-full bg-forest-700 px-6 py-3 text-sm font-extrabold text-white shadow-lg hover:bg-forest-800">Kirim ke Pengurus</button>
         </div>
       </form>
     </div>
@@ -314,21 +311,21 @@
           aboutBody: "Grand Depok Residence RT 09 RW 12 menempatkan kenyamanan warga sebagai pusat aktivitas. Informasi dibuat mudah ditemukan, kegiatan terdokumentasi, dan komunikasi warga dibuat lebih dekat.",
           facilitiesEyebrow: "Fasilitas",
           facilitiesTitle: "Kebutuhan harian warga dalam jangkauan dekat.",
-          facilitiesBody: "Setiap fasilitas memakai foto yang bisa diganti dari panel Admin agar tampilan selalu relevan dengan kondisi terbaru.",
+          facilitiesBody: "Fasilitas lingkungan disusun ringkas agar warga dan tamu mudah memahami ruang bersama yang tersedia.",
           activitiesEyebrow: "Kegiatan",
           activitiesTitle: "Agenda warga yang membuat lingkungan terasa hidup.",
-          activitiesBody: "Daftar kegiatan bisa ditambah dan dihapus oleh admin. Cocok untuk jadwal kerja bakti, olahraga, kajian, atau agenda sosial.",
+          activitiesBody: "Beragam agenda warga membantu menjaga kebersihan, kesehatan, silaturahmi, dan kepedulian sosial di lingkungan.",
           musholaEyebrow: "Mushola",
           musholaTitle: "Ruang ibadah yang dekat dengan keseharian warga.",
           musholaBody: "Mushola menjadi titik temu untuk shalat berjamaah, kajian, pengajian anak, dan kegiatan sosial.",
           musholaCta: "Kotak Amal",
           newsEyebrow: "Berita warga",
           newsTitle: "Kabar terbaru dari lingkungan.",
-          newsBody: "Posting warga akan masuk antrean moderasi dan baru tampil setelah admin approve.",
+          newsBody: "Kabar lingkungan yang sudah dikurasi tampil di sini agar warga mudah mengikuti informasi terbaru.",
           contactEyebrow: "Kontak",
           contactTitle: "Perlu koordinasi dengan pengurus?",
           contactBody: "Gunakan WhatsApp resmi pengurus untuk pengumuman, perizinan kegiatan, keamanan, dan informasi lingkungan.",
-          contactCta: "WhatsApp +62 812-8869-6521",
+          contactCta: "WhatsApp",
           footerBody: "Portal informasi warga dan komunikasi lingkungan."
         }
       },
