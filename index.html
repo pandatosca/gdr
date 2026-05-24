@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Grand Depok Residence RT 9/RW 12 — Kawasan hunian hijau, ramah anak, dan religius di Tanah Baru, Beji, Depok">
+<title>Warga GDR — Grand Depok Residence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          forest: { 50:'#edf7f0',100:'#d1edd9',200:'#a3dbb3',300:'#6cc68c',400:'#3daa66',500:'#2d8a52',600:'#1f6b3e',700:'#174f2d',800:'#0f341d',900:'#081a0f' },
+          moss:   { 50:'#f2f8f3',100:'#e0f0e3',200:'#c2e1c7',300:'#95c99e',400:'#66ad74',500:'#469156',600:'#347042',700:'#275533',800:'#1a3a22',900:'#0e1f12' },
+          amber:  { 50:'#fdf9ee',100:'#f8efc8',200:'#f0d98a',300:'#e8c352',400:'#e0ae20',500:'#c99410',600:'#a5770d',700:'#815d0a',800:'#5c4207',900:'#382804' },
+        }
+      }
+    }
+  }
+</script>
+<style>
+  :root {
+    --g1: #0f341d; --g2: #1f6b3e; --g3: #2d8a52; --g4: #3daa66;
+    --g-light: #d1edd9; --g-pale: #edf7f0;
+    --gold: #c99410; --gold-l: #e8c352; --gold-pale: #fdf9ee;
+    --cream: #f8faf7; --white: #ffffff;
+    --text: #0f1f15; --muted: #4a6555;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+  .font-display { font-family: 'Cormorant Garamond', serif; }
+
+  /* ── NAV ── */
+  #main-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; transition: all 0.3s ease; }
+  #main-nav.scrolled { background: rgba(255,255,255,0.95); backdrop-filter: blur(16px); box-shadow: 0 2px 24px rgba(15,52,29,0.10); }
+  #main-nav.top { background: rgba(15,52,29,0.2); backdrop-filter: blur(8px); }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 22px; letter-spacing: 1px; }
+  .nav-link { font-size: 13px; font-weight: 600; letter-spacing: 0.5px; padding: 6px 14px; border-radius: 99px; transition: all 0.2s; cursor: pointer; }
+  .nav-link:hover { background: var(--g-light); color: var(--g2); }
+  #main-nav.top .nav-logo, #main-nav.top .nav-link { color: white; }
+  #main-nav.top .nav-link:hover { background: rgba(255,255,255,0.15); color: white; }
+  #main-nav.scrolled .nav-logo { color: var(--g1); }
+  #main-nav.scrolled .nav-link { color: var(--muted); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100svh;
+    background: linear-gradient(155deg, #081a0f 0%, #0f341d 30%, #1f6b3e 65%, #2d8a52 100%);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center;
+  }
+  .hero-blob {
+    position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.25;
+    animation: blobFloat 8s ease-in-out infinite alternate;
+  }
+  @keyframes blobFloat { from { transform: scale(1) translate(0,0); } to { transform: scale(1.08) translate(20px, -15px); } }
+  .hero-pattern {
+    position: absolute; inset: 0; opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M20 0L25 10L35 10L27 16L30 26L20 20L10 26L13 16L5 10L15 10Z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 99px; padding: 6px 16px; }
+  .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 700; line-height: 1.1; color: white; }
+  .hero-title .accent { color: var(--gold-l); font-style: italic; }
+  .hero-subtitle { color: rgba(255,255,255,0.75); font-size: clamp(0.95rem, 2vw, 1.1rem); font-weight: 400; line-height: 1.7; }
+  .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--gold); color: white; font-weight: 700; font-size: 14px; letter-spacing: 0.3px; padding: 13px 26px; border-radius: 99px; border: none; cursor: pointer; text-decoration: none; transition: all 0.25s ease; }
+  .btn-primary:hover { background: #e0ae20; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,148,16,0.4); }
+  .btn-outline { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: white; font-weight: 600; font-size: 14px; padding: 12px 24px; border-radius: 99px; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; text-decoration: none; transition: all 0.25s ease; }
+  .btn-outline:hover { background: rgba(255,255,255,0.1); border-color: white; transform: translateY(-2px); }
+  .hero-scroll { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; animation: scrollBounce 2s ease-in-out infinite; }
+  @keyframes scrollBounce { 0%,100%{ transform: translateX(-50%) translateY(0); } 50%{ transform: translateX(-50%) translateY(6px); } }
+
+  /* ── STATS ── */
+  .stats-bar { background: white; border-bottom: 2px solid var(--g-pale); }
+  .stat-item { text-align: center; padding: 24px 16px; border-right: 1px solid var(--g-pale); }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 700; color: var(--g3); line-height: 1; }
+  .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 4px; }
+
+  /* ── SECTION ── */
+  .section-tag { font-size: 11px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--g3); display: flex; align-items: center; gap: 10px; }
+  .section-tag::after { content: ''; flex: 1; max-width: 40px; height: 2px; background: var(--g3); border-radius: 2px; }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 700; color: var(--g1); line-height: 1.2; }
+
+  /* ── PILLARS ── */
+  .pillar-card { background: white; border-radius: 20px; padding: 36px 28px; box-shadow: 0 4px 24px rgba(15,52,29,0.07); border: 1px solid var(--g-pale); transition: all 0.3s ease; position: relative; overflow: hidden; }
+  .pillar-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: 20px 20px 0 0; }
+  .pillar-card.green::before { background: linear-gradient(90deg, var(--g3), var(--g4)); }
+  .pillar-card.gold::before { background: linear-gradient(90deg, var(--gold), var(--gold-l)); }
+  .pillar-card.blue::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+  .pillar-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(15,52,29,0.12); }
+  .pillar-icon { width: 64px; height: 64px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 20px; }
+
+  /* ── FACILITIES ── */
+  .fac-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 16px; }
+  .fac-item { background: white; border-radius: 16px; padding: 20px 16px; text-align: center; box-shadow: 0 2px 12px rgba(15,52,29,0.06); border: 1px solid var(--g-pale); transition: all 0.25s; cursor: default; }
+  .fac-item:hover { background: var(--g-pale); border-color: var(--g-light); transform: scale(1.04); }
+  .fac-item .icon { font-size: 32px; display: block; margin-bottom: 10px; }
+  .fac-item .label { font-size: 12px; font-weight: 700; color: var(--g2); line-height: 1.3; }
+
+  /* ── ACTIVITIES ── */
+  .act-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 16px rgba(15,52,29,0.06); border: 1px solid var(--g-pale); display: flex; gap: 16px; align-items: flex-start; transition: all 0.25s; }
+  .act-card:hover { box-shadow: 0 8px 32px rgba(15,52,29,0.12); transform: translateX(4px); }
+  .act-dot { width: 48px; height: 48px; min-width: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+
+  /* ── MUSHOLA ── */
+  .mushola-section { background: linear-gradient(135deg, #0f341d 0%, #1f6b3e 100%); position: relative; overflow: hidden; }
+  .mushola-section::before { content: ''; position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(61,170,102,0.2) 0%, transparent 70%); }
+  .mushola-section::after { content: ''; position: absolute; bottom: -30%; left: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(201,148,16,0.15) 0%, transparent 70%); }
+
+  /* ── PENGURUS ── */
+  .pengurus-card { background: white; border-radius: 20px; padding: 28px 24px; text-align: center; box-shadow: 0 4px 24px rgba(15,52,29,0.08); border: 1px solid var(--g-pale); transition: all 0.3s; }
+  .pengurus-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(15,52,29,0.14); }
+  .pengurus-avatar { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 30px; border: 3px solid var(--g-light); }
+
+  /* ── BERITA ── */
+  .cat-btn { padding: 7px 18px; border-radius: 99px; font-size: 12px; font-weight: 700; cursor: pointer; border: 2px solid var(--g-light); color: var(--g3); background: white; transition: all 0.2s; letter-spacing: 0.3px; }
+  .cat-btn.active, .cat-btn:hover { background: var(--g2); color: white; border-color: var(--g2); }
+  .news-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 16px rgba(15,52,29,0.07); border: 1px solid var(--g-pale); transition: all 0.3s; display: flex; flex-direction: column; }
+  .news-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(15,52,29,0.13); }
+  .news-card-body { padding: 20px; flex: 1; }
+  .news-cat { display: inline-block; padding: 3px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .cat-pengumuman { background: #fef3c7; color: #92400e; }
+  .cat-kegiatan { background: var(--g-light); color: var(--g2); }
+  .cat-berita { background: #dbeafe; color: #1e40af; }
+  .cat-dkm { background: #f3e8ff; color: #6b21a8; }
+
+  /* ── GALLERY ── */
+  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: auto auto; gap: 8px; }
+  .gallery-grid .g-main { grid-column: span 2; grid-row: span 2; }
+  .gallery-img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display: block; transition: transform 0.4s; cursor: pointer; }
+  .gallery-wrap { overflow: hidden; border-radius: 12px; height: 100%; }
+  .g-main .gallery-wrap { height: 360px; }
+  .gallery-wrap:not(.g-main .gallery-wrap) { height: 174px; }
+  .gallery-wrap:hover .gallery-img { transform: scale(1.06); }
+
+  /* ── MAP ── */
+  .map-frame { border-radius: 20px; overflow: hidden; border: 3px solid var(--g-light); box-shadow: 0 8px 40px rgba(15,52,29,0.12); }
+
+  /* ── CONTACT ── */
+  .contact-card { background: white; border-radius: 20px; padding: 28px; box-shadow: 0 4px 24px rgba(15,52,29,0.08); border: 1px solid var(--g-pale); }
+  .btn-wa { display: inline-flex; align-items: center; gap: 10px; background: #25d366; color: white; font-weight: 700; font-size: 14px; padding: 12px 22px; border-radius: 99px; text-decoration: none; border: none; cursor: pointer; transition: all 0.25s; }
+  .btn-wa:hover { background: #128c7e; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,211,102,0.35); }
+
+  /* ── FOOTER ── */
+  footer { background: var(--g1); color: rgba(255,255,255,0.7); }
+
+  /* ── TOAST ── */
+  #toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; background: var(--g2); color: white; padding: 14px 22px; border-radius: 14px; font-weight: 600; font-size: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); transform: translateY(80px); opacity: 0; transition: all 0.35s ease; max-width: 300px; }
+  #toast.show { transform: translateY(0); opacity: 1; }
+  #toast.error { background: #dc2626; }
+
+  /* ── DASHBOARD OVERLAY ── */
+  #dashboard { display: none; position: fixed; inset: 0; z-index: 900; background: #f0f5f1; overflow-y: auto; }
+  #dashboard.show { display: block; }
+  .dash-nav { background: var(--g1); padding: 0 24px; display: flex; align-items: center; gap: 0; position: sticky; top: 0; z-index: 10; min-height: 60px; }
+  .dash-tab { padding: 20px 18px; font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.55); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
+  .dash-tab.active, .dash-tab:hover { color: white; border-bottom-color: var(--gold-l); }
+  .dash-panel { display: none; padding: 24px; max-width: 900px; margin: 0 auto; }
+  .dash-panel.active { display: block; }
+  .form-group { margin-bottom: 18px; }
+  .form-label { font-size: 13px; font-weight: 700; color: var(--g1); display: block; margin-bottom: 6px; }
+  .form-input, .form-textarea, .form-select { width: 100%; padding: 11px 14px; border: 2px solid var(--g-light); border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text); outline: none; transition: border-color 0.2s; background: white; }
+  .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--g3); }
+  .form-textarea { min-height: 120px; resize: vertical; }
+  .btn-submit { background: var(--g3); color: white; font-weight: 700; font-size: 14px; padding: 13px 28px; border-radius: 10px; border: none; cursor: pointer; transition: all 0.2s; }
+  .btn-submit:hover { background: var(--g2); }
+  .btn-danger { background: #dc2626; color: white; font-weight: 600; font-size: 12px; padding: 6px 14px; border-radius: 8px; border: none; cursor: pointer; transition: background 0.2s; }
+  .btn-danger:hover { background: #b91c1c; }
+  .btn-approve { background: var(--g3); color: white; font-weight: 600; font-size: 12px; padding: 6px 14px; border-radius: 8px; border: none; cursor: pointer; transition: background 0.2s; }
+  .btn-approve:hover { background: var(--g2); }
+  .btn-secondary { background: var(--g-light); color: var(--g2); font-weight: 600; font-size: 12px; padding: 6px 14px; border-radius: 8px; border: none; cursor: pointer; transition: all 0.2s; }
+  .btn-secondary:hover { background: var(--g-pale); }
+  .admin-post-card { background: white; border-radius: 14px; padding: 18px; box-shadow: 0 2px 12px rgba(15,52,29,0.07); border: 1px solid var(--g-pale); margin-bottom: 12px; }
+  .status-badge { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+  .status-approved { background: var(--g-light); color: var(--g2); }
+  .status-pending { background: #fef3c7; color: #92400e; }
+  .status-rejected { background: #fee2e2; color: #dc2626; }
+
+  /* ── LOGIN ── */
+  .login-box { background: white; border-radius: 20px; padding: 36px; box-shadow: 0 8px 40px rgba(15,52,29,0.12); border: 1px solid var(--g-pale); max-width: 400px; margin: 60px auto; }
+
+  /* ── MOBILE NAV ── */
+  #mobile-menu { display: none; background: white; border-top: 1px solid var(--g-pale); padding: 12px 0; }
+  #mobile-menu.open { display: block; }
+  .mobile-nav-link { display: block; padding: 12px 24px; font-size: 14px; font-weight: 600; color: var(--muted); transition: all 0.2s; cursor: pointer; }
+  .mobile-nav-link:hover { background: var(--g-pale); color: var(--g2); }
+  #hamburger { display: none; }
+
+  /* ── DIVIDER ── */
+  .gold-line { height: 3px; width: 56px; background: linear-gradient(90deg, var(--gold), var(--gold-l)); border-radius: 99px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    #hamburger { display: flex; }
+    .desktop-nav { display: none; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .g-main { grid-column: span 2; }
+    .g-main .gallery-wrap { height: 220px; }
+    .gallery-wrap:not(.g-main .gallery-wrap) { height: 120px; }
+    .stat-num { font-size: 1.8rem; }
+  }
+
+  /* ── ANIMATIONS ── */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* No news placeholder */
+  .empty-state { text-align: center; padding: 48px 24px; color: var(--muted); }
+  .empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+</style>
+</head>
+<body>
+
+<!-- ────────────────────────────────────────────────────────── TOAST -->
+<div id="toast"></div>
+
+<!-- ────────────────────────────────────────────────────────── NAV -->
+<nav id="main-nav" class="top">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="nav-logo flex items-center gap-2">
+      <span style="background:var(--gold);color:white;padding:4px 10px;border-radius:8px;font-size:18px;">GDR</span>
+      <span>Grand Depok Residence</span>
+    </div>
+    <div class="desktop-nav flex items-center gap-1" id="desktop-links">
+      <span class="nav-link" onclick="scrollTo('tentang')">Tentang</span>
+      <span class="nav-link" onclick="scrollTo('fasilitas')">Fasilitas</span>
+      <span class="nav-link" onclick="scrollTo('kegiatan')">Kegiatan</span>
+      <span class="nav-link" onclick="scrollTo('mushola')">Mushola</span>
+      <span class="nav-link" onclick="scrollTo('berita')">Berita</span>
+      <span class="nav-link" onclick="scrollTo('kontak')">Kontak</span>
+      <span class="nav-link" style="background:var(--g3);color:white;margin-left:8px;" onclick="openDashboard()">✏️ Tulis Berita</span>
+    </div>
+    <button id="hamburger" onclick="toggleMenu()" class="flex flex-col gap-1.5 p-2 rounded-lg" style="background:rgba(255,255,255,0.15);">
+      <span style="display:block;width:22px;height:2px;background:white;border-radius:2px;transition:all 0.3s;" class="ham-line"></span>
+      <span style="display:block;width:22px;height:2px;background:white;border-radius:2px;transition:all 0.3s;" class="ham-line"></span>
+      <span style="display:block;width:22px;height:2px;background:white;border-radius:2px;transition:all 0.3s;" class="ham-line"></span>
+    </button>
+  </div>
+  <div id="mobile-menu">
+    <span class="mobile-nav-link" onclick="scrollTo('tentang');toggleMenu()">🏡 Tentang GDR</span>
+    <span class="mobile-nav-link" onclick="scrollTo('fasilitas');toggleMenu()">⚽ Fasilitas</span>
+    <span class="mobile-nav-link" onclick="scrollTo('kegiatan');toggleMenu()">📅 Kegiatan</span>
+    <span class="mobile-nav-link" onclick="scrollTo('mushola');toggleMenu()">🕌 Mushola</span>
+    <span class="mobile-nav-link" onclick="scrollTo('berita');toggleMenu()">📰 Berita</span>
+    <span class="mobile-nav-link" onclick="scrollTo('kontak');toggleMenu()">📞 Kontak</span>
+    <span class="mobile-nav-link" style="color:var(--g3);font-weight:800;" onclick="openDashboard();toggleMenu()">✏️ Tulis Berita</span>
+  </div>
+</nav>
+
+<!-- ────────────────────────────────────────────────────────── HERO -->
+<section id="hero">
+  <div class="hero-pattern"></div>
+  <div class="hero-blob" style="width:500px;height:500px;background:var(--g4);top:-100px;right:-150px;animation-duration:9s;"></div>
+  <div class="hero-blob" style="width:350px;height:350px;background:#a3dbb3;bottom:-80px;left:-100px;animation-duration:11s;animation-direction:alternate-reverse;"></div>
+  <div class="hero-blob" style="width:200px;height:200px;background:var(--gold);top:40%;left:30%;animation-duration:7s;opacity:0.15;"></div>
+
+  <div class="max-w-6xl mx-auto px-4 py-20 relative z-10 w-full">
+    <div class="max-w-2xl">
+      <div class="hero-badge mb-6" style="display:inline-flex;">
+        <span style="font-size:16px;">🌿</span>
+        <span style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:1.5px;text-transform:uppercase;">RT 9 / RW 12 · Tanah Baru, Beji, Depok</span>
+      </div>
+      <h1 class="hero-title mb-6">
+        Hijau Lingkungannya,<br>
+        <span class="accent">Hangat</span> Warganya,<br>
+        Berkah Hidupnya
+      </h1>
+      <p class="hero-subtitle mb-10">
+        Kawasan hunian asri Grand Depok Residence — tempat keluarga tumbuh dalam lingkungan
+        hijau, ramah anak, religius, dan penuh semangat gotong royong.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a class="btn-primary" onclick="scrollTo('berita')">📰 Lihat Berita Warga</a>
+        <a class="btn-outline" href="https://wa.me/6285691448299" target="_blank">📞 Hubungi Pak RT</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 10l5 5 5-5"/></svg>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────── STATS -->
+<div class="stats-bar">
+  <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4">
+    <div class="stat-item reveal">
+      <div class="stat-num">6</div>
+      <div class="stat-label">Petugas Keamanan</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-1">
+      <div class="stat-num">2</div>
+      <div class="stat-label">Pos Keamanan</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-2">
+      <div class="stat-num">RT9</div>
+      <div class="stat-label">RW 12 · Tanah Baru</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-3">
+      <div class="stat-num">5+</div>
+      <div class="stat-label">Kegiatan Bulanan</div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────────────────── TENTANG -->
+<section id="tentang" class="py-20" style="background:var(--cream);">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+      <div class="reveal">
+        <div class="section-tag mb-4">Tentang Kami</div>
+        <h2 class="section-title mb-4">Komunitas <em style="color:var(--g3);">Warga GDR</em> yang Guyup dan Rukun</h2>
+        <div class="gold-line mb-6"></div>
+        <p style="color:var(--muted);font-size:15px;line-height:1.8;" class="mb-4">
+          Grand Depok Residence berlokasi di Jl. M. Zakaria, Tanah Baru, Kecamatan Beji, Kota Depok —
+          sebuah kawasan hunian minimalis modern yang dikelilingi lingkungan asri dan nyaman.
+        </p>
+        <p style="color:var(--muted);font-size:15px;line-height:1.8;" class="mb-6">
+          Kami adalah komunitas warga RT 9/RW 12 yang menjunjung tinggi nilai-nilai kebersamaan,
+          gotong royong, dan pembangunan yang berkesinambungan. Di sini, setiap warga saling mengenal,
+          saling peduli, dan bersama-sama membangun lingkungan yang lebih baik setiap harinya.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <span style="background:var(--g-pale);color:var(--g2);padding:8px 16px;border-radius:99px;font-size:13px;font-weight:700;">🌿 Lingkungan Hijau</span>
+          <span style="background:var(--gold-pale);color:#92400e;padding:8px 16px;border-radius:99px;font-size:13px;font-weight:700;">🕌 Religius</span>
+          <span style="background:#eff6ff;color:#1e40af;padding:8px 16px;border-radius:99px;font-size:13px;font-weight:700;">👶 Ramah Anak</span>
+          <span style="background:#fdf4ff;color:#7e22ce;padding:8px 16px;border-radius:99px;font-size:13px;font-weight:700;">🤝 Gotong Royong</span>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="gallery-grid" style="height:380px;">
+          <div class="g-main gallery-wrap">
+            <img class="gallery-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80&auto=format&fit=crop" alt="Grand Depok Residence">
+          </div>
+          <div class="gallery-wrap">
+            <img class="gallery-img" src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&q=80&auto=format&fit=crop" alt="Taman hijau">
+          </div>
+          <div class="gallery-wrap">
+            <img class="gallery-img" src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400&q=80&auto=format&fit=crop" alt="Anak-anak bermain">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 PILLARS -->
+    <div class="grid md:grid-cols-3 gap-6 mt-20">
+      <div class="pillar-card green reveal">
+        <div class="pillar-icon" style="background:var(--g-pale);">🌿</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:var(--g1);margin-bottom:10px;">Hijau & Asri</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.7;">Lingkungan penghijauan yang terjaga, udara segar, dan taman yang terawat menjadi kebanggaan warga GDR setiap harinya.</p>
+      </div>
+      <div class="pillar-card gold reveal reveal-delay-2">
+        <div class="pillar-icon" style="background:var(--gold-pale);">🕌</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:var(--g1);margin-bottom:10px;">Religius</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.7;">Mushola Riqon Hasanah aktif dengan DKM yang berdedikasi — pengajian, TPA, dan kegiatan ibadah berjalan rutin dan semarak.</p>
+      </div>
+      <div class="pillar-card blue reveal reveal-delay-4">
+        <div class="pillar-icon" style="background:#eff6ff;">👨‍👩‍👧‍👦</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:var(--g1);margin-bottom:10px;">Ramah Anak</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.7;">Area bermain, lingkungan aman dengan CCTV dan 6 satpam, serta komunitas yang peduli menjadikan GDR surga tumbuh kembang anak.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────── FASILITAS -->
+<section id="fasilitas" class="py-20" style="background:white;">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="text-center mb-12 reveal">
+      <div class="section-tag justify-center mb-4" style="display:flex;">Fasilitas</div>
+      <h2 class="section-title">Lengkap untuk <em style="color:var(--g3);">Semua Warga</em></h2>
+      <div class="gold-line mx-auto mt-4 mb-4"></div>
+      <p style="color:var(--muted);max-width:480px;margin:0 auto;font-size:15px;line-height:1.7;">Dari lapangan olahraga hingga pos keamanan 24 jam — fasilitas GDR dirancang untuk kenyamanan seluruh keluarga.</p>
+    </div>
+    <div class="fac-grid reveal">
+      <div class="fac-item"><span class="icon">🏸</span><span class="label">Lapangan Badminton</span></div>
+      <div class="fac-item"><span class="icon">🏐</span><span class="label">Lapangan Voli</span></div>
+      <div class="fac-item"><span class="icon">🏀</span><span class="label">Lapangan Basket</span></div>
+      <div class="fac-item"><span class="icon">⚽</span><span class="label">Lapangan Futsal</span></div>
+      <div class="fac-item"><span class="icon">🛝</span><span class="label">Taman Bermain Anak</span></div>
+      <div class="fac-item"><span class="icon">📹</span><span class="label">CCTV 24 Jam</span></div>
+      <div class="fac-item"><span class="icon">🛡️</span><span class="label">2 Pos Keamanan</span></div>
+      <div class="fac-item"><span class="icon">👮</span><span class="label">6 Petugas Satpam</span></div>
+      <div class="fac-item"><span class="icon">🕌</span><span class="label">Mushola Riqon Hasanah</span></div>
+      <div class="fac-item"><span class="icon">🌳</span><span class="label">Area Penghijauan</span></div>
+      <div class="fac-item"><span class="icon">♻️</span><span class="label">Bank Sampah</span></div>
+      <div class="fac-item"><span class="icon">🏥</span><span class="label">Posyandu</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────── KEGIATAN -->
+<section id="kegiatan" class="py-20" style="background:var(--cream);">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="grid md:grid-cols-2 gap-16 items-start">
+      <div class="reveal">
+        <div class="section-tag mb-4">Kegiatan Warga</div>
+        <h2 class="section-title mb-4">Aktif, <em style="color:var(--g3);">Guyup,</em> dan Rukun</h2>
+        <div class="gold-line mb-6"></div>
+        <p style="color:var(--muted);font-size:15px;line-height:1.8;margin-bottom:24px;">
+          Berbagai kegiatan rutin mempererat ikatan antar warga GDR. Dari arisan bulanan hingga kerja bakti,
+          semua berjalan dengan semangat kebersamaan yang tinggi.
+        </p>
+        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=700&q=80&auto=format&fit=crop" alt="Kegiatan warga" style="width:100%;border-radius:16px;object-fit:cover;height:220px;">
+      </div>
+      <div class="flex flex-col gap-4">
+        <div class="act-card reveal">
+          <div class="act-dot" style="background:#e0f0e3;">📅</div>
+          <div>
+            <div style="font-weight:700;font-size:15px;color:var(--g1);">Arisan & Musyawarah Warga</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6;">Pertemuan rutin warga setiap bulan untuk musyawarah, arisan, dan koordinasi lingkungan. Tempat semua aspirasi warga disuarakan bersama.</div>
+          </div>
+        </div>
+        <div class="act-card reveal reveal-delay-1">
+          <div class="act-dot" style="background:#fef3c7;">👶</div>
+          <div>
+            <div style="font-weight:700;font-size:15px;color:var(--g1);">Posyandu</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6;">Layanan kesehatan ibu dan anak secara rutin. Pantau tumbuh kembang si kecil bersama kader posyandu GDR yang berpengalaman.</div>
+          </div>
+        </div>
+        <div class="act-card reveal reveal-delay-2">
+          <div class="act-dot" style="background:#dcfce7;">♻️</div>
+          <div>
+            <div style="font-weight:700;font-size:15px;color:var(--g1);">Bank Sampah</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6;">Kegiatan pilah sampah ibu-ibu GDR untuk menjaga lingkungan tetap bersih dan berkontribusi nyata pada kelestarian bumi.</div>
+          </div>
+        </div>
+        <div class="act-card reveal reveal-delay-3">
+          <div class="act-dot" style="background:#eff6ff;">🧹</div>
+          <div>
+            <div style="font-weight:700;font-size:15px;color:var(--g1);">Kerja Bakti</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6;">Gotong royong membersihkan lingkungan secara rutin. Bukti nyata semangat kebersamaan dan kepedulian warga GDR terhadap lingkungan.</div>
+          </div>
+        </div>
+        <div class="act-card reveal reveal-delay-4">
+          <div class="act-dot" style="background:#fdf4ff;">🎉</div>
+          <div>
+            <div style="font-weight:700;font-size:15px;color:var(--g1);">Lomba 17-an & Buka Bersama</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6;">Merayakan kemerdekaan dengan semangat dan keakraban. Buka bersama Ramadan pun menjadi momen mempererat tali silaturahmi warga.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────── MUSHOLA -->
+<section id="mushola" class="mushola-section py-20">
+  <div class="max-w-6xl mx-auto px-4 relative z-10">
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+      <div class="reveal">
+        <img src="https://images.unsplash.com/photo-1564769610726-59cead6a6f8f?w=700&q=80&auto=format&fit=crop" alt="Mushola Riqon Hasanah" style="width:100%;border-radius:20px;height:340px;object-fit:cover;border:3px solid rgba(255,255,255,0.15);">
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="section-tag mb-4" style="color:var(--gold-l);">Mushola & DKM</div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,2.8rem);font-weight:700;color:white;line-height:1.2;margin-bottom:16px;">
+          Mushola <em style="color:var(--gold-l);">Riqon Hasanah</em>
+        </h2>
+        <div class="gold-line mb-6"></div>
+        <p style="color:rgba(255,255,255,0.75);font-size:15px;line-height:1.8;margin-bottom:24px;">
+          Jantung spiritual warga GDR. DKM Riqon Hasanah yang aktif menjalankan berbagai
+          program keagamaan untuk mempererat ukhuwah islamiyah di lingkungan perumahan.
+        </p>
+        <div class="grid grid-cols-2 gap-3 mb-8">
+          <div style="background:rgba(255,255,255,0.1);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.15);">
+            <div style="font-size:18px;margin-bottom:6px;">📖</div>
+            <div style="font-size:13px;font-weight:700;color:white;">Pengajian Rutin</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.15);">
+            <div style="font-size:18px;margin-bottom:6px;">🎓</div>
+            <div style="font-size:13px;font-weight:700;color:white;">TPA (Taman Pendidikan Al-Quran)</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.15);">
+            <div style="font-size:18px;margin-bottom:6px;">🕌</div>
+            <div style="font-size:13px;font-weight:700;color:white;">Sholat Jumat & Berjamaah</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.15);">
+            <div style="font-size:18px;margin-bottom:6px;">🐄</div>
+            <div style="font-size:13px;font-weight:700;color:white;">Idul Adha & Qurban</div>
+          </div>
+        </div>
+        <div style="background:rgba(255,255,255,0.08);border-radius:14px;padding:20px;border:1px solid rgba(255,255,255,0.15);">
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold-l);margin-bottom:8px;">Ketua DKM</div>
+          <div style="font-size:18px;font-weight:700;color:white;margin-bottom:12px;">Pak Mutaqin</div>
+          <a href="https://wa.me/6281281387331" target="_blank" class="btn-wa" style="font-size:13px;padding:10px 18px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Hubungi DKM
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────── PENGURUS -->
+<section id="pengurus" class="py-20" style="background:white;">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="text-center mb-12 reveal">
+      <div class="section-tag justify-center mb-4" style="display:flex;">Pengurus RT</div>
+      <h2 class="section-title">Pengurus RT 9 <em style="color:var(--g3);">RW 12</em></h2>
+      <div class="gold-line mx-auto mt-4"></div>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+      <div class="pengurus-card reveal">
+        <div class="pengurus-avatar" style="background:var(--g-pale);">👨‍💼</div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--g3);margin-bottom:6px;">Ketua RT</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--g1);margin-bottom:12px;">Pak Guntur Utomo</div>
+        <a href="https://wa.me/6285691448299" target="_blank" class="btn-wa" style="font-size:12px;padding:8px 14px;width:100%;justify-content:center;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </a>
+      </div>
+      <div class="pengurus-card reveal reveal-delay-1">
+        <div class="pengurus-avatar" style="background:#eff6ff;">📝</div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#3b82f6;margin-bottom:6px;">Sekretaris</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--g1);">Sekretaris RT 9</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px;">Administrasi & surat-menyurat warga</div>
+      </div>
+      <div class="pengurus-card reveal reveal-delay-2">
+        <div class="pengurus-avatar" style="background:var(--gold-pale);">💰</div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin-bottom:6px;">Bendahara</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--g1);">Bendahara RT 9</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px;">Pengelolaan keuangan & iuran warga</div>
+      </div>
+      <div class="pengurus-card reveal reveal-delay-3">
+        <div class="pengurus-avatar" style="background:#fff1f2;">🛡️</div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#e11d48;margin-bottom:6px;">Kepala Keamanan</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--g1);">Kepala Satpam GDR</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px;">Koordinasi 6 petugas & 2 pos jaga</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────── BERITA -->
+<section id="berita" class="py-20" style="background:var(--cream);">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 reveal">
+      <div>
+        <div class="section-tag mb-4">Berita & Pengumuman</div>
+        <h2 class="section-title">Info Terkini <em style="color:var(--g3);">Warga GDR</em></h2>
+        <div class="gold-line mt-4"></div>
+      </div>
+      <button class="btn-primary" onclick="openDashboard()" style="white-space:nowrap;">✏️ Tulis Berita</button>
+    </div>
+
+    <!-- CATEGORY FILTER -->
+    <div class="flex flex-wrap gap-2 mb-8 reveal">
+      <button class="cat-btn active" onclick="filterNews('semua',this)">Semua</button>
+      <button class="cat-btn" onclick="filterNews('Pengumuman',this)">📢 Pengumuman</button>
+      <button class="cat-btn" onclick="filterNews('Kegiatan',this)">📅 Kegiatan</button>
+      <button class="cat-btn" onclick="filterNews('Berita',this)">📰 Berita</button>
+      <button class="cat-btn" onclick="filterNews('DKM',this)">🕌 DKM</button>
+    </div>
+
+    <div id="news-grid" class="grid md:grid-cols-3 gap-6">
+      <!-- Populated by JS -->
+    </div>
+    <div id="news-empty" class="empty-state hidden">
+      <div class="icon">📭</div>
+      <div style="font-weight:700;font-size:16px;color:var(--g1);">Belum ada berita di kategori ini</div>
+      <div style="font-size:14px;margin-top:4px;">Jadilah yang pertama berbagi informasi!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────── GALERI -->
+<section id="galeri" class="py-20" style="background:white;">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="text-center mb-12 reveal">
+      <div class="section-tag justify-center mb-4" style="display:flex;">Galeri</div>
+      <h2 class="section-title">Momen <em style="color:var(--g3);">Warga GDR</em></h2>
+      <div class="gold-line mx-auto mt-4 mb-4"></div>
+      <p style="color:var(--muted);font-size:14px;">Kenangan indah bersama warga Grand Depok Residence</p>
+    </div>
+    <div class="gallery-grid reveal" style="height:auto;gap:10px;">
+      <div class="g-main gallery-wrap" style="height:380px;">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&q=80&auto=format&fit=crop" alt="Anak bermain">
+      </div>
+      <div class="gallery-wrap" style="height:183px;">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=500&q=80&auto=format&fit=crop" alt="Olahraga">
+      </div>
+      <div class="gallery-wrap" style="height:183px;">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=500&q=80&auto=format&fit=crop" alt="Kegiatan">
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-2.5 md:gap-3 mt-2.5 md:mt-3 reveal">
+      <div class="gallery-wrap" style="height:160px;">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&q=80&auto=format&fit=crop" alt="Kebersamaan">
+      </div>
+      <div class="gallery-wrap" style="height:160px;">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&q=80&auto=format&fit=crop" alt="Taman">
+      </div>
+      <div class="gallery-wrap" style="height:160px;">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80&auto=format&fit=crop" alt="Perumahan">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────── LOKASI & KONTAK -->
+<section id="kontak" class="py-20" style="background:var(--cream);">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="text-center mb-12 reveal">
+      <div class="section-tag justify-center mb-4" style="display:flex;">Lokasi & Kontak</div>
+      <h2 class="section-title">Temukan <em style="color:var(--g3);">Kami</em></h2>
+      <div class="gold-line mx-auto mt-4"></div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-10 items-start">
+      <div class="map-frame reveal" style="height:380px;">
+        <iframe
+          src="https://maps.google.com/maps?q=-6.3785526,106.7971088&z=17&output=embed"
+          width="100%" height="380" style="border:0;display:block;" allowfullscreen loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade" title="Lokasi Grand Depok Residence">
+        </iframe>
+      </div>
+      <div class="flex flex-col gap-5 reveal reveal-delay-2">
+        <!-- RT -->
+        <div class="contact-card">
+          <div class="flex items-center gap-3 mb-4">
+            <span style="font-size:28px;">👨‍💼</span>
+            <div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--g3);">Ketua RT 9</div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:var(--g1);">Pak Guntur Utomo</div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-2 mb-4">
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);">
+              <span>📍</span> Jl. M. Zakaria, Tanah Baru, Beji, Depok, Jawa Barat
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);">
+              <span>📞</span> +62 856-9144-8299
+            </div>
+          </div>
+          <a href="https://wa.me/6285691448299" target="_blank" class="btn-wa">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Chat Pak RT
+          </a>
+        </div>
+        <!-- DKM -->
+        <div class="contact-card">
+          <div class="flex items-center gap-3 mb-4">
+            <span style="font-size:28px;">🕌</span>
+            <div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7e22ce;">Ketua DKM Riqon Hasanah</div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:var(--g1);">Pak Mutaqin</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);margin-bottom:16px;">
+            <span>📞</span> +62 812-8138-7331
+          </div>
+          <a href="https://wa.me/6281281387331" target="_blank" class="btn-wa">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Chat DKM
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────── FOOTER -->
+<footer class="py-10">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="grid md:grid-cols-3 gap-8 mb-8">
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:white;margin-bottom:12px;">🌿 Grand Depok Residence</div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.7;">RT 9 / RW 12, Jl. M. Zakaria,<br>Tanah Baru, Beji, Kota Depok,<br>Jawa Barat</div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--gold-l);margin-bottom:12px;">Navigasi</div>
+        <div class="flex flex-col gap-2">
+          <span onclick="scrollTo('tentang')" style="font-size:14px;color:rgba(255,255,255,0.55);cursor:pointer;transition:color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.55)'">Tentang GDR</span>
+          <span onclick="scrollTo('fasilitas')" style="font-size:14px;color:rgba(255,255,255,0.55);cursor:pointer;transition:color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.55)'">Fasilitas</span>
+          <span onclick="scrollTo('mushola')" style="font-size:14px;color:rgba(255,255,255,0.55);cursor:pointer;transition:color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.55)'">Mushola Riqon Hasanah</span>
+          <span onclick="scrollTo('berita')" style="font-size:14px;color:rgba(255,255,255,0.55);cursor:pointer;transition:color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.55)'">Berita & Pengumuman</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--gold-l);margin-bottom:12px;">Kontak Darurat</div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.8;">
+          RT: <a href="tel:+6285691448299" style="color:white;">+62 856-9144-8299</a><br>
+          DKM: <a href="tel:+6281281387331" style="color:white;">+62 812-8138-7331</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:24px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;">
+      <div style="font-size:13px;color:rgba(255,255,255,0.35);">© 2026 Warga GDR · Grand Depok Residence RT 9/RW 12</div>
+      <span onclick="openAdminLogin()" style="font-size:11px;color:rgba(255,255,255,0.2);cursor:pointer;transition:color 0.2s;letter-spacing:1px;" onmouseover="this.style.color='rgba(255,255,255,0.5)'" onmouseout="this.style.color='rgba(255,255,255,0.2)'">⚙ Admin</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════════════════ DASHBOARD OVERLAY -->
+<div id="dashboard">
+  <div class="dash-nav flex items-center gap-0 flex-wrap">
+    <div style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:18px;color:white;padding:0 20px;margin-right:8px;white-space:nowrap;">🌿 GDR</div>
+    <button class="dash-tab active" id="tab-post-btn" onclick="showDashTab('post')">✏️ Tulis Berita</button>
+    <div id="admin-tabs" style="display:none;display:contents;">
+      <button class="dash-tab" id="tab-moderasi-btn" onclick="showDashTab('moderasi')">🔔 Moderasi <span id="pending-count" style="background:var(--gold-l);color:#92400e;border-radius:99px;padding:1px 7px;font-size:11px;margin-left:4px;display:none;"></span></button>
+      <button class="dash-tab" id="tab-kelola-btn" onclick="showDashTab('kelola')">📋 Kelola Berita</button>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:10px;padding-right:8px;">
+      <span id="admin-indicator" style="display:none;font-size:12px;font-weight:700;color:var(--gold-l);">✅ Admin</span>
+      <button onclick="closeDashboard()" style="background:rgba(255,255,255,0.1);color:white;border:none;border-radius:8px;padding:8px 16px;font-weight:600;font-size:13px;cursor:pointer;">✕ Tutup</button>
+    </div>
+  </div>
+
+  <!-- TAB: TULIS BERITA -->
+  <div class="dash-panel active" id="dash-post">
+    <div style="max-width:640px;">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--g1);margin-bottom:6px;">Tulis Berita atau Pengumuman</h2>
+      <p style="font-size:14px;color:var(--muted);margin-bottom:24px;">Postingan Anda akan direview oleh Admin RT sebelum ditampilkan di website.</p>
+
+      <div style="background:white;border-radius:16px;padding:28px;box-shadow:0 2px 16px rgba(15,52,29,0.07);">
+        <div class="form-group">
+          <label class="form-label">Nama Anda *</label>
+          <input id="post-author" class="form-input" type="text" placeholder="Nama lengkap / sebutan (cth: Ibu Sari, Pengurus RT)">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Kategori *</label>
+          <select id="post-cat" class="form-select">
+            <option value="">— Pilih Kategori —</option>
+            <option value="Pengumuman">📢 Pengumuman</option>
+            <option value="Kegiatan">📅 Kegiatan</option>
+            <option value="Berita">📰 Berita</option>
+            <option value="DKM">🕌 DKM</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Judul Berita *</label>
+          <input id="post-title" class="form-input" type="text" placeholder="Judul yang singkat dan jelas">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Isi Berita *</label>
+          <textarea id="post-content" class="form-textarea" placeholder="Tulis isi berita / pengumuman di sini..."></textarea>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn-submit" onclick="submitPost()">📤 Kirim Berita</button>
+          <span style="font-size:12px;color:var(--muted);">Akan direview Admin RT</span>
+        </div>
+      </div>
+
+      <!-- ADMIN LOGIN BOX -->
+      <div style="margin-top:24px;background:white;border-radius:16px;padding:24px;box-shadow:0 2px 16px rgba(15,52,29,0.07);border:2px dashed var(--g-light);" id="admin-login-box">
+        <div style="font-size:13px;font-weight:700;color:var(--g1);margin-bottom:12px;">🔐 Login Admin (Pengurus RT)</div>
+        <div style="display:flex;gap:8px;">
+          <input id="admin-pass" class="form-input" type="password" placeholder="Password admin..." style="flex:1;" onkeydown="if(event.key==='Enter')adminLogin()">
+          <button class="btn-submit" onclick="adminLogin()" style="white-space:nowrap;padding:11px 18px;">Login</button>
+        </div>
+      </div>
+      <div id="admin-logout-box" style="display:none;margin-top:16px;background:var(--g-pale);border-radius:12px;padding:14px 20px;display:none;align-items:center;justify-content:space-between;">
+        <span style="font-size:13px;font-weight:700;color:var(--g2);">✅ Login sebagai Admin</span>
+        <button onclick="adminLogout()" class="btn-secondary">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: MODERASI -->
+  <div class="dash-panel" id="dash-moderasi">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--g1);margin-bottom:6px;">Moderasi Berita</h2>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:24px;">Setujui atau tolak postingan dari warga.</p>
+    <div id="moderation-list"></div>
+  </div>
+
+  <!-- TAB: KELOLA -->
+  <div class="dash-panel" id="dash-kelola">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+      <div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--g1);margin-bottom:4px;">Kelola Semua Berita</h2>
+        <p style="font-size:14px;color:var(--muted);">Edit, hapus, atau posting langsung sebagai admin.</p>
+      </div>
+      <button class="btn-submit" onclick="showAdminNewPost()">+ Posting Langsung</button>
+    </div>
+
+    <!-- Admin Quick Post Form -->
+    <div id="admin-new-post" style="display:none;background:white;border-radius:16px;padding:24px;margin-bottom:24px;box-shadow:0 2px 16px rgba(15,52,29,0.07);">
+      <div style="font-weight:700;font-size:15px;color:var(--g1);margin-bottom:16px;">📝 Posting Langsung (Admin)</div>
+      <div class="form-group">
+        <label class="form-label">Nama Pengirim</label>
+        <input id="adm-author" class="form-input" type="text" value="Pengurus RT 9">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kategori</label>
+        <select id="adm-cat" class="form-select">
+          <option value="Pengumuman">📢 Pengumuman</option>
+          <option value="Kegiatan">📅 Kegiatan</option>
+          <option value="Berita">📰 Berita</option>
+          <option value="DKM">🕌 DKM</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Judul</label>
+        <input id="adm-title" class="form-input" type="text" placeholder="Judul berita...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Isi</label>
+        <textarea id="adm-content" class="form-textarea" placeholder="Isi berita..."></textarea>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-submit" onclick="adminPost()">✅ Publish Langsung</button>
+        <button class="btn-secondary" onclick="document.getElementById('admin-new-post').style.display='none'">Batal</button>
+      </div>
+    </div>
+
+    <div id="manage-list"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════ JAVASCRIPT -->
+<script>
+// ── DATA AWAL ────────────────────────────────────────────────────
+const STORAGE_KEY = 'gdr_news_v2';
+const ADMIN_PASS  = 'GDR9RW12';
+let isAdmin = false;
+let currentFilter = 'semua';
+
+const defaultNews = [
+  { id: 1, title: 'Pertemuan Warga Bulan Mei 2026', content: 'Mengundang seluruh warga GDR untuk hadir dalam Arisan & Musyawarah Warga bulan Mei 2026. Acara akan dilaksanakan di kediaman pengurus. Harap hadir tepat waktu dan membawa iuran bulanan.', category: 'Pengumuman', author: 'Pak Guntur (RT 9)', date: '2026-05-20', status: 'approved' },
+  { id: 2, title: 'Jadwal Kerja Bakti Lingkungan', content: 'Kerja bakti rutin akan dilaksanakan Minggu, 25 Mei 2026 pukul 07.00 WIB. Mohon partisipasi seluruh warga. Bawa peralatan masing-masing. Snack dan minuman disediakan panitia!', category: 'Kegiatan', author: 'Sekretaris RT 9', date: '2026-05-18', status: 'approved' },
+  { id: 3, title: 'Pengajian Rutin Mushola Riqon Hasanah', content: 'Pengajian rutin mingguan di Mushola Riqon Hasanah tetap dilaksanakan setiap Minggu malam ba\'da Isya. Diisi oleh Ustadz undangan. Mari ramaikan masjid kita bersama-sama.', category: 'DKM', author: 'DKM Riqon Hasanah', date: '2026-05-15', status: 'approved' },
+  { id: 4, title: 'Turnamen Badminton Antar Warga GDR', content: 'Dalam rangka mempererat silaturahmi, akan diadakan Turnamen Badminton Antar Warga GDR. Pendaftaran dibuka sampai 30 Mei 2026. Hubungi Pak RT atau kunjungi pos keamanan untuk daftar.', category: 'Kegiatan', author: 'Panitia Olahraga GDR', date: '2026-05-10', status: 'approved' },
+  { id: 5, title: 'Bank Sampah GDR: Jadwal Pengumpulan', content: 'Jadwal pengumpulan sampah terpilah bulan Mei: setiap Sabtu pukul 08.00–10.00 WIB di depan Pos Keamanan utama. Pisahkan sampah organik, plastik, dan kertas ya! Yuk jaga lingkungan kita bersama.', category: 'Berita', author: 'Ibu PKK RT 9', date: '2026-05-08', status: 'approved' },
+];
+
+// ── STORAGE ──────────────────────────────────────────────────────
+function getNews() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) return JSON.parse(stored);
+  } catch(e) {}
+  saveNews(defaultNews);
+  return [...defaultNews];
+}
+function saveNews(news) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(news)); } catch(e) {}
+}
+
+// ── HELPERS ──────────────────────────────────────────────────────
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+}
+function catClass(cat) {
+  const map = { Pengumuman:'cat-pengumuman', Kegiatan:'cat-kegiatan', Berita:'cat-berita', DKM:'cat-dkm' };
+  return map[cat] || 'cat-berita';
+}
+function catEmoji(cat) {
+  const map = { Pengumuman:'📢', Kegiatan:'📅', Berita:'📰', DKM:'🕌' };
+  return map[cat] || '📰';
+}
+function nextId() {
+  const news = getNews();
+  return news.length ? Math.max(...news.map(n=>n.id)) + 1 : 1;
+}
+
+// ── TOAST ────────────────────────────────────────────────────────
+function showToast(msg, isError=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = isError ? 'show error' : 'show';
+  setTimeout(() => { t.className = isError ? 'error' : ''; }, 3200);
+}
+
+// ── NEWS RENDER ──────────────────────────────────────────────────
+function renderNews(filter='semua') {
+  currentFilter = filter;
+  const all = getNews().filter(n => n.status === 'approved');
+  const filtered = filter === 'semua' ? all : all.filter(n => n.category === filter);
+  const grid = document.getElementById('news-grid');
+  const empty = document.getElementById('news-empty');
+
+  if (!filtered.length) {
+    grid.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+
+  // Sort newest first
+  filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  grid.innerHTML = filtered.map(n => `
+    <div class="news-card reveal">
+      <div class="news-card-body">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:6px;">
+          <span class="news-cat ${catClass(n.category)}">${catEmoji(n.category)} ${n.category}</span>
+          <span style="font-size:11px;color:var(--muted);">${formatDate(n.date)}</span>
+        </div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:var(--g1);line-height:1.3;margin-bottom:8px;">${n.title}</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">${n.content.length > 130 ? n.content.slice(0,130)+'...' : n.content}</p>
+      </div>
+      <div style="padding:14px 20px;border-top:1px solid var(--g-pale);display:flex;align-items:center;gap:8px;">
+        <span style="font-size:20px;">👤</span>
+        <span style="font-size:12px;font-weight:600;color:var(--muted);">${n.author}</span>
+      </div>
+    </div>
+  `).join('');
+
+  // Re-trigger reveal for new cards
+  setTimeout(() => {
+    document.querySelectorAll('#news-grid .reveal').forEach(el => el.classList.add('visible'));
+  }, 50);
+}
+
+function filterNews(cat, btn) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderNews(cat);
+}
+
+// ── NAV SCROLL ───────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('main-nav');
+  if (window.scrollY > 60) {
+    nav.classList.remove('top'); nav.classList.add('scrolled');
+    const ham = document.querySelectorAll('.ham-line');
+    ham.forEach(l => l.style.background = '#1f6b3e');
+  } else {
+    nav.classList.add('top'); nav.classList.remove('scrolled');
+    const ham = document.querySelectorAll('.ham-line');
+    ham.forEach(l => l.style.background = 'white');
+  }
+});
+
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// ── MOBILE MENU ──────────────────────────────────────────────────
+function toggleMenu() {
+  const m = document.getElementById('mobile-menu');
+  m.classList.toggle('open');
+}
+
+// ── REVEAL ON SCROLL ─────────────────────────────────────────────
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+function initReveal() {
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+}
+
+// ── DASHBOARD ────────────────────────────────────────────────────
+function openDashboard() {
+  document.getElementById('dashboard').classList.add('show');
+  document.body.style.overflow = 'hidden';
+  showDashTab('post');
+}
+function closeDashboard() {
+  document.getElementById('dashboard').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function openAdminLogin() {
+  openDashboard();
+  document.getElementById('admin-pass').focus();
+}
+
+function showDashTab(tab) {
+  document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.dash-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('dash-' + tab).classList.add('active');
+  const btn = document.getElementById('tab-' + tab + '-btn');
+  if (btn) btn.classList.add('active');
+  if (tab === 'moderasi') renderModeration();
+  if (tab === 'kelola') renderManage();
+}
+
+// ── ADMIN AUTH ───────────────────────────────────────────────────
+function adminLogin() {
+  const pass = document.getElementById('admin-pass').value;
+  if (pass === ADMIN_PASS) {
+    isAdmin = true;
+    document.getElementById('admin-login-box').style.display = 'none';
+    const logoutBox = document.getElementById('admin-logout-box');
+    logoutBox.style.display = 'flex';
+    document.getElementById('admin-indicator').style.display = 'inline';
+    // Show admin tabs
+    document.querySelectorAll('#admin-tabs button').forEach(b => b.style.display = 'inline-flex');
+    updatePendingCount();
+    showToast('✅ Login berhasil! Selamat datang Admin.');
+  } else {
+    showToast('❌ Password salah!', true);
+    document.getElementById('admin-pass').value = '';
+  }
+}
+function adminLogout() {
+  isAdmin = false;
+  document.getElementById('admin-login-box').style.display = 'block';
+  document.getElementById('admin-logout-box').style.display = 'none';
+  document.getElementById('admin-indicator').style.display = 'none';
+  document.getElementById('admin-pass').value = '';
+  showDashTab('post');
+  showToast('👋 Logout berhasil.');
+}
+
+function updatePendingCount() {
+  const n = getNews().filter(x => x.status === 'pending').length;
+  const badge = document.getElementById('pending-count');
+  if (n > 0) { badge.textContent = n; badge.style.display = 'inline'; }
+  else { badge.style.display = 'none'; }
+}
+
+// ── SUBMIT POST (WARGA) ──────────────────────────────────────────
+function submitPost() {
+  const author  = document.getElementById('post-author').value.trim();
+  const cat     = document.getElementById('post-cat').value;
+  const title   = document.getElementById('post-title').value.trim();
+  const content = document.getElementById('post-content').value.trim();
+  if (!author || !cat || !title || !content) { showToast('⚠️ Semua kolom harus diisi!', true); return; }
+
+  const news = getNews();
+  news.push({ id: nextId(), title, content, category: cat, author, date: new Date().toISOString().slice(0,10), status: 'pending' });
+  saveNews(news);
+  document.getElementById('post-author').value = '';
+  document.getElementById('post-cat').value = '';
+  document.getElementById('post-title').value = '';
+  document.getElementById('post-content').value = '';
+  updatePendingCount();
+  showToast('📤 Berita terkirim! Menunggu persetujuan Admin RT.');
+}
+
+// ── ADMIN POST (LANGSUNG APPROVED) ───────────────────────────────
+function showAdminNewPost() {
+  const box = document.getElementById('admin-new-post');
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+function adminPost() {
+  const author  = document.getElementById('adm-author').value.trim();
+  const cat     = document.getElementById('adm-cat').value;
+  const title   = document.getElementById('adm-title').value.trim();
+  const content = document.getElementById('adm-content').value.trim();
+  if (!title || !content) { showToast('⚠️ Judul dan isi wajib diisi!', true); return; }
+
+  const news = getNews();
+  news.push({ id: nextId(), title, content, category: cat, author: author || 'Pengurus RT 9', date: new Date().toISOString().slice(0,10), status: 'approved' });
+  saveNews(news);
+  document.getElementById('adm-title').value = '';
+  document.getElementById('adm-content').value = '';
+  document.getElementById('admin-new-post').style.display = 'none';
+  renderManage();
+  renderNews(currentFilter);
+  showToast('✅ Berita berhasil dipublish!');
+}
+
+// ── MODERATION ───────────────────────────────────────────────────
+function renderModeration() {
+  const pending = getNews().filter(n => n.status === 'pending');
+  const el = document.getElementById('moderation-list');
+  if (!pending.length) {
+    el.innerHTML = '<div class="empty-state"><div class="icon">✅</div><div style="font-weight:700;color:var(--g1);font-size:16px;">Tidak ada postingan menunggu moderasi</div></div>';
+    return;
+  }
+  el.innerHTML = pending.map(n => `
+    <div class="admin-post-card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <span class="news-cat ${catClass(n.category)}">${catEmoji(n.category)} ${n.category}</span>
+            <span class="status-badge status-pending">⏳ Menunggu</span>
+          </div>
+          <div style="font-weight:700;font-size:15px;color:var(--g1);margin-bottom:4px;">${n.title}</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:6px;">${n.content}</div>
+          <div style="font-size:12px;color:var(--muted);">📝 ${n.author} · ${formatDate(n.date)}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button class="btn-approve" onclick="approvePost(${n.id})">✅ Setujui</button>
+          <button class="btn-danger" onclick="rejectPost(${n.id})">✕ Tolak</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function approvePost(id) {
+  const news = getNews();
+  const idx = news.findIndex(n => n.id === id);
+  if (idx !== -1) { news[idx].status = 'approved'; saveNews(news); }
+  updatePendingCount(); renderModeration(); renderNews(currentFilter);
+  showToast('✅ Berita disetujui dan sudah tayang!');
+}
+function rejectPost(id) {
+  const news = getNews();
+  const idx = news.findIndex(n => n.id === id);
+  if (idx !== -1) { news[idx].status = 'rejected'; saveNews(news); }
+  updatePendingCount(); renderModeration();
+  showToast('❌ Berita ditolak.');
+}
+
+// ── MANAGE ALL ───────────────────────────────────────────────────
+function renderManage() {
+  const all = getNews().sort((a,b) => new Date(b.date) - new Date(a.date));
+  const el = document.getElementById('manage-list');
+  if (!all.length) { el.innerHTML = '<div class="empty-state"><div class="icon">📭</div>Belum ada berita</div>'; return; }
+  el.innerHTML = all.map(n => `
+    <div class="admin-post-card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <span class="news-cat ${catClass(n.category)}">${catEmoji(n.category)} ${n.category}</span>
+            <span class="status-badge status-${n.status}">${n.status==='approved'?'✅ Tayang':n.status==='pending'?'⏳ Menunggu':'❌ Ditolak'}</span>
+          </div>
+          <div style="font-weight:700;font-size:14px;color:var(--g1);margin-bottom:4px;">${n.title}</div>
+          <div style="font-size:12px;color:var(--muted);">📝 ${n.author} · ${formatDate(n.date)}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
+          ${n.status !== 'approved' ? `<button class="btn-approve" onclick="approvePost(${n.id});renderManage()">✅</button>` : ''}
+          ${n.status === 'approved' ? `<button class="btn-secondary" onclick="takeDownPost(${n.id})">📤 Turunkan</button>` : ''}
+          <button class="btn-danger" onclick="deletePost(${n.id})">🗑️ Hapus</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function takeDownPost(id) {
+  const news = getNews();
+  const idx = news.findIndex(n => n.id === id);
+  if (idx !== -1) { news[idx].status = 'pending'; saveNews(news); }
+  renderManage(); renderNews(currentFilter);
+  showToast('📤 Berita diturunkan dari tayangan.');
+}
+function deletePost(id) {
+  if (!confirm('Hapus berita ini secara permanen?')) return;
+  const news = getNews().filter(n => n.id !== id);
+  saveNews(news);
+  renderManage(); updatePendingCount(); renderNews(currentFilter);
+  showToast('🗑️ Berita dihapus.');
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  renderNews();
+  initReveal();
+
+  // Hide admin-only tabs on init
+  const adminTabs = document.querySelectorAll('#admin-tabs button');
+  adminTabs.forEach(b => b.style.display = 'none');
+
+  // Close dashboard on ESC
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('dashboard').classList.contains('show')) {
+      closeDashboard();
+    }
+  });
+
+  // Trigger reveal for above-fold elements
+  setTimeout(() => {
+    document.querySelectorAll('.reveal').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight) el.classList.add('visible');
+    });
+  }, 300);
+});
+</script>
+</body>
+</html>
