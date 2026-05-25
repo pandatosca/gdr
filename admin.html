@@ -1,325 +1,540 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Dashboard admin Grand Depok Residence RT 09 RW 12.">
-  <title>Admin GDR RT 09 RW 12</title>
-  <link rel="icon" href="./assets/logo2.svg" type="image/svg+xml">
-  <link href="./dist/index.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GDR CMS Admin</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
-    body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body{
+      font-family: Inter, sans-serif;
+    }
+
+    .sidebar-link.active{
+      background:#166534;
+      color:white;
+    }
+
+    .sidebar-link{
+      transition:.2s;
+    }
+
+    .sidebar-link:hover{
+      background:#f1f5f9;
+    }
   </style>
 </head>
-<body class="min-h-screen bg-stone-50 text-slate-950 antialiased">
-  <main class="mx-auto grid min-h-screen w-full max-w-6xl content-start px-4 py-5 sm:px-6 lg:px-8">
-    <header class="flex items-center justify-between gap-4 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
-      <a href="./" class="flex min-w-0 items-center gap-3">
-        <img src="./assets/logo2.svg" alt="" class="h-11 w-11 shrink-0">
-        <div class="min-w-0">
-          <p class="truncate text-base font-extrabold">Grand Depok Residence</p>
-          <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Dashboard Admin</p>
-        </div>
-      </a>
-      <a href="./" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-extrabold text-slate-700 transition hover:bg-slate-50">Lihat Website</a>
-    </header>
 
-    <section id="login-view" class="mx-auto mt-10 w-full max-w-sm rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-xl sm:p-6">
-      <div class="text-center">
-        <img src="./assets/logo2.svg" alt="" class="mx-auto h-16 w-16">
-        <h1 class="mt-5 text-2xl font-extrabold">Masuk Admin</h1>
-        <p class="mt-2 text-sm font-semibold leading-6 text-slate-500">Gunakan password admin untuk membuka moderasi kabar warga.</p>
-      </div>
-      <form id="login-form" class="mt-6 grid gap-3">
-        <label class="sr-only" for="admin-password">Password</label>
-        <input id="admin-password" type="password" required autocomplete="current-password" class="rounded-2xl border border-slate-200 px-4 py-3.5 text-sm font-semibold outline-none transition focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="Password">
-        <button class="rounded-full bg-forest-700 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-forest-900/10 transition hover:bg-forest-800" type="submit">Masuk</button>
-      </form>
-      <p id="login-message" class="mt-4 hidden rounded-2xl bg-red-50 px-4 py-3 text-sm font-bold text-red-700"></p>
-    </section>
+<body class="bg-slate-100 text-slate-900">
 
-    <section id="dashboard-view" class="mt-6 hidden">
-      <div class="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
-        <div>
-          <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-forest-700">Admin</p>
-          <h1 class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">Moderasi kabar warga</h1>
-          <p class="mt-3 max-w-2xl text-sm font-semibold leading-7 text-slate-500">Posting baru masuk sebagai pending. Setelah disetujui, kabar langsung tampil di halaman website.</p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <button id="refresh-button" type="button" class="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-extrabold text-slate-700 shadow-sm transition hover:bg-slate-50">Refresh</button>
-          <button id="logout-button" type="button" class="rounded-full bg-slate-950 px-4 py-2.5 text-sm font-extrabold text-white shadow-sm transition hover:bg-slate-800">Keluar</button>
-        </div>
-      </div>
+<div id="loading-screen" class="fixed inset-0 z-50 grid place-items-center bg-white">
+  <div class="text-center">
+    <div class="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-slate-200 border-t-green-700"></div>
+    <p class="mt-4 text-sm font-bold text-slate-500">Loading CMS...</p>
+  </div>
+</div>
 
-      <div class="mt-6 grid gap-3 sm:grid-cols-3">
-        <button type="button" data-filter="pending" class="filter-button rounded-2xl border border-amber-200 bg-amber-50 p-4 text-left shadow-sm">
-          <span class="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-700">Pending</span>
-          <strong id="count-pending" class="mt-2 block text-3xl font-extrabold text-amber-800">0</strong>
-        </button>
-        <button type="button" data-filter="approved" class="filter-button rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-left shadow-sm">
-          <span class="text-xs font-extrabold uppercase tracking-[0.18em] text-emerald-700">Tayang</span>
-          <strong id="count-approved" class="mt-2 block text-3xl font-extrabold text-emerald-800">0</strong>
-        </button>
-        <button type="button" data-filter="rejected" class="filter-button rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm">
-          <span class="text-xs font-extrabold uppercase tracking-[0.18em] text-slate-500">Ditolak</span>
-          <strong id="count-rejected" class="mt-2 block text-3xl font-extrabold text-slate-800">0</strong>
-        </button>
-      </div>
+<div id="login-view" class="min-h-screen grid place-items-center p-6">
 
-      <div id="dashboard-message" class="mt-5 hidden rounded-2xl px-4 py-3 text-sm font-bold"></div>
-      <div id="post-list" class="mt-5 grid gap-4"></div>
+  <div class="w-full max-w-sm rounded-[32px] bg-white p-8 shadow-2xl">
 
-      <section class="mt-8 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+    <div class="text-center">
+      <img src="./assets/logo2.svg" class="mx-auto h-16 w-16">
+      <h1 class="mt-5 text-3xl font-black">
+        Admin CMS
+      </h1>
+      <p class="mt-2 text-sm text-slate-500">
+        Grand Depok Residence
+      </p>
+    </div>
+
+    <form id="login-form" class="mt-8 space-y-4">
+
+      <input
+        id="password"
+        type="password"
+        placeholder="Password"
+        class="w-full rounded-2xl border border-slate-200 px-5 py-4 font-semibold outline-none focus:border-green-700"
+      >
+
+      <button
+        type="submit"
+        class="w-full rounded-2xl bg-green-700 py-4 font-bold text-white transition hover:bg-green-800"
+      >
+        Masuk
+      </button>
+
+    </form>
+
+    <p id="login-error" class="mt-4 hidden rounded-2xl bg-red-50 p-4 text-sm font-bold text-red-700"></p>
+
+  </div>
+
+</div>
+
+<div id="cms-view" class="hidden min-h-screen">
+
+  <div class="flex">
+
+    <!-- SIDEBAR -->
+
+    <aside class="hidden w-[280px] shrink-0 border-r border-slate-200 bg-white lg:block">
+
+      <div class="border-b border-slate-200 p-6">
+        <div class="flex items-center gap-3">
+          <img src="./assets/logo2.svg" class="h-12 w-12">
           <div>
-            <h2 class="text-xl font-extrabold">Ganti password</h2>
-            <p class="mt-2 text-sm font-semibold leading-6 text-slate-500">Perubahan berlaku untuk akun admin yang sedang login.</p>
+            <h2 class="font-black">GDR CMS</h2>
+            <p class="text-xs text-slate-400">
+              Admin Panel
+            </p>
           </div>
-          <form id="password-form" class="grid gap-3 sm:min-w-[360px] sm:grid-cols-[1fr_auto]">
-            <label class="sr-only" for="new-password">Password baru</label>
-            <input id="new-password" type="password" minlength="6" class="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold outline-none transition focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="Password baru">
-            <button class="rounded-full bg-forest-700 px-5 py-3 text-sm font-extrabold text-white" type="submit">Simpan</button>
-          </form>
         </div>
-      </section>
-    </section>
-  </main>
+      </div>
 
-  <script>
-    const SUPABASE_URL = "https://gyofijyebgtxzbtwlwbw.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo";
-    const ADMIN_EMAIL = "pixelcase@gmail.com";
+      <nav class="space-y-2 p-4">
 
-    let supabaseClient = null;
-    let posts = [];
-    let activeFilter = "pending";
+        <button class="sidebar-link active w-full rounded-2xl px-4 py-3 text-left font-bold">
+          Dashboard
+        </button>
 
-    const categoryClasses = {
-      Pengumuman: "bg-amber-100 text-amber-800",
-      Kegiatan: "bg-forest-100 text-forest-800",
-      DKM: "bg-sky-100 text-sky-800",
-      Berita: "bg-slate-100 text-slate-700"
-    };
+        <button class="sidebar-link w-full rounded-2xl px-4 py-3 text-left font-bold">
+          Berita Warga
+        </button>
 
-    function client() {
-      if (!window.supabase) return null;
-      if (!supabaseClient) supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      return supabaseClient;
-    }
+        <button class="sidebar-link w-full rounded-2xl px-4 py-3 text-left font-bold">
+          Hero Section
+        </button>
 
-    function showLogin() {
-      document.getElementById("login-view").classList.remove("hidden");
-      document.getElementById("dashboard-view").classList.add("hidden");
-    }
+        <button class="sidebar-link w-full rounded-2xl px-4 py-3 text-left font-bold">
+          Tentang GDR
+        </button>
 
-    function showDashboard() {
-      document.getElementById("login-view").classList.add("hidden");
-      document.getElementById("dashboard-view").classList.remove("hidden");
-    }
+        <button class="sidebar-link w-full rounded-2xl px-4 py-3 text-left font-bold">
+          Fasilitas
+        </button>
 
-    function showMessage(id, text, type = "ok") {
-      const el = document.getElementById(id);
-      el.textContent = text;
-      el.className = type === "error"
-        ? "mt-5 rounded-2xl bg-red-50 px-4 py-3 text-sm font-bold text-red-700"
-        : "mt-5 rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-700";
-      el.classList.remove("hidden");
-      clearTimeout(window.gdrAdminMessageTimer);
-      window.gdrAdminMessageTimer = setTimeout(() => el.classList.add("hidden"), 3000);
-    }
+        <button class="sidebar-link w-full rounded-2xl px-4 py-3 text-left font-bold">
+          Kegiatan
+        </button>
 
-    function formatDate(value) {
-      return new Date(value).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
-    }
+        <button class="sidebar-link w-full rounded-2xl px-4 py-3 text-left font-bold">
+          Mushola
+        </button>
 
-    function escapeHtml(value) {
-      return String(value || "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;");
-    }
+        <button class="sidebar-link w-full rounded-2xl px-4 py-3 text-left font-bold">
+          Kontak
+        </button>
 
-    async function loadPosts() {
-      const api = client();
-      if (!api) {
-        showMessage("dashboard-message", "Supabase belum tersedia. Cek koneksi internet atau CDN.", "error");
-        return;
-      }
+      </nav>
 
-      const { data, error } = await api
-        .from("news_posts")
-        .select("*")
-        .order("created_at", { ascending: false });
+      <div class="absolute bottom-0 w-[280px] border-t border-slate-200 p-4">
 
-      if (error) {
-        showMessage("dashboard-message", error.message, "error");
-        return;
-      }
+        <button
+          id="logout-button"
+          class="w-full rounded-2xl bg-slate-900 px-4 py-3 font-bold text-white"
+        >
+          Logout
+        </button>
 
-      posts = data || [];
-      renderDashboard();
-    }
+      </div>
 
-    function renderDashboard() {
-      const counts = {
-        pending: posts.filter((item) => item.status === "pending").length,
-        approved: posts.filter((item) => item.status === "approved").length,
-        rejected: posts.filter((item) => item.status === "rejected").length
-      };
+    </aside>
 
-      document.getElementById("count-pending").textContent = counts.pending;
-      document.getElementById("count-approved").textContent = counts.approved;
-      document.getElementById("count-rejected").textContent = counts.rejected;
+    <!-- CONTENT -->
 
-      document.querySelectorAll(".filter-button").forEach((button) => {
-        button.classList.toggle("ring-4", button.dataset.filter === activeFilter);
-        button.classList.toggle("ring-forest-100", button.dataset.filter === activeFilter);
-      });
+    <main class="min-h-screen flex-1 p-5 lg:p-8">
 
-      const visiblePosts = posts.filter((item) => item.status === activeFilter);
-      const list = document.getElementById("post-list");
-      if (!visiblePosts.length) {
-        list.innerHTML = `
-          <div class="rounded-3xl border border-dashed border-slate-300 bg-white p-8 text-center shadow-sm">
-            <p class="text-lg font-extrabold">Belum ada kabar ${activeFilter}.</p>
-            <p class="mt-2 text-sm font-semibold text-slate-500">Data akan muncul otomatis setelah warga mengirim kabar.</p>
+      <!-- TOPBAR -->
+
+      <div class="flex flex-col gap-4 rounded-[32px] bg-white p-6 shadow-sm lg:flex-row lg:items-center lg:justify-between">
+
+        <div>
+          <p class="text-sm font-black uppercase tracking-[0.2em] text-green-700">
+            Dashboard
+          </p>
+
+          <h1 class="mt-2 text-3xl font-black">
+            GDR CMS Admin
+          </h1>
+
+          <p class="mt-2 text-sm text-slate-500">
+            Kelola website Grand Depok Residence secara realtime.
+          </p>
+        </div>
+
+        <a
+          href="/"
+          class="rounded-2xl border border-slate-200 px-5 py-3 text-center font-bold"
+        >
+          Lihat Website
+        </a>
+
+      </div>
+
+      <!-- STATS -->
+
+      <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+
+        <div class="rounded-[28px] bg-white p-6 shadow-sm">
+          <p class="text-sm font-bold text-slate-400">
+            Pending
+          </p>
+          <h2 id="pending-count" class="mt-3 text-4xl font-black">
+            0
+          </h2>
+        </div>
+
+        <div class="rounded-[28px] bg-white p-6 shadow-sm">
+          <p class="text-sm font-bold text-slate-400">
+            Approved
+          </p>
+          <h2 id="approved-count" class="mt-3 text-4xl font-black">
+            0
+          </h2>
+        </div>
+
+        <div class="rounded-[28px] bg-white p-6 shadow-sm">
+          <p class="text-sm font-bold text-slate-400">
+            Rejected
+          </p>
+          <h2 id="rejected-count" class="mt-3 text-4xl font-black">
+            0
+          </h2>
+        </div>
+
+        <div class="rounded-[28px] bg-white p-6 shadow-sm">
+          <p class="text-sm font-bold text-slate-400">
+            Total Posts
+          </p>
+          <h2 id="total-count" class="mt-3 text-4xl font-black">
+            0
+          </h2>
+        </div>
+
+      </div>
+
+      <!-- POSTS -->
+
+      <section class="mt-6 rounded-[32px] bg-white p-6 shadow-sm">
+
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
+          <div>
+            <h2 class="text-2xl font-black">
+              Berita Warga
+            </h2>
+
+            <p class="mt-1 text-sm text-slate-500">
+              Moderasi posting warga realtime.
+            </p>
           </div>
-        `;
-        return;
-      }
 
-      list.innerHTML = visiblePosts.map((item) => {
-        const badge = categoryClasses[item.category] || categoryClasses.Berita;
-        return `
-          <article class="grid gap-4 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm lg:grid-cols-[220px_1fr]">
-            ${item.image_url
-              ? `<img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.title)}" class="h-52 w-full rounded-2xl object-cover lg:h-full">`
-              : `<div class="grid h-52 place-items-center rounded-2xl bg-stone-100 text-sm font-bold text-slate-400 lg:h-full">Tanpa foto</div>`}
-            <div class="flex min-w-0 flex-col">
-              <div class="flex flex-wrap items-center gap-2">
-                <span class="rounded-full px-3 py-1 text-xs font-extrabold ${badge}">${escapeHtml(item.category)}</span>
-                <time class="text-xs font-bold text-slate-400">${formatDate(item.created_at)}</time>
-              </div>
-              <h2 class="mt-3 text-xl font-extrabold leading-snug">${escapeHtml(item.title)}</h2>
-              <p class="mt-3 whitespace-pre-line text-sm leading-7 text-slate-600">${escapeHtml(item.content)}</p>
-              <p class="mt-4 text-xs font-extrabold uppercase tracking-[0.18em] text-slate-400">${escapeHtml(item.author)}</p>
-              <div class="mt-5 flex flex-wrap gap-2">
-                ${item.status !== "approved" ? `<button type="button" onclick="updatePost('${item.id}', 'approved')" class="rounded-full bg-forest-700 px-4 py-2 text-sm font-extrabold text-white">Approve</button>` : ""}
-                ${item.status !== "rejected" ? `<button type="button" onclick="updatePost('${item.id}', 'rejected')" class="rounded-full border border-red-200 px-4 py-2 text-sm font-extrabold text-red-700">Reject</button>` : ""}
-                <button type="button" onclick="deletePost('${item.id}')" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-extrabold text-slate-700">Hapus</button>
-              </div>
+          <button
+            id="refresh-button"
+            class="rounded-2xl border border-slate-200 px-5 py-3 font-bold"
+          >
+            Refresh
+          </button>
+
+        </div>
+
+        <div
+          id="posts-container"
+          class="mt-6 grid gap-5"
+        ></div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+</div>
+
+<script>
+
+const SUPABASE_URL = "https://gyofijyebgtxzbtwlwbw.supabase.co";
+
+const SUPABASE_ANON_KEY = "YOUR_ANON_KEY";
+
+const ADMIN_EMAIL = "pixelcase@gmail.com";
+
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+const loadingScreen = document.getElementById("loading-screen");
+const loginView = document.getElementById("login-view");
+const cmsView = document.getElementById("cms-view");
+
+const postsContainer = document.getElementById("posts-container");
+
+async function checkSession(){
+
+  const {
+    data:{session}
+  } = await supabaseClient.auth.getSession();
+
+  if(
+    session &&
+    session.user.email === ADMIN_EMAIL
+  ){
+    showCMS();
+    loadPosts();
+  }else{
+    showLogin();
+  }
+
+  loadingScreen.classList.add("hidden");
+}
+
+function showLogin(){
+  loginView.classList.remove("hidden");
+  cmsView.classList.add("hidden");
+}
+
+function showCMS(){
+  loginView.classList.add("hidden");
+  cmsView.classList.remove("hidden");
+}
+
+document
+.getElementById("login-form")
+.addEventListener("submit", async(e)=>{
+
+  e.preventDefault();
+
+  const password =
+    document.getElementById("password").value;
+
+  const loginError =
+    document.getElementById("login-error");
+
+  loginError.classList.add("hidden");
+
+  const {data,error} =
+    await supabaseClient.auth.signInWithPassword({
+      email:ADMIN_EMAIL,
+      password
+    });
+
+  if(error || !data.session){
+
+    loginError.textContent =
+      "Password salah.";
+
+    loginError.classList.remove("hidden");
+
+    return;
+  }
+
+  showCMS();
+
+  loadPosts();
+
+});
+
+async function loadPosts(){
+
+  const {data,error} =
+    await supabaseClient
+      .from("news_posts")
+      .select("*")
+      .order("created_at",{ascending:false});
+
+  if(error){
+    postsContainer.innerHTML = `
+      <div class="rounded-3xl bg-red-50 p-5 text-red-700 font-bold">
+        ${error.message}
+      </div>
+    `;
+    return;
+  }
+
+  renderPosts(data || []);
+
+}
+
+function renderPosts(posts){
+
+  document.getElementById("pending-count").textContent =
+    posts.filter(p=>p.status==="pending").length;
+
+  document.getElementById("approved-count").textContent =
+    posts.filter(p=>p.status==="approved").length;
+
+  document.getElementById("rejected-count").textContent =
+    posts.filter(p=>p.status==="rejected").length;
+
+  document.getElementById("total-count").textContent =
+    posts.length;
+
+  if(!posts.length){
+
+    postsContainer.innerHTML = `
+      <div class="rounded-3xl border border-dashed border-slate-300 p-10 text-center">
+        <h3 class="text-2xl font-black">
+          Belum ada posting.
+        </h3>
+      </div>
+    `;
+
+    return;
+  }
+
+  postsContainer.innerHTML =
+    posts.map(post=>`
+
+      <article class="grid gap-5 rounded-[28px] border border-slate-200 p-5 lg:grid-cols-[220px_1fr]">
+
+        ${
+          post.image_url
+          ? `
+            <img
+              src="${post.image_url}"
+              class="h-52 w-full rounded-3xl object-cover"
+            >
+          `
+          : `
+            <div class="grid h-52 place-items-center rounded-3xl bg-slate-100 text-sm font-bold text-slate-400">
+              Tanpa Foto
             </div>
-          </article>
-        `;
-      }).join("");
-    }
+          `
+        }
 
-    async function updatePost(id, status) {
-      const api = client();
-      const { error } = await api
-        .from("news_posts")
-        .update({ status, updated_at: new Date().toISOString() })
-        .eq("id", id);
-      if (error) {
-        showMessage("dashboard-message", error.message, "error");
-        return;
-      }
-      showMessage("dashboard-message", status === "approved" ? "Kabar sudah tayang." : "Kabar ditolak.");
-      await loadPosts();
-    }
+        <div>
 
-    async function deletePost(id) {
-      if (!confirm("Hapus kabar ini?")) return;
-      const api = client();
-      const { error } = await api.from("news_posts").delete().eq("id", id);
-      if (error) {
-        showMessage("dashboard-message", error.message, "error");
-        return;
-      }
-      showMessage("dashboard-message", "Kabar dihapus.");
-      await loadPosts();
-    }
+          <div class="flex flex-wrap items-center gap-2">
 
-    async function init() {
-      const api = client();
-      if (!api) {
-        document.getElementById("login-message").textContent = "Supabase belum tersedia. Cek koneksi internet.";
-        document.getElementById("login-message").classList.remove("hidden");
-        return;
-      }
+            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-black">
+              ${post.category || "Berita"}
+            </span>
 
-      const { data } = await api.auth.getSession();
-      if (data.session?.user?.email?.toLowerCase() === ADMIN_EMAIL) {
-        showDashboard();
-        await loadPosts();
-      } else {
-        showLogin();
-      }
-    }
+            <span class="text-xs font-bold text-slate-400">
+              ${new Date(post.created_at).toLocaleDateString("id-ID")}
+            </span>
 
-    document.getElementById("login-form").addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const api = client();
-      const message = document.getElementById("login-message");
-      message.classList.add("hidden");
-      if (!api) {
-        message.textContent = "Supabase belum tersedia. Cek koneksi internet.";
-        message.classList.remove("hidden");
-        return;
-      }
+          </div>
 
-      const { data, error } = await api.auth.signInWithPassword({
-        email: ADMIN_EMAIL,
-        password: document.getElementById("admin-password").value
-      });
+          <h3 class="mt-4 text-2xl font-black">
+            ${post.title}
+          </h3>
 
-      if (error || !data.session) {
-        message.textContent = "Password salah atau akun admin belum aktif.";
-        message.classList.remove("hidden");
-        return;
-      }
+          <p class="mt-3 whitespace-pre-line text-sm leading-7 text-slate-600">
+            ${post.content}
+          </p>
 
-      showDashboard();
-      await loadPosts();
-    });
+          <div class="mt-5 flex flex-wrap gap-2">
 
-    document.getElementById("logout-button").addEventListener("click", async () => {
-      const api = client();
-      if (api) await api.auth.signOut();
-      posts = [];
+            ${
+              post.status !== "approved"
+              ? `
+                <button
+                  onclick="updatePost('${post.id}','approved')"
+                  class="rounded-2xl bg-green-700 px-5 py-3 text-sm font-black text-white"
+                >
+                  Approve
+                </button>
+              `
+              : ""
+            }
+
+            ${
+              post.status !== "rejected"
+              ? `
+                <button
+                  onclick="updatePost('${post.id}','rejected')"
+                  class="rounded-2xl border border-red-200 px-5 py-3 text-sm font-black text-red-700"
+                >
+                  Reject
+                </button>
+              `
+              : ""
+            }
+
+            <button
+              onclick="deletePost('${post.id}')"
+              class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-black"
+            >
+              Hapus
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    `).join("");
+
+}
+
+async function updatePost(id,status){
+
+  await supabaseClient
+    .from("news_posts")
+    .update({
+      status
+    })
+    .eq("id",id);
+
+  loadPosts();
+
+}
+
+async function deletePost(id){
+
+  const confirmDelete =
+    confirm("Hapus posting ini?");
+
+  if(!confirmDelete) return;
+
+  await supabaseClient
+    .from("news_posts")
+    .delete()
+    .eq("id",id);
+
+  loadPosts();
+
+}
+
+document
+.getElementById("logout-button")
+.addEventListener("click",async()=>{
+
+  await supabaseClient.auth.signOut();
+
+  location.reload();
+
+});
+
+document
+.getElementById("refresh-button")
+.addEventListener("click",loadPosts);
+
+supabaseClient.auth.onAuthStateChange(
+  async(event,session)=>{
+
+    if(
+      session &&
+      session.user.email === ADMIN_EMAIL
+    ){
+      showCMS();
+    }else{
       showLogin();
-    });
+    }
 
-    document.getElementById("refresh-button").addEventListener("click", loadPosts);
+  }
+);
 
-    document.querySelectorAll(".filter-button").forEach((button) => {
-      button.addEventListener("click", () => {
-        activeFilter = button.dataset.filter;
-        renderDashboard();
-      });
-    });
+checkSession();
 
-    document.getElementById("password-form").addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const input = document.getElementById("new-password");
-      if (!input.value) return;
-      const api = client();
-      if (!api) {
-        showMessage("dashboard-message", "Supabase belum tersedia. Cek koneksi internet.", "error");
-        return;
-      }
-      const { error } = await api.auth.updateUser({ password: input.value });
-      if (error) {
-        showMessage("dashboard-message", error.message, "error");
-        return;
-      }
-      input.value = "";
-      showMessage("dashboard-message", "Password admin berhasil diganti.");
-    });
+</script>
 
-    init();
-  </script>
 </body>
 </html>
