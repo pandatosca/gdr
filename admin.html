@@ -127,7 +127,7 @@ body{
 
 <!-- SIDEBAR -->
 
-<aside class="hidden w-[280px] shrink-0 border-r border-slate-200 bg-white lg:block">
+<aside class="hidden min-h-screen w-[280px] shrink-0 border-r border-slate-200 bg-white lg:flex lg:flex-col">
 
   <div class="border-b border-slate-200 p-6">
 
@@ -154,7 +154,7 @@ body{
 
   </div>
 
-  <nav class="space-y-2 p-4">
+  <nav class="flex-1 space-y-2 p-4">
 
     <button class="sidebar-btn active w-full rounded-2xl px-4 py-3 text-left font-bold" data-view="dashboard">
       Dashboard
@@ -182,7 +182,7 @@ body{
 
   </nav>
 
-  <div class="absolute bottom-0 w-[280px] border-t border-slate-200 p-4">
+  <div class="border-t border-slate-200 p-4">
 
     <button
       id="logout-button"
