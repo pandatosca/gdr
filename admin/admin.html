@@ -262,7 +262,21 @@
 
 </section>
 
-<script type="module" src="./admin.js"></script>
+<script>
+
+window.addEventListener("DOMContentLoaded",()=>{
+
+  document
+  .getElementById("loading-screen")
+  ?.classList.add("hidden");
+
+  document
+  .getElementById("login-view")
+  ?.classList.remove("hidden");
+
+});
+
+</script>
 
 </body>
 </html>
