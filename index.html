@@ -7,6 +7,7 @@
   <title>Grand Depok Residence RT 09 RW 12</title>
   <link rel="icon" href="./assets/logo2.svg" type="image/svg+xml">
   <link href="./dist/index.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     .glass-nav { backdrop-filter: blur(18px); }
@@ -280,7 +281,11 @@
       activities: "gdr-activities-v4",
       admin: "gdr-admin-v4"
     };
-    const ADMIN_PASS = "hik4rikU";
+    const SUPABASE_URL = "https://gyofijyebgtxzbtwlwbw.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo";
+    const MEDIA_BUCKET = "gdr-media";
+    let supabaseClient = null;
+    let currentUser = null;
     let currentCategory = "semua";
 
     const defaults = {
@@ -349,6 +354,41 @@
       Berita: "bg-slate-100 text-slate-700"
     };
 
+    const appState = {
+      settings: structuredClone(defaults.settings),
+      activities: structuredClone(defaults.activities),
+      news: structuredClone(defaults.news),
+      remoteReady: false
+    };
+
+    function initSupabaseClient() {
+      if (!window.supabase || supabaseClient) return supabaseClient;
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      return supabaseClient;
+    }
+
+    function rowToNews(row) {
+      return {
+        id: row.id,
+        title: row.title,
+        content: row.content,
+        category: row.category,
+        author: row.author,
+        date: row.created_at || row.updated_at || new Date().toISOString(),
+        status: row.status,
+        image: row.image_url || ""
+      };
+    }
+
+    function rowToActivity(row) {
+      return {
+        id: row.id,
+        label: row.label,
+        title: row.title,
+        desc: row.description
+      };
+    }
+
     function readStore(key, fallback) {
       try {
         const stored = localStorage.getItem(key);
@@ -364,8 +404,13 @@
       localStorage.setItem(key, JSON.stringify(value));
     }
 
-    function getSettings() {
-      const stored = readStore(STORAGE.settings, defaults.settings);
+    function loadLocalState() {
+      appState.settings = mergeSettings(readStore(STORAGE.settings, defaults.settings));
+      appState.activities = readStore(STORAGE.activities, defaults.activities);
+      appState.news = readStore(STORAGE.news, defaults.news);
+    }
+
+    function mergeSettings(stored) {
       const merged = {
         ...defaults.settings,
         ...stored,
@@ -374,12 +419,63 @@
       };
       return merged;
     }
-    function saveSettings(value) { writeStore(STORAGE.settings, value); }
-    function getNews() { return readStore(STORAGE.news, defaults.news); }
-    function saveNews(value) { writeStore(STORAGE.news, value); }
-    function getActivities() { return readStore(STORAGE.activities, defaults.activities); }
-    function saveActivities(value) { writeStore(STORAGE.activities, value); }
-    function isAdmin() { return localStorage.getItem(STORAGE.admin) === "true"; }
+
+    function getSettings() { return mergeSettings(appState.settings); }
+    function getNews() { return appState.news; }
+    function getActivities() { return appState.activities; }
+    function isAdmin() { return Boolean(currentUser); }
+
+    async function loadRemoteData() {
+      const client = initSupabaseClient();
+      if (!client) return false;
+      const { data: sessionData } = await client.auth.getSession();
+      currentUser = sessionData.session?.user || null;
+
+      const [{ data: settingsRow }, { data: activitiesRows }, { data: newsRows }] = await Promise.all([
+        client.from("site_settings").select("data").eq("id", "default").maybeSingle(),
+        client.from("activities").select("*").order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
+        client.from("news_posts").select("*").order("created_at", { ascending: false })
+      ]);
+
+      if (settingsRow?.data && Object.keys(settingsRow.data).length) {
+        appState.settings = mergeSettings(settingsRow.data);
+        writeStore(STORAGE.settings, appState.settings);
+      }
+      if (activitiesRows?.length) {
+        appState.activities = activitiesRows.map(rowToActivity);
+        writeStore(STORAGE.activities, appState.activities);
+      }
+      if (newsRows?.length) {
+        appState.news = newsRows.map(rowToNews);
+        writeStore(STORAGE.news, appState.news);
+      }
+      appState.remoteReady = true;
+      return true;
+    }
+
+    async function saveSettings(value) {
+      appState.settings = mergeSettings(value);
+      writeStore(STORAGE.settings, appState.settings);
+      const client = initSupabaseClient();
+      if (client && isAdmin()) {
+        const { error } = await client.from("site_settings").upsert({
+          id: "default",
+          data: appState.settings,
+          updated_at: new Date().toISOString()
+        });
+        if (error) throw error;
+      }
+    }
+
+    async function saveActivities(value) {
+      appState.activities = value;
+      writeStore(STORAGE.activities, value);
+    }
+
+    async function saveNews(value) {
+      appState.news = value;
+      writeStore(STORAGE.news, value);
+    }
 
     function formatDate(value) {
       return new Date(value).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
@@ -401,6 +497,21 @@
         reader.onerror = reject;
         reader.readAsDataURL(file);
       });
+    }
+
+    async function uploadMedia(file, folder) {
+      if (!file) return "";
+      const client = initSupabaseClient();
+      if (!client) return fileToDataUrl(file);
+      const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, "-");
+      const path = `${folder}/${Date.now()}-${safeName}`;
+      const { error } = await client.storage.from(MEDIA_BUCKET).upload(path, file, {
+        cacheControl: "3600",
+        upsert: true
+      });
+      if (error) throw error;
+      const { data } = client.storage.from(MEDIA_BUCKET).getPublicUrl(path);
+      return data.publicUrl;
     }
 
     function setBg(id, image) {
@@ -475,7 +586,7 @@
         const excerpt = item.content.length > 118 ? `${item.content.slice(0, 118)}...` : item.content;
         return `
           <article class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
-            ${item.image ? `<button type="button" onclick="openDetailDialog(${item.id})" class="image-cover block h-48 w-full" style="background-image:url('${item.image}')" aria-label="Buka ${item.title}"></button>` : ""}
+            ${item.image ? `<button type="button" onclick='openDetailDialog(${JSON.stringify(item.id)})' class="image-cover block h-48 w-full" style="background-image:url('${item.image}')" aria-label="Buka ${item.title}"></button>` : ""}
             <div class="p-6">
               <div class="flex flex-wrap items-center justify-between gap-3">
                 <span class="rounded-full px-3 py-1 text-xs font-extrabold ${badge}">${item.category}</span>
@@ -485,7 +596,7 @@
               <p class="mt-3 text-sm leading-7 text-slate-600">${excerpt}</p>
               <div class="mt-6 flex items-center justify-between gap-4 border-t border-slate-100 pt-4">
                 <span class="text-sm font-bold text-slate-500">${item.author}</span>
-                <button type="button" onclick="openDetailDialog(${item.id})" class="text-sm font-extrabold text-forest-700 hover:text-forest-900">Baca</button>
+                <button type="button" onclick='openDetailDialog(${JSON.stringify(item.id)})' class="text-sm font-extrabold text-forest-700 hover:text-forest-900">Baca</button>
               </div>
             </div>
           </article>
@@ -568,7 +679,7 @@
             <div>
               <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-forest-700">Panel Admin</p>
               <h2 class="mt-2 text-2xl font-extrabold">Moderasi dan Konten Website</h2>
-              <p class="mt-2 text-sm font-semibold text-slate-500">Mode statis: perubahan tersimpan di browser admin. Untuk global lintas perangkat perlu backend/CMS.</p>
+              <p class="mt-2 text-sm font-semibold text-slate-500">Terhubung ke Supabase. Perubahan tersimpan live dan tampil untuk semua pengunjung.</p>
             </div>
             <button type="button" onclick="closeDialog('admin-dialog')" class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Tutup"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
           </div>
@@ -580,9 +691,10 @@
     function adminLoginContent() {
       return `
         <form id="admin-login-form" class="mt-8 max-w-md rounded-2xl border border-slate-200 bg-stone-50 p-5">
-          <label class="grid gap-2 text-sm font-bold text-slate-700">Passcode admin<input id="admin-pass" type="password" class="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="Masukkan passcode"></label>
+          <label class="grid gap-2 text-sm font-bold text-slate-700">Email admin<input id="admin-email" type="email" required class="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="admin@email.com"></label>
+          <label class="mt-4 grid gap-2 text-sm font-bold text-slate-700">Password<input id="admin-pass" type="password" required class="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="Password Supabase Auth"></label>
           <button class="mt-4 rounded-full bg-forest-700 px-6 py-3 text-sm font-extrabold text-white" type="submit">Masuk Admin</button>
-          <p class="mt-4 text-xs font-semibold leading-6 text-slate-500">Akses admin tersembunyi di ikon lock footer. Untuk keamanan produksi, gunakan backend/database.</p>
+          <p class="mt-4 text-xs font-semibold leading-6 text-slate-500">Buat user admin di Supabase Authentication, lalu login dengan email dan password tersebut.</p>
         </form>
       `;
     }
@@ -609,8 +721,8 @@
             <p class="mt-2 text-sm leading-6 text-slate-600">${item.content}</p>
             <p class="mt-2 text-xs font-bold text-slate-400">${item.author} - ${formatDate(item.date)}</p>
             <div class="mt-4 flex flex-wrap gap-2">
-              <button type="button" onclick="approvePost(${item.id})" class="rounded-full bg-forest-700 px-4 py-2 text-sm font-extrabold text-white">Approve</button>
-              <button type="button" onclick="rejectPost(${item.id})" class="rounded-full border border-red-200 px-4 py-2 text-sm font-extrabold text-red-700">Reject</button>
+              <button type="button" onclick='approvePost(${JSON.stringify(item.id)})' class="rounded-full bg-forest-700 px-4 py-2 text-sm font-extrabold text-white">Approve</button>
+              <button type="button" onclick='rejectPost(${JSON.stringify(item.id)})' class="rounded-full border border-red-200 px-4 py-2 text-sm font-extrabold text-red-700">Reject</button>
             </div>
           </div>
         </article>
@@ -717,36 +829,67 @@
         <div class="mt-5 grid gap-3">${activities.map((item) => `
           <div class="flex flex-col gap-3 rounded-2xl border border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div><p class="text-xs font-extrabold uppercase tracking-[0.18em] text-forest-700">${item.label}</p><p class="mt-1 font-extrabold">${item.title}</p><p class="text-sm text-slate-500">${item.desc}</p></div>
-            <button type="button" onclick="deleteActivity(${item.id})" class="rounded-full border border-red-200 px-4 py-2 text-sm font-extrabold text-red-700">Hapus</button>
+            <button type="button" onclick='deleteActivity(${JSON.stringify(item.id)})' class="rounded-full border border-red-200 px-4 py-2 text-sm font-extrabold text-red-700">Hapus</button>
           </div>
         `).join("")}</div>
       `;
     }
 
-    function approvePost(id) {
-      const news = getNews();
-      const item = news.find((entry) => entry.id === id);
-      if (item) item.status = "approved";
-      saveNews(news);
+    async function approvePost(id) {
+      const client = initSupabaseClient();
+      if (client && isAdmin()) {
+        const { error } = await client.from("news_posts").update({
+          status: "approved",
+          updated_at: new Date().toISOString()
+        }).eq("id", id);
+        if (error) return showToast(error.message);
+        await loadRemoteData();
+      } else {
+        const news = getNews();
+        const item = news.find((entry) => entry.id === id);
+        if (item) item.status = "approved";
+        await saveNews(news);
+      }
       renderNews();
       renderAdminDialog("moderasi");
       showToast("Posting sudah di-approve dan tampil.");
     }
 
-    function rejectPost(id) {
-      saveNews(getNews().filter((entry) => entry.id !== id));
+    async function rejectPost(id) {
+      const client = initSupabaseClient();
+      if (client && isAdmin()) {
+        const { error } = await client.from("news_posts").update({
+          status: "rejected",
+          updated_at: new Date().toISOString()
+        }).eq("id", id);
+        if (error) return showToast(error.message);
+        await loadRemoteData();
+      } else {
+        await saveNews(getNews().filter((entry) => entry.id !== id));
+      }
       renderAdminDialog("moderasi");
       showToast("Posting ditolak.");
     }
 
-    function adminLogout() {
-      localStorage.removeItem(STORAGE.admin);
+    async function adminLogout() {
+      const client = initSupabaseClient();
+      if (client) await client.auth.signOut();
+      currentUser = null;
+      await loadRemoteData();
+      applySettings();
       renderAdminDialog();
       showToast("Admin keluar.");
     }
 
-    function deleteActivity(id) {
-      saveActivities(getActivities().filter((item) => item.id !== id));
+    async function deleteActivity(id) {
+      const client = initSupabaseClient();
+      if (client && isAdmin()) {
+        const { error } = await client.from("activities").delete().eq("id", id);
+        if (error) return showToast(error.message);
+        await loadRemoteData();
+      } else {
+        await saveActivities(getActivities().filter((item) => item.id !== id));
+      }
       renderActivities();
       renderAdminDialog("kegiatan");
     }
@@ -761,32 +904,52 @@
     document.addEventListener("submit", async (event) => {
       if (event.target.id === "post-form") {
         event.preventDefault();
-        const image = await fileToDataUrl(document.getElementById("post-image").files[0]);
-        const news = getNews();
-        news.push({
-          id: Date.now(),
-          title: document.getElementById("post-title").value.trim(),
-          content: document.getElementById("post-content").value.trim(),
-          category: document.getElementById("post-category").value,
-          author: document.getElementById("post-author").value.trim(),
-          date: new Date().toISOString().slice(0, 10),
-          status: "pending",
-          image
-        });
-        saveNews(news);
-        event.target.reset();
-        closeDialog("post-dialog");
-        showToast("Kabar terkirim. Menunggu admin approve.");
+        try {
+          const file = document.getElementById("post-image").files[0];
+          const image = await uploadMedia(file, "posts");
+          const payload = {
+            title: document.getElementById("post-title").value.trim(),
+            content: document.getElementById("post-content").value.trim(),
+            category: document.getElementById("post-category").value,
+            author: document.getElementById("post-author").value.trim(),
+            status: "pending"
+          };
+          const client = initSupabaseClient();
+          if (client) {
+            const { error } = await client.from("news_posts").insert({
+              ...payload,
+              image_url: image || null
+            });
+            if (error) throw error;
+          } else {
+            const news = getNews();
+            news.push({ ...payload, id: Date.now(), date: new Date().toISOString().slice(0, 10), image });
+            await saveNews(news);
+          }
+          event.target.reset();
+          closeDialog("post-dialog");
+          showToast("Kabar terkirim. Menunggu pengurus approve.");
+        } catch (error) {
+          showToast(error.message || "Gagal mengirim kabar.");
+        }
       }
 
       if (event.target.id === "admin-login-form") {
         event.preventDefault();
-        if (document.getElementById("admin-pass").value === ADMIN_PASS) {
-          localStorage.setItem(STORAGE.admin, "true");
+        const client = initSupabaseClient();
+        if (!client) return showToast("Supabase client belum tersedia.");
+        const { data, error } = await client.auth.signInWithPassword({
+          email: document.getElementById("admin-email").value.trim(),
+          password: document.getElementById("admin-pass").value
+        });
+        if (!error && data.session) {
+          currentUser = data.session.user;
+          await loadRemoteData();
+          applySettings();
           renderAdminDialog("moderasi");
           showToast("Masuk admin berhasil.");
         } else {
-          showToast("Passcode admin salah.");
+          showToast(error?.message || "Login admin gagal.");
         }
       }
 
@@ -796,7 +959,8 @@
         const inputs = [...event.target.querySelectorAll("input[type='file']")];
         for (const input of inputs) {
           if (!input.files[0]) continue;
-          const value = await fileToDataUrl(input.files[0]);
+          const folder = key.startsWith("facility-") ? "site/facilities" : "site";
+          const value = await uploadMedia(input.files[0], folder);
           const key = input.dataset.photoKey;
           if (key.startsWith("facility-")) {
             const id = key.replace("facility-", "");
@@ -806,7 +970,7 @@
             settings[key] = value;
           }
         }
-        saveSettings(settings);
+        await saveSettings(settings);
         applySettings();
         renderAdminDialog("foto");
         showToast("Foto website disimpan.");
@@ -819,7 +983,7 @@
         inputs.forEach((input) => {
           settings.copy[input.dataset.copyInput] = input.value.trim();
         });
-        saveSettings(settings);
+        await saveSettings(settings);
         applySettings();
         renderAdminDialog("teks");
         showToast("Teks halaman disimpan.");
@@ -827,14 +991,26 @@
 
       if (event.target.id === "admin-activity-form") {
         event.preventDefault();
-        const activities = getActivities();
-        activities.push({
-          id: Date.now(),
+        const item = {
           label: document.getElementById("activity-label").value.trim(),
           title: document.getElementById("activity-title").value.trim(),
           desc: document.getElementById("activity-desc").value.trim()
-        });
-        saveActivities(activities);
+        };
+        const client = initSupabaseClient();
+        if (client && isAdmin()) {
+          const { error } = await client.from("activities").insert({
+            label: item.label,
+            title: item.title,
+            description: item.desc,
+            sort_order: getActivities().length + 1
+          });
+          if (error) return showToast(error.message);
+          await loadRemoteData();
+        } else {
+          const activities = getActivities();
+          activities.push({ ...item, id: Date.now() });
+          await saveActivities(activities);
+        }
         renderActivities();
         renderAdminDialog("kegiatan");
         showToast("Kegiatan ditambahkan.");
@@ -898,7 +1074,18 @@
       menuButton.classList.toggle("text-white", !isScrolled);
     }, { passive: true });
 
-    applySettings();
+    async function initApp() {
+      loadLocalState();
+      applySettings();
+      try {
+        await loadRemoteData();
+        applySettings();
+      } catch (error) {
+        console.warn("Supabase belum siap, memakai fallback lokal.", error);
+      }
+    }
+
+    initApp();
   </script>
 </body>
 </html>
