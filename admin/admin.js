@@ -1,6 +1,6 @@
 // admin/admin.js
 
-import { initViews } from "./modules/views.js";
+import { initAuth } from "./modules/auth.js";
 
 // ======================
 // SUPABASE
