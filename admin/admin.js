@@ -9,7 +9,7 @@ window.SUPABASE_URL =
 "https://gyofijyebgtxzbtwlwbw.supabase.co";
 
 window.SUPABASE_ANON_KEY =
-"YOUR_ANON_KEY";
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo";
 
 window.ADMIN_EMAIL =
 "pixelcase@gmail.com";
