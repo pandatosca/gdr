@@ -33,6 +33,14 @@ create table if not exists public.news_posts (
   updated_at timestamptz not null default now()
 );
 
+create or replace function public.is_gdr_admin()
+returns boolean
+language sql
+stable
+as $$
+  select lower(coalesce(auth.jwt() ->> 'email', '')) = 'pixelcase@gmail.com';
+$$;
+
 insert into public.site_settings (id, data)
 values ('default', '{}'::jsonb)
 on conflict (id) do nothing;
@@ -49,8 +57,8 @@ using (true);
 drop policy if exists "Admins can manage site settings" on public.site_settings;
 create policy "Admins can manage site settings"
 on public.site_settings for all
-using (auth.role() = 'authenticated')
-with check (auth.role() = 'authenticated');
+using (public.is_gdr_admin())
+with check (public.is_gdr_admin());
 
 drop policy if exists "Public can read activities" on public.activities;
 create policy "Public can read activities"
@@ -60,8 +68,8 @@ using (true);
 drop policy if exists "Admins can manage activities" on public.activities;
 create policy "Admins can manage activities"
 on public.activities for all
-using (auth.role() = 'authenticated')
-with check (auth.role() = 'authenticated');
+using (public.is_gdr_admin())
+with check (public.is_gdr_admin());
 
 drop policy if exists "Public can read approved posts" on public.news_posts;
 create policy "Public can read approved posts"
@@ -76,18 +84,18 @@ with check (status = 'pending');
 drop policy if exists "Admins can read all posts" on public.news_posts;
 create policy "Admins can read all posts"
 on public.news_posts for select
-using (auth.role() = 'authenticated');
+using (public.is_gdr_admin());
 
 drop policy if exists "Admins can manage posts" on public.news_posts;
 create policy "Admins can manage posts"
 on public.news_posts for update
-using (auth.role() = 'authenticated')
-with check (auth.role() = 'authenticated');
+using (public.is_gdr_admin())
+with check (public.is_gdr_admin());
 
 drop policy if exists "Admins can delete posts" on public.news_posts;
 create policy "Admins can delete posts"
 on public.news_posts for delete
-using (auth.role() = 'authenticated');
+using (public.is_gdr_admin());
 
 insert into storage.buckets (id, name, public)
 values ('gdr-media', 'gdr-media', true)
@@ -106,5 +114,5 @@ with check (bucket_id = 'gdr-media' and (storage.foldername(name))[1] = 'posts')
 drop policy if exists "Admins can manage media" on storage.objects;
 create policy "Admins can manage media"
 on storage.objects for all
-using (bucket_id = 'gdr-media' and auth.role() = 'authenticated')
-with check (bucket_id = 'gdr-media' and auth.role() = 'authenticated');
+using (bucket_id = 'gdr-media' and public.is_gdr_admin())
+with check (bucket_id = 'gdr-media' and public.is_gdr_admin());

@@ -284,6 +284,7 @@
     const SUPABASE_URL = "https://gyofijyebgtxzbtwlwbw.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo";
     const MEDIA_BUCKET = "gdr-media";
+    const ADMIN_EMAIL = "pixelcase@gmail.com";
     let supabaseClient = null;
     let currentUser = null;
     let currentCategory = "semua";
@@ -423,7 +424,7 @@
     function getSettings() { return mergeSettings(appState.settings); }
     function getNews() { return appState.news; }
     function getActivities() { return appState.activities; }
-    function isAdmin() { return Boolean(currentUser); }
+    function isAdmin() { return currentUser?.email === ADMIN_EMAIL; }
 
     async function loadRemoteData() {
       const client = initSupabaseClient();
@@ -691,7 +692,7 @@
     function adminLoginContent() {
       return `
         <form id="admin-login-form" class="mt-8 max-w-md rounded-2xl border border-slate-200 bg-stone-50 p-5">
-          <label class="grid gap-2 text-sm font-bold text-slate-700">Email admin<input id="admin-email" type="email" required class="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="admin@email.com"></label>
+          <label class="grid gap-2 text-sm font-bold text-slate-700">Email admin<input id="admin-email" type="email" required value="${ADMIN_EMAIL}" class="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="admin@email.com"></label>
           <label class="mt-4 grid gap-2 text-sm font-bold text-slate-700">Password<input id="admin-pass" type="password" required class="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="Password Supabase Auth"></label>
           <button class="mt-4 rounded-full bg-forest-700 px-6 py-3 text-sm font-extrabold text-white" type="submit">Masuk Admin</button>
           <p class="mt-4 text-xs font-semibold leading-6 text-slate-500">Buat user admin di Supabase Authentication, lalu login dengan email dan password tersebut.</p>
