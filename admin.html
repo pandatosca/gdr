@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -9,34 +11,8 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<style>
-body{
-  font-family:Inter,sans-serif;
-}
+<link rel="stylesheet" href="./admin.css">
 
-.sidebar-btn.active{
-  background:#166534;
-  color:white;
-}
-
-.sidebar-btn{
-  transition:.2s;
-}
-
-.sidebar-btn:hover{
-  background:#f1f5f9;
-}
-
-/* View switching styles */
-.view-section {
-  display: none;
-}
-.view-section.active {
-  display: block;
-}
-</style>
-
-<base target="_blank">
 </head>
 
 <body class="bg-slate-100 text-slate-900">
@@ -72,7 +48,7 @@ body{
     <div class="text-center">
 
       <img
-        src="./assets/logo2.svg"
+        src="../assets/logo2.svg"
         class="mx-auto h-16 w-16"
       >
 
@@ -123,7 +99,7 @@ body{
   class="hidden min-h-screen"
 >
 
-<div class="flex">
+<div class="flex min-h-screen">
 
 <!-- SIDEBAR -->
 
@@ -134,7 +110,7 @@ body{
     <div class="flex items-center gap-3">
 
       <img
-        src="./assets/logo2.svg"
+        src="../assets/logo2.svg"
         class="h-12 w-12"
       >
 
@@ -199,132 +175,22 @@ body{
 
 <main class="flex-1 p-5 lg:p-8">
 
-<!-- DASHBOARD VIEW -->
-<section class="view-section active" id="view-dashboard">
+  <!-- DASHBOARD -->
 
-  <!-- HEADER -->
+  <section
+    class="view-section active"
+    id="view-dashboard"
+  >
 
-  <div class="rounded-[32px] bg-white p-6 shadow-sm">
+    <div class="rounded-[32px] bg-white p-6 shadow-sm">
 
-    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <h1 class="text-3xl font-black">
+        Dashboard
+      </h1>
 
-      <div>
-
-        <p class="text-sm font-black uppercase tracking-[0.2em] text-green-700">
-          Dashboard
-        </p>
-
-        <h1 class="mt-2 text-3xl font-black">
-          GDR CMS Admin
-        </h1>
-
-        <p class="mt-2 text-sm text-slate-500">
-          Kelola website Grand Depok Residence realtime.
-        </p>
-
-      </div>
-
-      <a
-        href="/"
-        class="rounded-2xl border border-slate-200 px-5 py-3 text-center font-black"
-      >
-        Lihat Website
-      </a>
-
-    </div>
-
-  </div>
-
-  <!-- STATS -->
-
-  <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-
-    <div class="rounded-[28px] bg-white p-6 shadow-sm">
-
-      <p class="text-sm font-bold text-slate-400">
-        Pending
+      <p class="mt-2 text-sm text-slate-500">
+        Kelola website realtime.
       </p>
-
-      <h2
-        id="pending-count"
-        class="mt-3 text-4xl font-black"
-      >
-        0
-      </h2>
-
-    </div>
-
-    <div class="rounded-[28px] bg-white p-6 shadow-sm">
-
-      <p class="text-sm font-bold text-slate-400">
-        Approved
-      </p>
-
-      <h2
-        id="approved-count"
-        class="mt-3 text-4xl font-black"
-      >
-        0
-      </h2>
-
-    </div>
-
-    <div class="rounded-[28px] bg-white p-6 shadow-sm">
-
-      <p class="text-sm font-bold text-slate-400">
-        Rejected
-      </p>
-
-      <h2
-        id="rejected-count"
-        class="mt-3 text-4xl font-black"
-      >
-        0
-      </h2>
-
-    </div>
-
-    <div class="rounded-[28px] bg-white p-6 shadow-sm">
-
-      <p class="text-sm font-bold text-slate-400">
-        Total
-      </p>
-
-      <h2
-        id="total-count"
-        class="mt-3 text-4xl font-black"
-      >
-        0
-      </h2>
-
-    </div>
-
-  </div>
-
-  <!-- POSTS -->
-
-  <section class="mt-6 rounded-[32px] bg-white p-6 shadow-sm">
-
-    <div class="flex items-center justify-between">
-
-      <div>
-
-        <h2 class="text-2xl font-black">
-          Berita Warga
-        </h2>
-
-        <p class="mt-1 text-sm text-slate-500">
-          Moderasi posting warga.
-        </p>
-
-      </div>
-
-      <button
-        id="refresh-button"
-        class="rounded-2xl border border-slate-200 px-5 py-3 font-black"
-      >
-        Refresh
-      </button>
 
     </div>
 
@@ -335,103 +201,60 @@ body{
 
   </section>
 
-</section>
+  <!-- HERO -->
 
-<!-- HERO VIEW -->
-<section class="view-section" id="view-hero">
+  <section
+    class="view-section"
+    id="view-hero"
+  >
 
-  <div class="rounded-[32px] bg-white p-6 shadow-sm mb-6">
-    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-      <div>
-        <p class="text-sm font-black uppercase tracking-[0.2em] text-green-700">Hero</p>
-        <h1 class="mt-2 text-3xl font-black">Hero Section</h1>
-        <p class="mt-2 text-sm text-slate-500">Edit hero website realtime.</p>
-      </div>
-      <a href="/" class="rounded-2xl border border-slate-200 px-5 py-3 text-center font-black">Lihat Website</a>
-    </div>
-  </div>
-
-  <section class="rounded-[32px] bg-white p-6 shadow-sm">
-
-    <form
-      id="hero-form"
-      class="grid gap-5"
-    >
-
-      <input
-        id="hero-title"
-        type="text"
-        placeholder="Judul hero"
-        class="rounded-2xl border border-slate-200 px-5 py-4 font-semibold outline-none focus:border-green-700"
-      >
-
-      <textarea
-        id="hero-description"
-        rows="5"
-        placeholder="Deskripsi hero"
-        class="rounded-2xl border border-slate-200 px-5 py-4 font-semibold outline-none focus:border-green-700"
-      ></textarea>
-
-      <input
-        id="hero-image"
-        type="file"
-        accept="image/*"
-        class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-5 py-5"
-      >
-
-      <img
-        id="hero-preview"
-        class="hidden h-[260px] w-full rounded-[28px] object-cover"
-      >
-
-      <button
-        type="submit"
-        class="rounded-2xl bg-green-700 px-6 py-4 font-black text-white"
-      >
-        Simpan Hero
-      </button>
-
-    </form>
+    <div id="hero-root"></div>
 
   </section>
 
-</section>
+  <!-- FASILITAS -->
 
-<!-- FASILITAS VIEW -->
-<section class="view-section" id="view-fasilitas">
-  <div class="rounded-[32px] bg-white p-6 shadow-sm">
-    <p class="text-sm font-black uppercase tracking-[0.2em] text-green-700">Fasilitas</p>
-    <h1 class="mt-2 text-3xl font-black">Kelola Fasilitas</h1>
-    <p class="mt-2 text-sm text-slate-500">Section fasilitas — tambahkan konten di sini.</p>
-  </div>
-</section>
+  <section
+    class="view-section"
+    id="view-fasilitas"
+  >
 
-<!-- KEGIATAN VIEW -->
-<section class="view-section" id="view-kegiatan">
-  <div class="rounded-[32px] bg-white p-6 shadow-sm">
-    <p class="text-sm font-black uppercase tracking-[0.2em] text-green-700">Kegiatan</p>
-    <h1 class="mt-2 text-3xl font-black">Kelola Kegiatan</h1>
-    <p class="mt-2 text-sm text-slate-500">Section kegiatan — tambahkan konten di sini.</p>
-  </div>
-</section>
+    <div id="facilities-root"></div>
 
-<!-- MUSHOLA VIEW -->
-<section class="view-section" id="view-mushola">
-  <div class="rounded-[32px] bg-white p-6 shadow-sm">
-    <p class="text-sm font-black uppercase tracking-[0.2em] text-green-700">Mushola</p>
-    <h1 class="mt-2 text-3xl font-black">Kelola Mushola</h1>
-    <p class="mt-2 text-sm text-slate-500">Section mushola — tambahkan konten di sini.</p>
-  </div>
-</section>
+  </section>
 
-<!-- KONTAK VIEW -->
-<section class="view-section" id="view-kontak">
-  <div class="rounded-[32px] bg-white p-6 shadow-sm">
-    <p class="text-sm font-black uppercase tracking-[0.2em] text-green-700">Kontak</p>
-    <h1 class="mt-2 text-3xl font-black">Kelola Kontak</h1>
-    <p class="mt-2 text-sm text-slate-500">Section kontak — tambahkan konten di sini.</p>
-  </div>
-</section>
+  <!-- KEGIATAN -->
+
+  <section
+    class="view-section"
+    id="view-kegiatan"
+  >
+
+    <div id="activities-root"></div>
+
+  </section>
+
+  <!-- MUSHOLA -->
+
+  <section
+    class="view-section"
+    id="view-mushola"
+  >
+
+    <div id="mushola-root"></div>
+
+  </section>
+
+  <!-- KONTAK -->
+
+  <section
+    class="view-section"
+    id="view-kontak"
+  >
+
+    <div id="contact-root"></div>
+
+  </section>
 
 </main>
 
@@ -439,395 +262,7 @@ body{
 
 </section>
 
-<script>
-
-const SUPABASE_URL =
-"https://gyofijyebgtxzbtwlwbw.supabase.co";
-
-const SUPABASE_ANON_KEY =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo";
-
-const ADMIN_EMAIL =
-"pixelcase@gmail.com";
-
-const supabaseClient =
-supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
-const loadingScreen =
-document.getElementById("loading-screen");
-
-const loginView =
-document.getElementById("login-view");
-
-const cmsView =
-document.getElementById("cms-view");
-
-const postsContainer =
-document.getElementById("posts-container");
-
-function showLogin(){
-  loginView.classList.remove("hidden");
-  cmsView.classList.add("hidden");
-}
-
-function showCMS(){
-  loginView.classList.add("hidden");
-  cmsView.classList.remove("hidden");
-}
-
-// VIEW SWITCHING LOGIC
-function switchView(viewName) {
-  // Hide all views
-  document.querySelectorAll('.view-section').forEach(el => {
-    el.classList.remove('active');
-  });
-
-  // Show selected view
-  const target = document.getElementById('view-' + viewName);
-  if (target) {
-    target.classList.add('active');
-  }
-
-  // Update sidebar active state
-  document.querySelectorAll('.sidebar-btn').forEach(btn => {
-    btn.classList.remove('active');
-    if (btn.dataset.view === viewName) {
-      btn.classList.add('active');
-    }
-  });
-}
-
-// Add click listeners to sidebar buttons
-document.querySelectorAll('.sidebar-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const view = btn.dataset.view;
-    if (view) switchView(view);
-  });
-});
-
-async function checkSession(){
-
-  const {
-    data:{session}
-  } = await supabaseClient.auth.getSession();
-
-  if(
-    session &&
-    session.user.email === ADMIN_EMAIL
-  ){
-    showCMS();
-    initCMS();
-  }else{
-    showLogin();
-  }
-
-  loadingScreen.classList.add("hidden");
-
-}
-
-document
-.getElementById("login-form")
-.addEventListener("submit",async(e)=>{
-
-  e.preventDefault();
-
-  const password =
-  document.getElementById("password").value;
-
-  const loginError =
-  document.getElementById("login-error");
-
-  loginError.classList.add("hidden");
-
-  const {data,error} =
-  await supabaseClient.auth.signInWithPassword({
-    email:ADMIN_EMAIL,
-    password
-  });
-
-  if(error || !data.session){
-
-    loginError.textContent =
-    "Password salah.";
-
-    loginError.classList.remove("hidden");
-
-    return;
-  }
-
-  showCMS();
-
-  initCMS();
-
-});
-
-async function loadPosts(){
-
-  const {data,error} =
-  await supabaseClient
-  .from("news_posts")
-  .select("*")
-  .order("created_at",{ascending:false});
-
-  if(error){
-
-    postsContainer.innerHTML = `
-      <div class="rounded-3xl bg-red-50 p-5 font-bold text-red-700">
-        ${error.message}
-      </div>
-    `;
-
-    return;
-  }
-
-  renderPosts(data || []);
-
-}
-
-function renderPosts(posts){
-
-  document.getElementById("pending-count").textContent =
-  posts.filter(p=>p.status==="pending").length;
-
-  document.getElementById("approved-count").textContent =
-  posts.filter(p=>p.status==="approved").length;
-
-  document.getElementById("rejected-count").textContent =
-  posts.filter(p=>p.status==="rejected").length;
-
-  document.getElementById("total-count").textContent =
-  posts.length;
-
-  if(!posts.length){
-
-    postsContainer.innerHTML = `
-      <div class="rounded-3xl border border-dashed border-slate-300 p-10 text-center">
-        <h3 class="text-2xl font-black">
-          Belum ada posting.
-        </h3>
-      </div>
-    `;
-
-    return;
-  }
-
-  postsContainer.innerHTML =
-  posts.map(post=>`
-
-  <article class="grid gap-5 rounded-[28px] border border-slate-200 p-5 lg:grid-cols-[220px_1fr]">
-
-    ${
-      post.image_url
-      ? `
-      <img
-        src="${post.image_url}"
-        class="h-52 w-full rounded-3xl object-cover"
-      >
-      `
-      : `
-      <div class="grid h-52 place-items-center rounded-3xl bg-slate-100 text-sm font-bold text-slate-400">
-        Tanpa Foto
-      </div>
-      `
-    }
-
-    <div>
-
-      <h3 class="text-2xl font-black">
-        ${post.title}
-      </h3>
-
-      <p class="mt-3 whitespace-pre-line text-sm leading-7 text-slate-600">
-        ${post.content}
-      </p>
-
-      <div class="mt-5 flex flex-wrap gap-2">
-
-        ${
-          post.status !== "approved"
-          ? `
-          <button
-            onclick="updatePost('${post.id}','approved')"
-            class="rounded-2xl bg-green-700 px-5 py-3 text-sm font-black text-white"
-          >
-            Approve
-          </button>
-          `
-          : ""
-        }
-
-        ${
-          post.status !== "rejected"
-          ? `
-          <button
-            onclick="updatePost('${post.id}','rejected')"
-            class="rounded-2xl border border-red-200 px-5 py-3 text-sm font-black text-red-700"
-          >
-            Reject
-          </button>
-          `
-          : ""
-        }
-
-      </div>
-
-    </div>
-
-  </article>
-
-  `).join("");
-
-}
-
-async function updatePost(id,status){
-
-  await supabaseClient
-  .from("news_posts")
-  .update({status})
-  .eq("id",id);
-
-  loadPosts();
-
-}
-
-async function loadHero(){
-
-  const {data} =
-  await supabaseClient
-  .from("site_settings")
-  .select("*")
-  .eq("id","main")
-  .single();
-
-  const settings =
-  data?.data || {};
-
-  document.getElementById("hero-title").value =
-  settings.hero_title || "";
-
-  document.getElementById("hero-description").value =
-  settings.hero_description || "";
-
-  if(settings.hero_image){
-
-    const preview =
-    document.getElementById("hero-preview");
-
-    preview.src =
-    settings.hero_image;
-
-    preview.classList.remove("hidden");
-
-  }
-
-}
-
-document
-.getElementById("hero-image")
-.addEventListener("change",(e)=>{
-
-  const file =
-  e.target.files[0];
-
-  if(!file) return;
-
-  const preview =
-  document.getElementById("hero-preview");
-
-  preview.src =
-  URL.createObjectURL(file);
-
-  preview.classList.remove("hidden");
-
-});
-
-document
-.getElementById("hero-form")
-.addEventListener("submit",async(e)=>{
-
-  e.preventDefault();
-
-  let heroImage = "";
-
-  const file =
-  document.getElementById("hero-image").files[0];
-
-  if(file){
-
-    const path =
-    `hero/${Date.now()}-${file.name}`;
-
-    await supabaseClient
-    .storage
-    .from("gdr-media")
-    .upload(path,file,{
-      upsert:true
-    });
-
-    const {data} =
-    supabaseClient
-    .storage
-    .from("gdr-media")
-    .getPublicUrl(path);
-
-    heroImage =
-    data.publicUrl;
-
-  }
-
-  const payload = {
-
-    hero_title:
-    document.getElementById("hero-title").value,
-
-    hero_description:
-    document.getElementById("hero-description").value
-
-  };
-
-  if(heroImage){
-    payload.hero_image = heroImage;
-  }
-
-  await supabaseClient
-  .from("site_settings")
-  .upsert({
-    id:"main",
-    data:payload
-  });
-
-  alert("Hero berhasil disimpan.");
-
-});
-
-async function initCMS(){
-
-  await loadPosts();
-
-  await loadHero();
-
-}
-
-document
-.getElementById("logout-button")
-.addEventListener("click",async()=>{
-
-  await supabaseClient.auth.signOut();
-
-  location.reload();
-
-});
-
-document
-.getElementById("refresh-button")
-.addEventListener("click",initCMS);
-
-checkSession();
-
-</script>
+<script type="module" src="./admin.js"></script>
 
 </body>
 </html>
