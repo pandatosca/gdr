@@ -233,12 +233,7 @@
           <p class="text-sm font-semibold text-white/55">RT 09 RW 12 - Tanah Baru, Beji, Depok</p>
         </div>
       </div>
-      <div class="flex items-center gap-4">
-        <p class="text-sm font-semibold text-white/50" data-copy="footerBody">Portal informasi warga dan komunikasi lingkungan.</p>
-        <button type="button" onclick="openAdminDialog()" class="grid h-9 w-9 place-items-center rounded-full border border-white/10 text-white/45 transition hover:border-white/30 hover:text-white" aria-label="Admin">
-          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 10V8a5 5 0 0 1 10 0v2M6 10h12v10H6V10Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-        </button>
-      </div>
+      <p class="text-sm font-semibold text-white/50" data-copy="footerBody">Portal informasi warga dan komunikasi lingkungan.</p>
     </div>
   </footer>
 
@@ -271,22 +266,18 @@
 
   <div id="detail-dialog" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/70 p-4"></div>
   <div id="qris-dialog" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/70 p-4"></div>
-  <div id="admin-dialog" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/70 p-4"></div>
   <div id="toast" class="fixed bottom-5 left-1/2 z-[90] hidden -translate-x-1/2 rounded-full bg-slate-950 px-5 py-3 text-sm font-extrabold text-white shadow-2xl"></div>
 
   <script>
     const STORAGE = {
       settings: "gdr-settings-v4",
       news: "gdr-news-v4",
-      activities: "gdr-activities-v4",
-      admin: "gdr-admin-v4"
+      activities: "gdr-activities-v4"
     };
     const SUPABASE_URL = "https://gyofijyebgtxzbtwlwbw.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo";
     const MEDIA_BUCKET = "gdr-media";
-    const ADMIN_EMAIL = "pixelcase@gmail.com";
     let supabaseClient = null;
-    let currentUser = null;
     let currentCategory = "semua";
 
     const defaults = {
@@ -424,14 +415,9 @@
     function getSettings() { return mergeSettings(appState.settings); }
     function getNews() { return appState.news; }
     function getActivities() { return appState.activities; }
-    function isAdmin() { return currentUser?.email === ADMIN_EMAIL; }
-
     async function loadRemoteData() {
       const client = initSupabaseClient();
       if (!client) return false;
-      const { data: sessionData } = await client.auth.getSession();
-      currentUser = sessionData.session?.user || null;
-
       const [{ data: settingsRow }, { data: activitiesRows }, { data: newsRows }] = await Promise.all([
         client.from("site_settings").select("data").eq("id", "default").maybeSingle(),
         client.from("activities").select("*").order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
@@ -452,25 +438,6 @@
       }
       appState.remoteReady = true;
       return true;
-    }
-
-    async function saveSettings(value) {
-      appState.settings = mergeSettings(value);
-      writeStore(STORAGE.settings, appState.settings);
-      const client = initSupabaseClient();
-      if (client && isAdmin()) {
-        const { error } = await client.from("site_settings").upsert({
-          id: "default",
-          data: appState.settings,
-          updated_at: new Date().toISOString()
-        });
-        if (error) throw error;
-      }
-    }
-
-    async function saveActivities(value) {
-      appState.activities = value;
-      writeStore(STORAGE.activities, value);
     }
 
     async function saveNews(value) {
@@ -625,6 +592,7 @@
 
     function closeDialog(id) {
       const el = document.getElementById(id);
+      if (!el) return;
       el.classList.add("hidden");
       el.classList.remove("flex");
       if (!document.querySelector(".fixed.flex")) document.body.classList.remove("dialog-open");
@@ -660,241 +628,11 @@
           <h2 class="mt-2 text-2xl font-extrabold">Kotak Amal Mushola</h2>
           <p class="mt-2 text-sm font-semibold leading-6 text-slate-500">Terima kasih atas infaq dan dukungan warga. Semoga menjadi amal kebaikan.</p>
           <div class="mt-6 rounded-2xl border border-slate-200 bg-stone-50 p-4">
-            ${qrisImage ? `<img src="${qrisImage}" alt="QRIS Mushola" class="mx-auto max-h-[420px] rounded-xl object-contain">` : `<div class="grid min-h-[300px] place-items-center rounded-xl border border-dashed border-slate-300 p-6 text-sm font-bold text-slate-500">QRIS belum diunggah. Admin bisa menambahkannya dari panel Admin.</div>`}
+            ${qrisImage ? `<img src="${qrisImage}" alt="QRIS Mushola" class="mx-auto max-h-[420px] rounded-xl object-contain">` : `<div class="grid min-h-[300px] place-items-center rounded-xl border border-dashed border-slate-300 p-6 text-sm font-bold text-slate-500">QRIS mushola akan segera tersedia.</div>`}
           </div>
         </div>
       `;
       openDialog("qris-dialog");
-    }
-
-    function openAdminDialog() {
-      renderAdminDialog();
-      openDialog("admin-dialog");
-    }
-
-    function renderAdminDialog(tab = "moderasi") {
-      const admin = isAdmin();
-      const shellClass = admin
-        ? "max-h-[92vh] w-full max-w-4xl overflow-y-auto rounded-3xl bg-white p-5 shadow-2xl sm:p-7"
-        : "mb-4 w-full max-w-sm rounded-[1.75rem] bg-white p-5 shadow-2xl sm:mb-8 sm:p-6";
-      const wrapperClass = admin
-        ? "fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/70 p-4"
-        : "fixed inset-0 z-[80] hidden items-end justify-center bg-slate-950/70 p-4 sm:items-center";
-      document.getElementById("admin-dialog").className = wrapperClass;
-      document.getElementById("admin-dialog").innerHTML = `
-        <div class="${shellClass}">
-          <div class="flex items-start justify-end gap-4">
-            <button type="button" onclick="closeDialog('admin-dialog')" class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Tutup"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-          </div>
-          ${admin ? adminContent(tab) : adminLoginContent()}
-        </div>
-      `;
-    }
-
-    function adminLoginContent() {
-      return `
-        <form id="admin-login-form" class="grid gap-3">
-          <label class="sr-only" for="admin-pass">Password</label>
-          <input id="admin-pass" type="password" required autocomplete="current-password" class="rounded-2xl border border-slate-200 px-4 py-3.5 text-sm font-semibold outline-none transition focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="Password">
-          <button class="rounded-full bg-forest-700 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-forest-900/10 transition hover:bg-forest-800" type="submit">Masuk Admin</button>
-          <p class="text-center text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 sm:hidden">Swipe up</p>
-        </form>
-      `;
-    }
-
-    function adminContent(tab) {
-      return `
-        <div class="flex flex-wrap gap-2">
-          ${["moderasi", "teks", "foto", "kegiatan"].map((key) => `<button type="button" onclick="renderAdminDialog('${key}')" class="rounded-full px-4 py-2 text-sm font-extrabold ${tab === key ? "bg-forest-700 text-white" : "border border-slate-200 text-slate-700"}">${key === "moderasi" ? "Moderasi" : key === "teks" ? "Teks Halaman" : key === "foto" ? "Foto Website" : "Kegiatan"}</button>`).join("")}
-          <button type="button" onclick="adminLogout()" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-extrabold text-slate-700">Keluar</button>
-        </div>
-        <div class="mt-6">${tab === "moderasi" ? adminModerationContent() : tab === "teks" ? adminCopyContent() : tab === "foto" ? adminPhotoContent() : adminActivitiesContent()}</div>
-      `;
-    }
-
-    function adminModerationContent() {
-      const pending = getNews().filter((item) => item.status === "pending");
-      if (!pending.length) return `<div class="rounded-2xl border border-slate-200 bg-stone-50 p-8 text-center font-bold text-slate-500">Belum ada posting menunggu approval.</div>`;
-      return `<div class="grid gap-4">${pending.map((item) => `
-        <article class="grid gap-4 rounded-2xl border border-slate-200 p-4 sm:grid-cols-[180px_1fr]">
-          ${item.image ? `<img src="${item.image}" alt="" class="h-36 w-full rounded-xl object-cover">` : `<div class="grid h-36 place-items-center rounded-xl bg-stone-100 text-xs font-bold text-slate-400">Tanpa foto</div>`}
-          <div>
-            <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-amber-700">${item.category}</p>
-            <h3 class="mt-2 text-lg font-extrabold">${item.title}</h3>
-            <p class="mt-2 text-sm leading-6 text-slate-600">${item.content}</p>
-            <p class="mt-2 text-xs font-bold text-slate-400">${item.author} - ${formatDate(item.date)}</p>
-            <div class="mt-4 flex flex-wrap gap-2">
-              <button type="button" onclick='approvePost(${JSON.stringify(item.id)})' class="rounded-full bg-forest-700 px-4 py-2 text-sm font-extrabold text-white">Approve</button>
-              <button type="button" onclick='rejectPost(${JSON.stringify(item.id)})' class="rounded-full border border-red-200 px-4 py-2 text-sm font-extrabold text-red-700">Reject</button>
-            </div>
-          </div>
-        </article>
-      `).join("")}</div>`;
-    }
-
-    function adminPhotoContent() {
-      const settings = getSettings();
-      const mainFields = [
-        ["heroImage", "Foto background hero"],
-        ["aboutImage", "Foto Tentang GDR"],
-        ["activitiesImage", "Foto besar Kegiatan"],
-        ["musholaImage", "Foto besar Mushola"],
-        ["qrisImage", "QRIS Mushola"]
-      ];
-      return `
-        <form id="admin-photo-form" class="grid gap-5">
-          <div class="grid gap-4 md:grid-cols-2">
-            ${mainFields.map(([key, label]) => photoField(key, label, settings[key])).join("")}
-          </div>
-          <div>
-            <h3 class="text-lg font-extrabold">Foto Fasilitas</h3>
-            <div class="mt-4 grid gap-4 md:grid-cols-2">${settings.facilities.map((facility) => photoField(`facility-${facility.id}`, facility.title, facility.image)).join("")}</div>
-          </div>
-          <button type="submit" class="w-fit rounded-full bg-forest-700 px-6 py-3 text-sm font-extrabold text-white">Simpan Foto</button>
-        </form>
-      `;
-    }
-
-    function adminCopyContent() {
-      const settings = getSettings();
-      const fields = [
-        ["heroSubtitle", "Hero - deskripsi"],
-        ["heroPrimaryCta", "Hero - tombol utama"],
-        ["heroSecondaryCta", "Hero - tombol kedua"],
-        ["heroCardEyebrow", "Hero card - label"],
-        ["heroCardTitle", "Hero card - judul"],
-        ["aboutEyebrow", "Tentang - label"],
-        ["aboutTitle", "Tentang - judul"],
-        ["aboutBody", "Tentang - deskripsi"],
-        ["facilitiesEyebrow", "Fasilitas - label"],
-        ["facilitiesTitle", "Fasilitas - judul"],
-        ["facilitiesBody", "Fasilitas - deskripsi"],
-        ["activitiesEyebrow", "Kegiatan - label"],
-        ["activitiesTitle", "Kegiatan - judul"],
-        ["activitiesBody", "Kegiatan - deskripsi"],
-        ["musholaEyebrow", "Mushola - label"],
-        ["musholaTitle", "Mushola - judul"],
-        ["musholaBody", "Mushola - deskripsi"],
-        ["musholaCta", "Mushola - tombol"],
-        ["newsEyebrow", "Berita - label"],
-        ["newsTitle", "Berita - judul"],
-        ["newsBody", "Berita - deskripsi"],
-        ["contactEyebrow", "Kontak - label"],
-        ["contactTitle", "Kontak - judul"],
-        ["contactBody", "Kontak - deskripsi"],
-        ["contactCta", "Kontak - teks tombol"],
-        ["footerBody", "Footer - teks kanan"]
-      ];
-      return `
-        <form id="admin-copy-form" class="grid gap-4">
-          <div class="grid gap-4 md:grid-cols-2">
-            ${fields.map(([key, label]) => copyField(key, label, settings.copy[key] || "")).join("")}
-          </div>
-          <button type="submit" class="w-fit rounded-full bg-forest-700 px-6 py-3 text-sm font-extrabold text-white">Simpan Teks</button>
-        </form>
-      `;
-    }
-
-    function copyField(key, label, value) {
-      const escaped = String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-      const isLong = value.length > 70;
-      return `
-        <label class="grid gap-2 rounded-2xl border border-slate-200 bg-stone-50 p-4 text-sm font-bold text-slate-700">
-          ${label}
-          ${isLong
-            ? `<textarea data-copy-input="${key}" rows="4" class="rounded-xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-forest-500 focus:ring-4 focus:ring-forest-100">${escaped}</textarea>`
-            : `<input data-copy-input="${key}" value="${escaped.replaceAll('"', "&quot;")}" class="rounded-xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-forest-500 focus:ring-4 focus:ring-forest-100">`}
-        </label>
-      `;
-    }
-
-    function photoField(key, label, value) {
-      return `
-        <label class="grid gap-2 rounded-2xl border border-slate-200 bg-stone-50 p-4 text-sm font-bold text-slate-700">
-          ${label}
-          ${value ? `<img src="${value}" alt="" class="h-32 w-full rounded-xl object-cover">` : `<div class="grid h-32 place-items-center rounded-xl border border-dashed border-slate-300 text-xs text-slate-400">Belum ada foto</div>`}
-          <input data-photo-key="${key}" type="file" accept="image/*" class="text-sm file:mr-3 file:rounded-full file:border-0 file:bg-forest-700 file:px-3 file:py-2 file:text-xs file:font-extrabold file:text-white">
-        </label>
-      `;
-    }
-
-    function adminActivitiesContent() {
-      const activities = getActivities();
-      return `
-        <form id="admin-activity-form" class="grid gap-3 rounded-2xl border border-slate-200 bg-stone-50 p-4">
-          <div class="grid gap-3 md:grid-cols-3">
-            <input id="activity-label" class="rounded-xl border border-slate-200 px-4 py-3 font-semibold" placeholder="Label, mis. Minggu Pagi" required>
-            <input id="activity-title" class="rounded-xl border border-slate-200 px-4 py-3 font-semibold" placeholder="Nama kegiatan" required>
-            <input id="activity-desc" class="rounded-xl border border-slate-200 px-4 py-3 font-semibold" placeholder="Deskripsi singkat" required>
-          </div>
-          <button class="w-fit rounded-full bg-forest-700 px-5 py-2.5 text-sm font-extrabold text-white" type="submit">Tambah Kegiatan</button>
-        </form>
-        <div class="mt-5 grid gap-3">${activities.map((item) => `
-          <div class="flex flex-col gap-3 rounded-2xl border border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between">
-            <div><p class="text-xs font-extrabold uppercase tracking-[0.18em] text-forest-700">${item.label}</p><p class="mt-1 font-extrabold">${item.title}</p><p class="text-sm text-slate-500">${item.desc}</p></div>
-            <button type="button" onclick='deleteActivity(${JSON.stringify(item.id)})' class="rounded-full border border-red-200 px-4 py-2 text-sm font-extrabold text-red-700">Hapus</button>
-          </div>
-        `).join("")}</div>
-      `;
-    }
-
-    async function approvePost(id) {
-      const client = initSupabaseClient();
-      if (client && isAdmin()) {
-        const { error } = await client.from("news_posts").update({
-          status: "approved",
-          updated_at: new Date().toISOString()
-        }).eq("id", id);
-        if (error) return showToast(error.message);
-        await loadRemoteData();
-      } else {
-        const news = getNews();
-        const item = news.find((entry) => entry.id === id);
-        if (item) item.status = "approved";
-        await saveNews(news);
-      }
-      renderNews();
-      renderAdminDialog("moderasi");
-      showToast("Posting sudah di-approve dan tampil.");
-    }
-
-    async function rejectPost(id) {
-      const client = initSupabaseClient();
-      if (client && isAdmin()) {
-        const { error } = await client.from("news_posts").update({
-          status: "rejected",
-          updated_at: new Date().toISOString()
-        }).eq("id", id);
-        if (error) return showToast(error.message);
-        await loadRemoteData();
-      } else {
-        await saveNews(getNews().filter((entry) => entry.id !== id));
-      }
-      renderAdminDialog("moderasi");
-      showToast("Posting ditolak.");
-    }
-
-    async function adminLogout() {
-      const client = initSupabaseClient();
-      if (client) await client.auth.signOut();
-      currentUser = null;
-      await loadRemoteData();
-      applySettings();
-      renderAdminDialog();
-      showToast("Admin keluar.");
-    }
-
-    async function deleteActivity(id) {
-      const client = initSupabaseClient();
-      if (client && isAdmin()) {
-        const { error } = await client.from("activities").delete().eq("id", id);
-        if (error) return showToast(error.message);
-        await loadRemoteData();
-      } else {
-        await saveActivities(getActivities().filter((item) => item.id !== id));
-      }
-      renderActivities();
-      renderAdminDialog("kegiatan");
     }
 
     function closeMobileMenu() {
@@ -937,92 +675,6 @@
         }
       }
 
-      if (event.target.id === "admin-login-form") {
-        event.preventDefault();
-        const client = initSupabaseClient();
-        if (!client) return showToast("Supabase client belum tersedia.");
-        const { data, error } = await client.auth.signInWithPassword({
-          email: ADMIN_EMAIL,
-          password: document.getElementById("admin-pass").value
-        });
-        if (!error && data.session) {
-          currentUser = data.session.user;
-          if (!isAdmin()) {
-            await client.auth.signOut();
-            currentUser = null;
-            return showToast("Email admin tidak sesuai.");
-          }
-          await loadRemoteData();
-          applySettings();
-          renderAdminDialog("moderasi");
-          showToast("Masuk admin berhasil.");
-        } else {
-          showToast("Password salah atau user admin belum dibuat di Supabase.");
-        }
-      }
-
-      if (event.target.id === "admin-photo-form") {
-        event.preventDefault();
-        const settings = getSettings();
-        const inputs = [...event.target.querySelectorAll("input[type='file']")];
-        for (const input of inputs) {
-          if (!input.files[0]) continue;
-          const folder = key.startsWith("facility-") ? "site/facilities" : "site";
-          const value = await uploadMedia(input.files[0], folder);
-          const key = input.dataset.photoKey;
-          if (key.startsWith("facility-")) {
-            const id = key.replace("facility-", "");
-            const facility = settings.facilities.find((item) => item.id === id);
-            if (facility) facility.image = value;
-          } else {
-            settings[key] = value;
-          }
-        }
-        await saveSettings(settings);
-        applySettings();
-        renderAdminDialog("foto");
-        showToast("Foto website disimpan.");
-      }
-
-      if (event.target.id === "admin-copy-form") {
-        event.preventDefault();
-        const settings = getSettings();
-        const inputs = [...event.target.querySelectorAll("[data-copy-input]")];
-        inputs.forEach((input) => {
-          settings.copy[input.dataset.copyInput] = input.value.trim();
-        });
-        await saveSettings(settings);
-        applySettings();
-        renderAdminDialog("teks");
-        showToast("Teks halaman disimpan.");
-      }
-
-      if (event.target.id === "admin-activity-form") {
-        event.preventDefault();
-        const item = {
-          label: document.getElementById("activity-label").value.trim(),
-          title: document.getElementById("activity-title").value.trim(),
-          desc: document.getElementById("activity-desc").value.trim()
-        };
-        const client = initSupabaseClient();
-        if (client && isAdmin()) {
-          const { error } = await client.from("activities").insert({
-            label: item.label,
-            title: item.title,
-            description: item.desc,
-            sort_order: getActivities().length + 1
-          });
-          if (error) return showToast(error.message);
-          await loadRemoteData();
-        } else {
-          const activities = getActivities();
-          activities.push({ ...item, id: Date.now() });
-          await saveActivities(activities);
-        }
-        renderActivities();
-        renderAdminDialog("kegiatan");
-        showToast("Kegiatan ditambahkan.");
-      }
     });
 
     document.getElementById("menu-button").addEventListener("click", () => {
@@ -1041,7 +693,7 @@
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
-        ["post-dialog", "detail-dialog", "qris-dialog", "admin-dialog"].forEach(closeDialog);
+        ["post-dialog", "detail-dialog", "qris-dialog"].forEach(closeDialog);
       }
     });
 
@@ -1062,14 +714,6 @@
         item.classList.toggle("bg-white", isScrolled);
         item.classList.toggle("text-slate-700", isScrolled);
         item.classList.toggle("border-white/15", !isScrolled);
-        item.classList.toggle("bg-white/10", !isScrolled);
-        item.classList.toggle("text-white", !isScrolled);
-      });
-      document.querySelectorAll(".nav-admin-button").forEach((item) => {
-        item.classList.toggle("border-slate-200", isScrolled);
-        item.classList.toggle("bg-white", isScrolled);
-        item.classList.toggle("text-slate-700", isScrolled);
-        item.classList.toggle("border-white/20", !isScrolled);
         item.classList.toggle("bg-white/10", !isScrolled);
         item.classList.toggle("text-white", !isScrolled);
       });
