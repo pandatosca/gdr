@@ -674,14 +674,16 @@
 
     function renderAdminDialog(tab = "moderasi") {
       const admin = isAdmin();
+      const shellClass = admin
+        ? "max-h-[92vh] w-full max-w-4xl overflow-y-auto rounded-3xl bg-white p-5 shadow-2xl sm:p-7"
+        : "mb-4 w-full max-w-sm rounded-[1.75rem] bg-white p-5 shadow-2xl sm:mb-8 sm:p-6";
+      const wrapperClass = admin
+        ? "fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/70 p-4"
+        : "fixed inset-0 z-[80] hidden items-end justify-center bg-slate-950/70 p-4 sm:items-center";
+      document.getElementById("admin-dialog").className = wrapperClass;
       document.getElementById("admin-dialog").innerHTML = `
-        <div class="max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-3xl bg-white p-5 shadow-2xl sm:p-7">
-          <div class="flex items-start justify-between gap-4">
-            <div>
-              <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-forest-700">Panel Admin</p>
-              <h2 class="mt-2 text-2xl font-extrabold">Moderasi dan Konten Website</h2>
-              <p class="mt-2 text-sm font-semibold text-slate-500">Terhubung ke Supabase. Perubahan tersimpan live dan tampil untuk semua pengunjung.</p>
-            </div>
+        <div class="${shellClass}">
+          <div class="flex items-start justify-end gap-4">
             <button type="button" onclick="closeDialog('admin-dialog')" class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Tutup"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
           </div>
           ${admin ? adminContent(tab) : adminLoginContent()}
@@ -691,18 +693,18 @@
 
     function adminLoginContent() {
       return `
-        <form id="admin-login-form" class="mt-8 max-w-md rounded-2xl border border-slate-200 bg-stone-50 p-5">
-          <label class="grid gap-2 text-sm font-bold text-slate-700">Email admin<input id="admin-email" type="email" required value="${ADMIN_EMAIL}" class="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="admin@email.com"></label>
-          <label class="mt-4 grid gap-2 text-sm font-bold text-slate-700">Password<input id="admin-pass" type="password" required class="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="Password Supabase Auth"></label>
-          <button class="mt-4 rounded-full bg-forest-700 px-6 py-3 text-sm font-extrabold text-white" type="submit">Masuk Admin</button>
-          <p class="mt-4 text-xs font-semibold leading-6 text-slate-500">Buat user admin di Supabase Authentication, lalu login dengan email dan password tersebut.</p>
+        <form id="admin-login-form" class="grid gap-3">
+          <label class="sr-only" for="admin-pass">Password</label>
+          <input id="admin-pass" type="password" required autocomplete="current-password" class="rounded-2xl border border-slate-200 px-4 py-3.5 text-sm font-semibold outline-none transition focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="Password">
+          <button class="rounded-full bg-forest-700 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-forest-900/10 transition hover:bg-forest-800" type="submit">Masuk Admin</button>
+          <p class="text-center text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 sm:hidden">Swipe up</p>
         </form>
       `;
     }
 
     function adminContent(tab) {
       return `
-        <div class="mt-8 flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-2">
           ${["moderasi", "teks", "foto", "kegiatan"].map((key) => `<button type="button" onclick="renderAdminDialog('${key}')" class="rounded-full px-4 py-2 text-sm font-extrabold ${tab === key ? "bg-forest-700 text-white" : "border border-slate-200 text-slate-700"}">${key === "moderasi" ? "Moderasi" : key === "teks" ? "Teks Halaman" : key === "foto" ? "Foto Website" : "Kegiatan"}</button>`).join("")}
           <button type="button" onclick="adminLogout()" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-extrabold text-slate-700">Keluar</button>
         </div>
@@ -940,17 +942,22 @@
         const client = initSupabaseClient();
         if (!client) return showToast("Supabase client belum tersedia.");
         const { data, error } = await client.auth.signInWithPassword({
-          email: document.getElementById("admin-email").value.trim(),
+          email: ADMIN_EMAIL,
           password: document.getElementById("admin-pass").value
         });
         if (!error && data.session) {
           currentUser = data.session.user;
+          if (!isAdmin()) {
+            await client.auth.signOut();
+            currentUser = null;
+            return showToast("Email admin tidak sesuai.");
+          }
           await loadRemoteData();
           applySettings();
           renderAdminDialog("moderasi");
           showToast("Masuk admin berhasil.");
         } else {
-          showToast(error?.message || "Login admin gagal.");
+          showToast("Password salah atau user admin belum dibuat di Supabase.");
         }
       }
 

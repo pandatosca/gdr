@@ -33,13 +33,35 @@ create table if not exists public.news_posts (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.admin_accounts (
+  email text primary key,
+  created_at timestamptz not null default now()
+);
+
+insert into public.admin_accounts (email)
+values ('pixelcase@gmail.com')
+on conflict (email) do nothing;
+
 create or replace function public.is_gdr_admin()
 returns boolean
 language sql
 stable
+security definer
+set search_path = public
 as $$
-  select lower(coalesce(auth.jwt() ->> 'email', '')) = 'pixelcase@gmail.com';
+  select exists (
+    select 1
+    from public.admin_accounts
+    where lower(email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+  );
 $$;
+
+alter table public.admin_accounts enable row level security;
+
+drop policy if exists "Admins can read admin accounts" on public.admin_accounts;
+create policy "Admins can read admin accounts"
+on public.admin_accounts for select
+using (public.is_gdr_admin());
 
 insert into public.site_settings (id, data)
 values ('default', '{}'::jsonb)
