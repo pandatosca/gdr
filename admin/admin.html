@@ -4,59 +4,89 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>GDR CMS - Admin</title>
-  <link rel="stylesheet" href="admin.css" />
-  <!-- Load Supabase JS SEKALI saja -->
+  <!-- Path CSS pakai ./ biar jelas relatif terhadap folder ini -->
+  <link rel="stylesheet" href="./admin.css" />
+  <!-- Load Supabase JS v2 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-  <!-- LOGIN VIEW -->
+  <!-- === LOGIN VIEW === -->
   <div id="auth-view" class="auth-container">
     <h1>GDR CMS</h1>
     <p>Masuk untuk kelola website.</p>
+    
     <form id="login-form">
       <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="email" required />
+        <label for="email">Email</label>
+        <input type="email" id="email" required placeholder="admin@gdr.com" autocomplete="email" />
       </div>
       <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="password" required />
+        <label for="password">Password</label>
+        <input type="password" id="password" required placeholder="••••••••" autocomplete="current-password" />
       </div>
       <p id="login-error" class="error-msg"></p>
       <button type="submit" class="btn" id="login-btn">Masuk</button>
     </form>
   </div>
 
-  <!-- DASHBOARD VIEW -->
-  <div id="dashboard-view" class="hidden">
+  <!-- === DASHBOARD VIEW === -->
+  <div id="dashboard-view">
+    <!-- Sidebar -->
     <aside class="sidebar">
       <h2>GDR Admin</h2>
       <button class="sidebar-btn active" onclick="switchTab('dashboard')">📊 Dashboard</button>
       <button class="sidebar-btn" onclick="switchTab('content')">📝 Konten</button>
+      <button class="sidebar-btn" onclick="switchTab('settings')">⚙️ Pengaturan</button>
       <button class="sidebar-btn logout" onclick="handleLogout()">🚪 Keluar</button>
     </aside>
+
+    <!-- Main Content -->
     <main class="main-content">
       <div class="header">
         <h2 id="page-title">Dashboard</h2>
         <span id="user-email"></span>
       </div>
+
+      <!-- Tab: Dashboard -->
       <section id="tab-dashboard" class="view-section active">
-        <div class="card"><h3>Selamat Datang! 👋</h3></div>
+        <div class="card">
+          <h3>Selamat Datang! 👋</h3>
+          <p style="margin-top: 0.5rem;">
+            Sistem admin GDR siap digunakan. Pilih menu di sebelah kiri untuk mulai mengelola.
+          </p>
+        </div>
       </section>
+
+      <!-- Tab: Content -->
       <section id="tab-content" class="view-section">
-        <div class="card"><h3>Konten</h3></div>
+        <div class="card">
+          <h3>Kelola Konten</h3>
+          <p style="margin-top: 0.5rem;">
+            Fitur manajemen konten akan segera tersedia.
+          </p>
+        </div>
+      </section>
+
+      <!-- Tab: Settings -->
+      <section id="tab-settings" class="view-section">
+        <div class="card">
+          <h3>Pengaturan</h3>
+          <p style="margin-top: 0.5rem;">
+            Konfigurasi website akan muncul di sini.
+          </p>
+        </div>
       </section>
     </main>
   </div>
 
-  <!-- SCRIPT UTAMA - HANYA SATU KALI INISIALISASI -->
+  <!-- === MAIN SCRIPT === -->
   <script>
-    // ⚠️ GANTI DENGAN ANON KEY ASLI KAMU
+    // ⚠️ KONFIGURASI SUPABASE
     const SUPABASE_URL = 'https://gyofijyebgtxzbtwlwbw.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo';
     
-    // Inisialisasi Supabase - HANYA DI SINI
+    // Inisialisasi Supabase Client
     const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // DOM Elements
@@ -66,63 +96,121 @@
     const loginError = document.getElementById('login-error');
     const loginBtn = document.getElementById('login-btn');
     const userEmailSpan = document.getElementById('user-email');
+    const pageTitle = document.getElementById('page-title');
 
-    // Cek sesi saat load
+    // Debug: pastikan script load
+    console.log('✅ Admin script loaded');
+
+    // === 1. CEK SESI SAAT PAGE LOAD ===
     window.addEventListener('DOMContentLoaded', async () => {
-      const { data: { session } } = await _supabase.auth.getSession();
-      if (session) showDashboard(session.user?.email);
-      
+      try {
+        const { data: { session }, error } = await _supabase.auth.getSession();
+        if (error) throw error;
+        
+        if (session?.user) {
+          showDashboard(session.user.email);
+        } else {
+          showLogin();
+        }
+      } catch (err) {
+        console.error('Session check error:', err);
+        showLogin();
+      }
+
+      // Listen auth state changes
       _supabase.auth.onAuthStateChange((event, session) => {
-        if (event === 'SIGNED_IN' && session) showDashboard(session.user?.email);
-        if (event === 'SIGNED_OUT') showLogin();
+        console.log('Auth event:', event);
+        if (event === 'SIGNED_IN' && session?.user) {
+          showDashboard(session.user.email);
+        } else if (event === 'SIGNED_OUT') {
+          showLogin();
+        }
       });
     });
 
-    // Login handler
+    // === 2. HANDLE LOGIN SUBMIT ===
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       loginError.textContent = '';
       loginBtn.disabled = true;
       loginBtn.textContent = 'Memproses...';
 
-      const { data, error } = await _supabase.auth.signInWithPassword({
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value
-      });
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
 
-      if (error) {
-        loginError.textContent = 'Error: ' + error.message;
+      console.log('🔐 Login attempt:', email);
+
+      try {
+        const { data, error } = await _supabase.auth.signInWithPassword({ 
+          email, 
+          password 
+        });
+        
+        if (error) throw error;
+        // Sukses: onAuthStateChange akan handle UI update
+      } catch (err) {
+        console.error('Login error:', err);
+        loginError.textContent = 'Gagal: ' + (err.message || 'Terjadi kesalahan');
         loginBtn.disabled = false;
         loginBtn.textContent = 'Masuk';
       }
-      // Jika sukses, onAuthStateChange handle sisanya
     });
 
-    // Logout
+    // === 3. HANDLE LOGOUT ===
     async function handleLogout() {
-      await _supabase.auth.signOut();
-      showLogin();
+      try {
+        await _supabase.auth.signOut();
+        showLogin();
+      } catch (err) {
+        console.error('Logout error:', err);
+        alert('Gagal logout: ' + err.message);
+      }
     }
 
-    // UI Helpers
+    // === 4. UI SWITCHERS ===
     function showDashboard(email) {
+      console.log('📊 Showing dashboard for:', email);
       authView.classList.add('hidden');
       dashboardView.classList.remove('hidden');
+      dashboardView.classList.add('active');
       userEmailSpan.textContent = email;
     }
+
     function showLogin() {
+      console.log('🔐 Showing login');
+      dashboardView.classList.remove('active');
       dashboardView.classList.add('hidden');
       authView.classList.remove('hidden');
       loginForm.reset();
       loginBtn.disabled = false;
       loginBtn.textContent = 'Masuk';
+      loginError.textContent = '';
     }
-    function switchTab(tab) {
+
+    // === 5. TAB SWITCHER ===
+    function switchTab(tabName) {
+      // Reset semua
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.sidebar-btn').forEach(el => el.classList.remove('active'));
-      document.getElementById(`tab-${tab}`).classList.add('active');
-      event.currentTarget.classList.add('active');
-      document.getElementById('page-title').textContent = tab.charAt(0).toUpperCase() + tab.slice(1);
+      document.querySelectorAll('.sidebar-btn').forEach(el => {
+        if (!el.classList.contains('logout')) el.classList.remove('active');
+      });
+      
+      // Aktifkan yang dipilih
+      const clickedBtn = event.currentTarget;
+      clickedBtn.classList.add('active');
+      
+      const targetSection = document.getElementById(`tab-${tabName}`);
+      if (targetSection) targetSection.classList.add('active');
+      
+      // Update judul
+      const titles = {
+        'dashboard': 'Dashboard',
+        'content': 'Kelola Konten',
+        'settings': 'Pengaturan'
+      };
+      pageTitle.textContent = titles[tabName] || 'Admin';
+      
+      console.log('🔄 Switched to tab:', tabName);
     }
   </script>
 </body>
