@@ -1,626 +1,987 @@
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Grand Depok Residence RT 09 RW 12, portal informasi warga Tanah Baru, Beji, Depok.">
   <title>Grand Depok Residence RT 09 RW 12</title>
-  <meta name="description" content="Portal informasi warga Grand Depok Residence RT 09 RW 12 - Tanah Baru, Beji, Depok"/>
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Supabase -->
+  <link rel="icon" href="./assets/logo2.svg" type="image/svg+xml">
+  <link href="./dist/index.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
-  <!-- Browser Image Compression -->
-  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
-  
   <style>
-    /* Custom styles */
-    .hero-bg {
-      background: linear-gradient(135deg, rgba(22, 101, 52, 0.9), rgba(21, 128, 61, 0.8)), url('./assets/hero-bg.jpg');
-      background-size: cover;
-      background-position: center;
-    }
-    .card-hover:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 9999;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal.show {
-      display: flex;
-    }
-    .alert {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 10000;
-      padding: 1rem 1.5rem;
-      border-radius: 0.5rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      display: none;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 500;
-      animation: slideIn 0.3s ease;
-    }
-    .alert.show {
-      display: flex;
-    }
-    .alert-success {
-      background: #10b981;
-      color: white;
-    }
-    .alert-error {
-      background: #ef4444;
-      color: white;
-    }
-    @keyframes slideIn {
-      from { transform: translateX(400px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    @keyframes slideOut {
-      from { transform: translateX(0); opacity: 1; }
-      to { transform: translateX(400px); opacity: 0; }
-    }
+    body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .glass-nav { backdrop-filter: blur(18px); }
+    .text-balance { text-wrap: balance; }
+    .image-cover { background-position: center; background-size: cover; background-repeat: no-repeat; }
+    .logo-leaf path { transition: fill .25s ease; }
+    .dialog-open { overflow: hidden; }
   </style>
 </head>
 <body class="bg-stone-50 text-slate-950 antialiased">
+  <header id="site-header" class="fixed inset-x-0 top-0 z-50 border-b border-white/10 transition-all duration-300">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8" aria-label="Navigasi utama">
+      <a href="#beranda" class="brand-lockup flex min-w-0 items-center gap-3 text-white">
+        <span class="brand-mark grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white shadow-sm">
+          <svg class="logo-leaf h-7 w-7" viewBox="0 0 61 60" fill="none" aria-hidden="true">
+            <path class="leaf-fill" d="M51.5021 29.0686C42.397 28.6363 24.4659 29.717 24.4659 45.2801C24.4659 50.4678 37.1116 49.8193 51.5021 29.0686Z" fill="#164C2C"/>
+            <path class="leaf-fill" d="M29.7957 31.0139C28.4633 27.1232 25.7984 20.6386 40.4553 12.8571C43.1202 16.7478 43.1202 27.1232 29.7957 31.0139Z" fill="#164C2C"/>
+            <path class="leaf-fill" d="M24.4659 36.2016C17.8037 36.2016 7.94357 25.0481 13.8063 14.154C19.8024 16.5437 32.4606 25.8263 24.4659 36.2016Z" fill="#164C2C"/>
+          </svg>
+        </span>
+        <span class="min-w-0">
+          <span class="brand-title block truncate text-sm font-extrabold leading-5 sm:text-base">Grand Depok Residence</span>
+          <span class="brand-sub block text-xs font-medium tracking-[0.2em] opacity-80">RT 09 RW 12</span>
+        </span>
+      </a>
 
-  <!-- Alert Message -->
-  <div id="alertBox" class="alert">
-    <span id="alertIcon">✅</span>
-    <span id="alertMessage">Pesan</span>
-  </div>
+      <div class="nav-shell hidden items-center gap-1 rounded-full border border-white/15 bg-white/10 px-2 py-2 text-sm font-semibold text-white shadow-sm lg:flex">
+        <a class="rounded-full px-4 py-2 transition hover:bg-white/14" href="#tentang">Tentang</a>
+        <a class="rounded-full px-4 py-2 transition hover:bg-white/14" href="#fasilitas">Fasilitas</a>
+        <a class="rounded-full px-4 py-2 transition hover:bg-white/14" href="#kegiatan">Kegiatan</a>
+        <a class="rounded-full px-4 py-2 transition hover:bg-white/14" href="#berita">Berita</a>
+        <a class="rounded-full px-4 py-2 transition hover:bg-white/14" href="#kontak">Kontak</a>
+      </div>
 
-  <!-- Navigation -->
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-stone-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 bg-green-700 rounded-lg flex items-center justify-center">
-            <span class="text-white font-bold text-sm">GDR</span>
-          </div>
-          <div>
-            <h1 class="font-bold text-green-800">Grand Depok Residence</h1>
-            <p class="text-xs text-stone-600">RT 09 RW 12</p>
-          </div>
-        </div>
-        
-        <div class="hidden md:flex items-center gap-6">
-          <a href="#tentang" class="text-stone-600 hover:text-green-700 font-medium">Tentang</a>
-          <a href="#fasilitas" class="text-stone-600 hover:text-green-700 font-medium">Fasilitas</a>
-          <a href="#kegiatan" class="text-stone-600 hover:text-green-700 font-medium">Kegiatan</a>
-          <a href="#berita" class="text-stone-600 hover:text-green-700 font-medium">Berita</a>
-          <a href="#kontak" class="text-stone-600 hover:text-green-700 font-medium">Kontak</a>
-        </div>
-        
-        <button onclick="openModal()" class="bg-yellow-400 hover:bg-yellow-500 text-stone-900 font-bold py-2 px-6 rounded-full transition">
+      <div class="hidden items-center gap-3 lg:flex">
+        <button type="button" onclick="openPostDialog()" class="rounded-full bg-amber-400 px-5 py-2.5 text-sm font-extrabold text-forest-950 shadow-lg shadow-black/10 transition hover:bg-amber-300">
           Kirim Kabar
         </button>
       </div>
-    </div>
-  </nav>
 
-  <!-- Hero Section -->
-  <section id="beranda" class="hero-bg min-h-screen flex items-center pt-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-      <div class="max-w-3xl">
-        <div class="inline-block bg-white/20 backdrop-blur px-4 py-2 rounded-full mb-6">
-          <span class="text-white font-medium">📍 Tanah Baru, Beji, Depok</span>
+      <button id="menu-button" type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition lg:hidden" aria-label="Buka menu" aria-expanded="false">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </nav>
+
+    <div id="mobile-menu" class="hidden border-t border-forest-100 bg-white px-4 py-4 shadow-2xl lg:hidden">
+      <div class="grid gap-2 text-sm font-bold text-slate-700">
+        <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#tentang">Tentang</a>
+        <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#fasilitas">Fasilitas</a>
+        <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#kegiatan">Kegiatan</a>
+        <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#berita">Berita</a>
+        <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#kontak">Kontak</a>
+        <button type="button" onclick="openPostDialog()" class="rounded-xl bg-forest-700 px-4 py-3 text-left font-extrabold text-white">Kirim Kabar Warga</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="beranda">
+    <section id="hero-section" class="image-cover relative isolate min-h-[780px] overflow-hidden bg-forest-950 pt-28 text-white sm:pt-32">
+      <div class="absolute inset-0 bg-gradient-to-br from-forest-950 via-forest-950/86 to-amber-700/55"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_18%,rgba(255,255,255,.18),transparent_26%),linear-gradient(rgba(255,255,255,.07)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.07)_1px,transparent_1px)] bg-[length:auto,44px_44px,44px_44px]"></div>
+      <div class="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-stone-50 to-transparent"></div>
+
+      <div class="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pb-24 sm:px-6 lg:grid-cols-[1fr_.9fr] lg:px-8">
+        <div class="max-w-3xl">
+          <div class="mb-6 inline-flex items-center gap-3 rounded-full border border-white/18 bg-white/12 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-amber-100">
+            <span class="h-2 w-2 rounded-full bg-amber-300"></span>
+            Tanah Baru, Beji, Depok
+          </div>
+          <h1 class="text-balance text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl">Grand Depok Residence</h1>
+          <p class="mt-4 text-2xl font-medium tracking-[0.08em] text-white/90">RT 09 RW 12</p>
+          <p class="mt-6 max-w-2xl text-lg leading-8 text-white/76">
+            <span data-copy="heroSubtitle">Portal lingkungan untuk informasi, kegiatan, fasilitas, kabar warga, dan akses cepat ke pengurus.</span>
+          </p>
+          <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+            <a href="#berita" class="inline-flex items-center justify-center rounded-full bg-amber-400 px-6 py-3.5 text-sm font-extrabold text-forest-950 shadow-xl shadow-black/10 transition hover:-translate-y-0.5 hover:bg-amber-300" data-copy="heroPrimaryCta">Lihat Berita</a>
+            <button type="button" onclick="openPostDialog()" class="inline-flex items-center justify-center rounded-full border border-white/24 bg-white/10 px-6 py-3.5 text-sm font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-white/16" data-copy="heroSecondaryCta">Kirim Kabar</button>
+          </div>
         </div>
-        <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-          Grand Depok Residence<br/>RT 09 RW 12
-        </h1>
-        <p class="text-xl text-white/90 mb-8 leading-relaxed">
-          Portal lingkungan untuk informasi, kegiatan, fasilitas, kabar warga, dan akses cepat ke pengurus.
-        </p>
-        <div class="flex flex-wrap gap-4">
-          <a href="#berita" class="bg-yellow-400 hover:bg-yellow-500 text-stone-900 font-bold py-3 px-8 rounded-full transition text-lg">
-            Lihat Berita
+
+        <div class="rounded-[2rem] border border-white/16 bg-white/[0.10] p-4 shadow-2xl shadow-black/25 sm:p-5">
+          <div class="rounded-[1.5rem] bg-white p-4 text-slate-950 sm:p-5">
+            <div class="rounded-[1.1rem] bg-gradient-to-br from-forest-800 via-forest-700 to-amber-500 p-6 text-white">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <p class="text-sm font-extrabold uppercase tracking-[0.22em] text-amber-100" data-copy="heroCardEyebrow">Lingkungan aktif</p>
+                  <h2 class="mt-4 max-w-sm text-3xl font-extrabold leading-tight" data-copy="heroCardTitle">Hijau, tertib, dan dekat dengan kebutuhan harian warga.</h2>
+                </div>
+                <img src="./assets/logo3.svg" alt="" class="h-12 w-12 shrink-0">
+              </div>
+              <div class="mt-8 grid grid-cols-3 gap-3">
+                <div class="rounded-2xl bg-white/12 p-4"><div class="text-3xl font-extrabold">24</div><div class="mt-1 text-xs font-semibold text-white/72">Jam keamanan</div></div>
+                <div class="rounded-2xl bg-white/12 p-4"><div class="text-3xl font-extrabold">12+</div><div class="mt-1 text-xs font-semibold text-white/72">Fasilitas</div></div>
+                <div class="rounded-2xl bg-white/12 p-4"><div class="text-3xl font-extrabold">RT09</div><div class="mt-1 text-xs font-semibold text-white/72">RW 12</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-stone-50 py-14">
+      <div class="mx-auto grid max-w-7xl gap-4 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p class="text-3xl font-extrabold text-forest-700">RT 09</p><p class="mt-2 text-sm font-semibold text-slate-500">Bagian dari RW 12 Grand Depok Residence.</p></div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p class="text-3xl font-extrabold text-forest-700">24/7</p><p class="mt-2 text-sm font-semibold text-slate-500">Lingkungan dengan pos keamanan dan akses warga.</p></div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p class="text-3xl font-extrabold text-forest-700">12+</p><p class="mt-2 text-sm font-semibold text-slate-500">Fasilitas bersama untuk keluarga dan komunitas.</p></div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p class="text-3xl font-extrabold text-forest-700">Aktif</p><p class="mt-2 text-sm font-semibold text-slate-500">Kegiatan sosial, olahraga, ibadah, dan kebersihan.</p></div>
+      </div>
+    </section>
+
+    <section id="tentang" class="bg-white py-20 sm:py-24">
+      <div class="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[.9fr_1.1fr] lg:px-8">
+        <div>
+          <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-600" data-copy="aboutEyebrow">Tentang GDR</p>
+          <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="aboutTitle">Lingkungan yang nyaman untuk tumbuh bersama.</h2>
+          <p class="mt-5 text-base leading-8 text-slate-600" data-copy="aboutBody">Grand Depok Residence RT 09 RW 12 menempatkan kenyamanan warga sebagai pusat aktivitas. Informasi dibuat mudah ditemukan, kegiatan terdokumentasi, dan komunikasi warga dibuat lebih dekat.</p>
+          <div class="mt-8 grid gap-4 sm:grid-cols-3">
+            <div class="rounded-2xl border border-slate-200 bg-stone-50 p-5"><h3 class="font-extrabold">Tertib</h3><p class="mt-2 text-sm leading-6 text-slate-600">Agenda dan pengumuman tersusun jelas.</p></div>
+            <div class="rounded-2xl border border-slate-200 bg-stone-50 p-5"><h3 class="font-extrabold">Aman</h3><p class="mt-2 text-sm leading-6 text-slate-600">Akses pengurus dan keamanan lebih mudah.</p></div>
+            <div class="rounded-2xl border border-slate-200 bg-stone-50 p-5"><h3 class="font-extrabold">Guyub</h3><p class="mt-2 text-sm leading-6 text-slate-600">Kabar warga bisa dibagikan dan dikurasi.</p></div>
+          </div>
+        </div>
+        <div id="about-photo" class="image-cover min-h-[420px] rounded-[2rem] border border-slate-200 bg-stone-100 shadow-sm"></div>
+      </div>
+    </section>
+
+    <section id="fasilitas" class="bg-slate-950 py-20 text-white sm:py-24">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+          <div class="max-w-2xl">
+            <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-300" data-copy="facilitiesEyebrow">Fasilitas</p>
+            <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="facilitiesTitle">Kebutuhan harian warga dalam jangkauan dekat.</h2>
+          </div>
+          <p class="max-w-xl text-base leading-8 text-white/68" data-copy="facilitiesBody">Fasilitas lingkungan disusun ringkas agar warga dan tamu mudah memahami ruang bersama yang tersedia.</p>
+        </div>
+        <div id="facility-grid" class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4"></div>
+      </div>
+    </section>
+
+    <section id="kegiatan" class="bg-stone-50 py-20 sm:py-24">
+      <div class="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[.9fr_1.1fr] lg:px-8">
+        <div>
+          <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-forest-700" data-copy="activitiesEyebrow">Kegiatan</p>
+          <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="activitiesTitle">Agenda warga yang membuat lingkungan terasa hidup.</h2>
+          <p class="mt-5 text-base leading-8 text-slate-600" data-copy="activitiesBody">Beragam agenda warga membantu menjaga kebersihan, kesehatan, silaturahmi, dan kepedulian sosial di lingkungan.</p>
+          <div id="activities-photo" class="image-cover mt-8 min-h-[320px] rounded-[2rem] border border-slate-200 bg-stone-100 shadow-sm"></div>
+        </div>
+        <div id="activities-list" class="grid content-start gap-4"></div>
+      </div>
+    </section>
+
+    <section id="mushola" class="bg-white py-20 sm:py-24">
+      <div class="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[1.1fr_.9fr] lg:px-8">
+        <div id="mushola-photo" class="image-cover min-h-[460px] rounded-[2rem] border border-slate-200 bg-stone-100 shadow-sm"></div>
+        <div class="flex flex-col justify-center rounded-[2rem] bg-forest-800 p-8 text-white shadow-xl">
+          <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-200" data-copy="musholaEyebrow">Mushola</p>
+          <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="musholaTitle">Ruang ibadah yang dekat dengan keseharian warga.</h2>
+          <p class="mt-5 text-base leading-8 text-white/72" data-copy="musholaBody">Mushola menjadi titik temu untuk shalat berjamaah, kajian, pengajian anak, dan kegiatan sosial.</p>
+          <button type="button" onclick="openQrisDialog()" class="mt-8 inline-flex w-fit items-center justify-center rounded-full bg-amber-400 px-6 py-3.5 text-sm font-extrabold text-forest-950 shadow-lg transition hover:bg-amber-300" data-copy="musholaCta">Kotak Amal</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="berita" class="bg-stone-50 py-20 sm:py-24">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+          <div class="max-w-2xl">
+            <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-forest-700" data-copy="newsEyebrow">Berita warga</p>
+            <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="newsTitle">Kabar terbaru dari lingkungan.</h2>
+            <p class="mt-4 text-sm font-semibold leading-7 text-slate-500" data-copy="newsBody">Kabar lingkungan yang sudah dikurasi tampil di sini agar warga mudah mengikuti informasi terbaru.</p>
+          </div>
+          <button type="button" onclick="openPostDialog()" class="inline-flex w-full items-center justify-center rounded-full bg-forest-700 px-6 py-3.5 text-sm font-extrabold text-white shadow-lg transition hover:bg-forest-800 sm:w-auto">Kirim Kabar Warga</button>
+        </div>
+
+        <div class="mt-10 flex flex-wrap gap-2" id="category-buttons">
+          <button class="category-button active rounded-full border border-forest-700 bg-forest-700 px-4 py-2 text-sm font-extrabold text-white" data-category="semua">Semua</button>
+          <button class="category-button rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-forest-200 hover:bg-forest-50" data-category="Pengumuman">Pengumuman</button>
+          <button class="category-button rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-forest-200 hover:bg-forest-50" data-category="Kegiatan">Kegiatan</button>
+          <button class="category-button rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-forest-200 hover:bg-forest-50" data-category="DKM">DKM</button>
+          <button class="category-button rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-forest-200 hover:bg-forest-50" data-category="Berita">Berita</button>
+        </div>
+
+        <div id="news-grid" class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3"></div>
+        <div id="empty-news" class="mt-8 hidden rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center">
+          <p class="text-lg font-extrabold">Belum ada kabar untuk kategori ini.</p>
+          <p class="mt-2 text-sm text-slate-500">Coba kategori lain atau kirim kabar baru dari tombol di atas.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="kontak" class="bg-white py-14 sm:py-16">
+      <div class="mx-auto grid max-w-7xl gap-6 px-4 sm:px-6 lg:grid-cols-[.62fr_1.38fr] lg:px-8">
+        <div class="rounded-[2rem] bg-gradient-to-br from-forest-800 via-forest-700 to-emerald-600 p-7 text-white shadow-xl shadow-forest-900/10 sm:p-8">
+          <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-200" data-copy="contactEyebrow">Kontak</p>
+          <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="contactTitle">Perlu koordinasi dengan pengurus?</h2>
+          <p class="mt-5 text-base leading-8 text-white/72" data-copy="contactBody">Gunakan WhatsApp resmi pengurus untuk pengumuman, perizinan kegiatan, keamanan, dan informasi lingkungan.</p>
+          <a href="https://wa.me/6281288696521?text=Halo%20Pengurus%20GDR%2C%20saya%20ingin%20bertanya%20tentang%20lingkungan%20RT%2009%20RW%2012." target="_blank" rel="noreferrer" class="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3.5 text-sm font-extrabold text-white shadow-lg transition hover:brightness-95 sm:w-auto">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.8 8.8 0 0 1-3.9-.9L3 20l1.2-4.7A8.2 8.2 0 0 1 3 11.5a8.5 8.5 0 0 1 18 0Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            <span data-copy="contactCta">WhatsApp</span>
           </a>
-          <button onclick="openModal()" class="bg-white/20 hover:bg-white/30 backdrop-blur text-white font-bold py-3 px-8 rounded-full transition text-lg border-2 border-white">
-            Kirim Kabar
-          </button>
+        </div>
+        <div class="overflow-hidden rounded-[2rem] border border-slate-200 bg-stone-50 p-4 shadow-sm">
+          <iframe
+            title="Peta Grand Depok Residence"
+            class="h-[340px] w-full rounded-[1.5rem] lg:h-[400px]"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=Grand%20Depok%20Residence%20Tanah%20Baru%20Beji%20Depok&output=embed">
+          </iframe>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
-  <!-- Stats Section -->
-  <section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-        <div class="text-center">
-          <div class="text-4xl font-bold text-green-700 mb-2">24/7</div>
-          <div class="text-stone-600">Jam keamanan</div>
-        </div>
-        <div class="text-center">
-          <div class="text-4xl font-bold text-green-700 mb-2">12+</div>
-          <div class="text-stone-600">Fasilitas</div>
-        </div>
-        <div class="text-center">
-          <div class="text-4xl font-bold text-green-700 mb-2">RT 09</div>
-          <div class="text-stone-600">RW 12</div>
-        </div>
-        <div class="text-center">
-          <div class="text-4xl font-bold text-green-700 mb-2">Aktif</div>
-          <div class="text-stone-600">Kegiatan</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Tentang Section -->
-  <section id="tentang" class="py-20 bg-stone-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold text-stone-900 mb-4">Tentang GDR</h2>
-        <p class="text-xl text-stone-600 max-w-3xl mx-auto">
-          Lingkungan yang nyaman untuk tumbuh bersama.
-        </p>
-      </div>
-      
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-white p-8 rounded-2xl shadow-lg card-hover transition">
-          <div class="text-4xl mb-4">📋</div>
-          <h3 class="text-xl font-bold text-stone-900 mb-3">Tertib</h3>
-          <p class="text-stone-600">Agenda dan pengumuman tersusun jelas.</p>
-        </div>
-        <div class="bg-white p-8 rounded-2xl shadow-lg card-hover transition">
-          <div class="text-4xl mb-4"></div>
-          <h3 class="text-xl font-bold text-stone-900 mb-3">Aman</h3>
-          <p class="text-stone-600">Akses pengurus dan keamanan lebih mudah.</p>
-        </div>
-        <div class="bg-white p-8 rounded-2xl shadow-lg card-hover transition">
-          <div class="text-4xl mb-4">🤝</div>
-          <h3 class="text-xl font-bold text-stone-900 mb-3">Guyub</h3>
-          <p class="text-stone-600">Kabar warga bisa dibagikan dan dikurasi.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Fasilitas Section -->
-  <section id="fasilitas" class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold text-stone-900 mb-4">Fasilitas</h2>
-        <p class="text-xl text-stone-600">Kebutuhan harian warga dalam jangkauan dekat.</p>
-      </div>
-      
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="fasilitiesContainer">
-        <div class="bg-stone-50 p-6 rounded-xl">
-          <div class="text-3xl mb-3">🕌</div>
-          <h3 class="font-bold text-stone-900 mb-2">Mushola</h3>
-          <p class="text-stone-600 text-sm">Ruang ibadah yang dekat dengan keseharian warga.</p>
-        </div>
-        <div class="bg-stone-50 p-6 rounded-xl">
-          <div class="text-3xl mb-3">📦</div>
-          <h3 class="font-bold text-stone-900 mb-2">Kotak Amal</h3>
-          <p class="text-stone-600 text-sm">Sarana berbagi untuk warga yang membutuhkan.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Kegiatan Section -->
-  <section id="kegiatan" class="py-20 bg-stone-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold text-stone-900 mb-4">Kegiatan</h2>
-        <p class="text-xl text-stone-600">Agenda warga yang membuat lingkungan terasa hidup.</p>
-      </div>
-      
-      <div id="agendaContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="text-center text-stone-500 py-12">
-          Memuat agenda...
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Berita Section -->
-  <section id="berita" class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold text-stone-900 mb-4">Berita warga</h2>
-        <p class="text-xl text-stone-600">Kabar terbaru dari lingkungan.</p>
-      </div>
-      
-      <div class="flex flex-wrap justify-center gap-3 mb-8" id="kategoriFilter">
-        <button onclick="filterKategori('semua')" class="kategori-btn active bg-green-700 text-white px-6 py-2 rounded-full font-medium transition">Semua</button>
-        <button onclick="filterKategori('Pengumuman')" class="kategori-btn bg-stone-200 text-stone-700 px-6 py-2 rounded-full font-medium hover:bg-stone-300 transition">Pengumuman</button>
-        <button onclick="filterKategori('Kegiatan')" class="kategori-btn bg-stone-200 text-stone-700 px-6 py-2 rounded-full font-medium hover:bg-stone-300 transition">Kegiatan</button>
-        <button onclick="filterKategori('DKM')" class="kategori-btn bg-stone-200 text-stone-700 px-6 py-2 rounded-full font-medium hover:bg-stone-300 transition">DKM</button>
-        <button onclick="filterKategori('Berita')" class="kategori-btn bg-stone-200 text-stone-700 px-6 py-2 rounded-full font-medium hover:bg-stone-300 transition">Berita</button>
-      </div>
-      
-      <div id="newsContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="text-center text-stone-500 py-12 col-span-full">
-          Memuat berita...
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Kontak Section -->
-  <section id="kontak" class="py-20 bg-green-700">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center text-white">
-        <h2 class="text-4xl font-bold mb-4">Kontak</h2>
-        <p class="text-xl text-green-100 mb-8">Perlu koordinasi dengan pengurus?</p>
-        <a href="https://wa.me/6281288696521?text=Halo%20Pengurus%20GDR%2C%20saya%20ingin%20bertanya%20tentang%20lingkungan%20RT%2009%20RW%2012." 
-           class="inline-block bg-white text-green-700 font-bold py-4 px-8 rounded-full hover:bg-green-50 transition text-lg">
-          📱 WhatsApp Pengurus
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-stone-900 text-stone-400 py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-3 gap-8 mb-8">
+  <footer class="bg-slate-950 py-10 text-white">
+    <div class="mx-auto flex max-w-7xl flex-col gap-6 px-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+      <div class="flex items-center gap-3">
+        <img src="./assets/logo.svg" alt="" class="h-11 w-11">
         <div>
-          <h3 class="text-white font-bold text-lg mb-4">Grand Depok Residence<br/>RT 09 RW 12</h3>
-          <p>Tanah Baru, Beji, Depok</p>
-        </div>
-        <div>
-          <h4 class="text-white font-bold mb-4">Menu</h4>
-          <ul class="space-y-2">
-            <li><a href="#tentang" class="hover:text-white transition">Tentang</a></li>
-            <li><a href="#fasilitas" class="hover:text-white transition">Fasilitas</a></li>
-            <li><a href="#kegiatan" class="hover:text-white transition">Kegiatan</a></li>
-            <li><a href="#berita" class="hover:text-white transition">Berita</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="text-white font-bold mb-4">Kabar warga</h4>
-          <p>Kirim kabar untuk ditinjau. Posting tidak langsung tampil. Pengurus akan meninjau sebelum kabar dipublikasikan.</p>
+          <p class="font-extrabold">Grand Depok Residence</p>
+          <p class="text-sm font-semibold text-white/55">RT 09 RW 12 - Tanah Baru, Beji, Depok</p>
         </div>
       </div>
-      <div class="border-t border-stone-800 pt-8 text-center">
-        <p>&copy; 2024 Grand Depok Residence RT 09 RW 12. Portal informasi warga dan komunikasi lingkungan.</p>
-      </div>
+      <p class="text-sm font-semibold text-white/50" data-copy="footerBody">Portal informasi warga dan komunikasi lingkungan.</p>
     </div>
   </footer>
 
-  <!-- Modal Kirim Kabar -->
-  <div id="submitModal" class="modal">
-    <div class="bg-white rounded-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-      <div class="p-6 border-b border-stone-200 flex justify-between items-center">
-        <h3 class="text-2xl font-bold text-stone-900">Kirim kabar untuk ditinjau</h3>
-        <button onclick="closeModal()" class="text-stone-400 hover:text-stone-600 text-2xl">&times;</button>
+  <div id="post-dialog" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/70 p-4">
+    <div class="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-5 shadow-2xl sm:p-7" role="dialog" aria-modal="true" aria-labelledby="post-title-dialog">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-forest-700">Kabar warga</p>
+          <h2 id="post-title-dialog" class="mt-2 text-2xl font-extrabold">Kirim kabar untuk ditinjau</h2>
+          <p class="mt-2 text-sm font-semibold text-slate-500">Posting tidak langsung tampil. Pengurus akan meninjau sebelum kabar dipublikasikan.</p>
+        </div>
+        <button type="button" onclick="closeDialog('post-dialog')" class="grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Tutup"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
       </div>
-      
-      <div class="p-6">
-        <p class="text-stone-600 mb-6">Posting tidak langsung tampil. Pengurus akan meninjau sebelum kabar dipublikasikan.</p>
-        
-        <form id="kabarForm" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-stone-700 mb-2">Nama pengirim</label>
-            <input type="text" id="namaPengirim" required class="w-full px-4 py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium text-stone-700 mb-2">Kategori</label>
-            <select id="kategori" required class="w-full px-4 py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-              <option value="">Pilih kategori</option>
-              <option value="Pengumuman">Pengumuman</option>
-              <option value="Kegiatan">Kegiatan</option>
-              <option value="DKM">DKM</option>
-              <option value="Berita">Berita</option>
-            </select>
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium text-stone-700 mb-2">Judul</label>
-            <input type="text" id="judul" required class="w-full px-4 py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium text-stone-700 mb-2">Foto kabar</label>
-            <input type="file" id="fotoInput" accept="image/*" class="w-full px-4 py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-            <img id="fotoPreview" class="mt-3 max-w-xs rounded-lg hidden">
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium text-stone-700 mb-2">Isi kabar</label>
-            <textarea id="isiKabar" rows="5" required class="w-full px-4 py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"></textarea>
-          </div>
-          
-          <div class="flex gap-3 pt-4">
-            <button type="button" onclick="closeModal()" class="flex-1 px-6 py-3 border border-stone-300 text-stone-700 rounded-lg font-medium hover:bg-stone-50 transition">
-              Batal
-            </button>
-            <button type="submit" class="flex-1 px-6 py-3 bg-green-700 text-white rounded-lg font-medium hover:bg-green-800 transition">
-              Kirim ke Pengurus
-            </button>
-          </div>
-        </form>
-      </div>
+
+      <form id="post-form" class="mt-6 grid gap-4">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <label class="grid gap-2 text-sm font-bold text-slate-700">Nama pengirim<input id="post-author" required class="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none transition focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="Nama warga"></label>
+          <label class="grid gap-2 text-sm font-bold text-slate-700">Kategori<select id="post-category" required class="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none transition focus:border-forest-500 focus:ring-4 focus:ring-forest-100"><option value="">Pilih kategori</option><option>Pengumuman</option><option>Kegiatan</option><option>DKM</option><option>Berita</option></select></label>
+        </div>
+        <label class="grid gap-2 text-sm font-bold text-slate-700">Judul<input id="post-title" required class="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none transition focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="Contoh: Jadwal kerja bakti bulan ini"></label>
+        <label class="grid gap-2 text-sm font-bold text-slate-700">Foto kabar<input id="post-image" type="file" accept="image/*" class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold file:mr-4 file:rounded-full file:border-0 file:bg-forest-700 file:px-4 file:py-2 file:text-sm file:font-extrabold file:text-white"></label>
+        <label class="grid gap-2 text-sm font-bold text-slate-700">Isi kabar<textarea id="post-content" required rows="5" class="resize-y rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none transition focus:border-forest-500 focus:ring-4 focus:ring-forest-100" placeholder="Tulis informasi singkat dan jelas."></textarea></label>
+        <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <button type="button" onclick="closeDialog('post-dialog')" class="rounded-full border border-slate-200 px-6 py-3 text-sm font-extrabold text-slate-700 hover:bg-slate-50">Batal</button>
+          <button type="submit" class="rounded-full bg-forest-700 px-6 py-3 text-sm font-extrabold text-white shadow-lg hover:bg-forest-800">Kirim ke Pengurus</button>
+        </div>
+      </form>
     </div>
   </div>
 
+  <div id="detail-dialog" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/70 p-4"></div>
+  <div id="qris-dialog" class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/70 p-4"></div>
+  <div id="toast" class="fixed bottom-5 left-1/2 z-[90] hidden -translate-x-1/2 rounded-full bg-slate-950 px-5 py-3 text-sm font-extrabold text-white shadow-2xl"></div>
+
   <script>
-    // ===== KONFIGURASI SUPABASE =====
-    const CONFIG = {
-      SUPABASE_URL: 'https://gyofijyebgtxzbtwlwbw.supabase.co',
-      SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo',
-      TABLE: 'news_posts',
-      BUCKET: 'gdr-media'
+    const STORAGE = {
+      settings: "gdr-settings-v4",
+      news: "gdr-news-v4",
+      activities: "gdr-activities-v4"
+    };
+    const SUPABASE_URL = "https://gyofijyebgtxzbtwlwbw.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo";
+    const MEDIA_BUCKET = "gdr-media";
+    let supabaseClient = null;
+    let currentCategory = "semua";
+
+    const defaults = {
+      settings: {
+        heroImage: "./assets/site-hero.jpg",
+        aboutImage: "./assets/site-about.jpg",
+        activitiesImage: "./assets/site-activities.jpg",
+        musholaImage: "./assets/site-mushola.jpg",
+        qrisImage: "",
+        facilities: [
+          { id: "security", title: "Pos keamanan", desc: "Pemantauan lingkungan dan akses masuk warga.", image: "./assets/facility-security.jpg" },
+          { id: "mushola", title: "Mushola", desc: "Ruang ibadah dan kegiatan keagamaan warga.", image: "./assets/facility-mushola.jpg" },
+          { id: "playground", title: "Area bermain", desc: "Ruang terbuka untuk anak dan keluarga.", image: "./assets/facility-playground.jpg" },
+          { id: "field", title: "Lapangan", desc: "Tempat olahraga, senam, dan acara warga.", image: "./assets/facility-field.jpg" },
+          { id: "waste", title: "Bank sampah", desc: "Program kebersihan dan pemilahan sampah lingkungan.", image: "./assets/facility-waste.jpg" },
+          { id: "hall", title: "Balai warga", desc: "Rapat RT, koordinasi, dan kegiatan komunitas.", image: "./assets/facility-hall.jpg" },
+          { id: "park", title: "Taman hijau", desc: "Area teduh untuk bersantai dan bertemu tetangga.", image: "./assets/facility-park.jpg" },
+          { id: "channel", title: "Kanal warga", desc: "Ruang berbagi kabar yang bisa dikurasi pengurus.", image: "./assets/facility-channel.jpg" }
+        ],
+        copy: {
+          heroSubtitle: "Portal lingkungan untuk informasi, kegiatan, fasilitas, kabar warga, dan akses cepat ke pengurus.",
+          heroPrimaryCta: "Lihat Berita",
+          heroSecondaryCta: "Kirim Kabar",
+          heroCardEyebrow: "Lingkungan aktif",
+          heroCardTitle: "Hijau, tertib, dan dekat dengan kebutuhan harian warga.",
+          aboutEyebrow: "Tentang GDR",
+          aboutTitle: "Lingkungan yang nyaman untuk tumbuh bersama.",
+          aboutBody: "Grand Depok Residence RT 09 RW 12 menempatkan kenyamanan warga sebagai pusat aktivitas. Informasi dibuat mudah ditemukan, kegiatan terdokumentasi, dan komunikasi warga dibuat lebih dekat.",
+          facilitiesEyebrow: "Fasilitas",
+          facilitiesTitle: "Kebutuhan harian warga dalam jangkauan dekat.",
+          facilitiesBody: "Fasilitas lingkungan disusun ringkas agar warga dan tamu mudah memahami ruang bersama yang tersedia.",
+          activitiesEyebrow: "Kegiatan",
+          activitiesTitle: "Agenda warga yang membuat lingkungan terasa hidup.",
+          activitiesBody: "Beragam agenda warga membantu menjaga kebersihan, kesehatan, silaturahmi, dan kepedulian sosial di lingkungan.",
+          musholaEyebrow: "Mushola",
+          musholaTitle: "Ruang ibadah yang dekat dengan keseharian warga.",
+          musholaBody: "Mushola menjadi titik temu untuk shalat berjamaah, kajian, pengajian anak, dan kegiatan sosial.",
+          musholaCta: "Kotak Amal",
+          newsEyebrow: "Berita warga",
+          newsTitle: "Kabar terbaru dari lingkungan.",
+          newsBody: "Kabar lingkungan yang sudah dikurasi tampil di sini agar warga mudah mengikuti informasi terbaru.",
+          contactEyebrow: "Kontak",
+          contactTitle: "Perlu koordinasi dengan pengurus?",
+          contactBody: "Gunakan WhatsApp resmi pengurus untuk pengumuman, perizinan kegiatan, keamanan, dan informasi lingkungan.",
+          contactCta: "WhatsApp",
+          footerBody: "Portal informasi warga dan komunikasi lingkungan."
+        }
+      },
+      activities: [
+        { id: 1, label: "Minggu Pagi", title: "Senam dan olahraga warga", desc: "Ruang berkumpul sehat untuk keluarga, remaja, dan warga senior." },
+        { id: 2, label: "Bulanan RT", title: "Kerja bakti dan bank sampah", desc: "Agenda kebersihan lingkungan, pemilahan sampah, dan perawatan." },
+        { id: 3, label: "Rutin DKM", title: "Kajian, pengajian, dan santunan", desc: "Kegiatan ibadah dan sosial untuk memperkuat kepedulian antarwarga." }
+      ],
+      news: [
+        { id: 1, title: "Kerja Bakti Lingkungan Minggu Pagi", content: "Warga RT 09 diundang hadir untuk membersihkan saluran air, taman, dan area sekitar pos keamanan. Mohon membawa perlengkapan sederhana dari rumah.", category: "Kegiatan", author: "Pengurus RT 09", date: "2026-05-19", status: "approved", image: "./assets/news-work.jpg" },
+        { id: 2, title: "Pengumpulan Bank Sampah", content: "Pengumpulan sampah terpilah dilakukan setiap Sabtu pagi di area depan pos utama. Pisahkan plastik, kertas, dan material bernilai guna.", category: "Berita", author: "Tim Kebersihan", date: "2026-05-15", status: "approved", image: "./assets/news-waste.jpg" },
+        { id: 3, title: "Kajian Rutin Mushola", content: "Kajian rutin ba'da Maghrib akan dilaksanakan di mushola lingkungan. Warga dipersilakan hadir bersama keluarga.", category: "DKM", author: "DKM GDR", date: "2026-05-12", status: "approved", image: "./assets/news-dkm.jpg" },
+        { id: 4, title: "Imbauan Keamanan Lingkungan", content: "Pastikan pintu pagar rumah terkunci dan laporkan tamu menginap kepada pengurus atau petugas keamanan untuk pendataan lingkungan.", category: "Pengumuman", author: "Keamanan GDR", date: "2026-05-10", status: "approved", image: "./assets/news-security.jpg" }
+      ]
     };
 
-    // Inisialisasi Supabase (HANYA 1x!)
-    const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
-    
-    let currentCategory = 'semua';
-    let currentUploadedFile = null;
+    const categoryClasses = {
+      Pengumuman: "bg-amber-100 text-amber-800",
+      Kegiatan: "bg-forest-100 text-forest-800",
+      DKM: "bg-sky-100 text-sky-800",
+      Berita: "bg-slate-100 text-slate-700"
+    };
 
-    // ===== ALERT MESSAGE FUNCTION =====
-    function showAlert(message, type = 'success') {
-      const alert = document.getElementById('alertBox');
-      const alertIcon = document.getElementById('alertIcon');
-      const alertMessage = document.getElementById('alertMessage');
-      
-      alert.className = `alert alert-${type} show`;
-      alertIcon.textContent = type === 'success' ? '✅' : '❌';
-      alertMessage.textContent = message;
-      
-      setTimeout(() => {
-        alert.classList.remove('show');
-      }, 4000);
+    const appState = {
+      settings: structuredClone(defaults.settings),
+      activities: structuredClone(defaults.activities),
+      news: structuredClone(defaults.news),
+      remoteReady: false
+    };
+
+    function initSupabaseClient() {
+      if (!window.supabase || supabaseClient) return supabaseClient;
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      return supabaseClient;
     }
 
-    // ===== MODAL FUNCTIONS =====
-    function openModal() {
-      document.getElementById('submitModal').classList.add('show');
-      document.body.style.overflow = 'hidden';
+    function rowToNews(row) {
+      return {
+        id: row.id,
+        title: row.title,
+        content: row.content,
+        category: row.category,
+        author: row.author,
+        date: row.created_at || row.updated_at || new Date().toISOString(),
+        status: row.status,
+        image: row.image_url || ""
+      };
     }
 
-    function closeModal() {
-      document.getElementById('submitModal').classList.remove('show');
-      document.body.style.overflow = '';
-      document.getElementById('kabarForm').reset();
-      document.getElementById('fotoPreview').classList.add('hidden');
-      currentUploadedFile = null;
+    function rowToActivity(row) {
+      return {
+        id: row.id,
+        label: row.label,
+        title: row.title,
+        desc: row.description
+      };
     }
 
-    // ===== FILE UPLOAD PREVIEW =====
-    document.getElementById('fotoInput')?.addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        currentUploadedFile = file;
+    function readStore(key, fallback) {
+      try {
+        const stored = localStorage.getItem(key);
+        if (stored) return JSON.parse(stored);
+      } catch (error) {
+        console.warn("Gagal membaca storage", key, error);
+      }
+      localStorage.setItem(key, JSON.stringify(fallback));
+      return structuredClone(fallback);
+    }
+
+    function writeStore(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function loadLocalState() {
+      appState.settings = mergeSettings(readStore(STORAGE.settings, defaults.settings));
+      appState.activities = readStore(STORAGE.activities, defaults.activities);
+      appState.news = readStore(STORAGE.news, defaults.news);
+    }
+
+    function mergeSettings(stored) {
+      const merged = {
+        ...defaults.settings,
+        ...stored,
+        copy: { ...defaults.settings.copy, ...(stored.copy || {}) },
+        facilities: stored.facilities || defaults.settings.facilities
+      };
+      return merged;
+    }
+
+    function getSettings() { return mergeSettings(appState.settings); }
+    function getNews() { return appState.news; }
+    function getActivities() { return appState.activities; }
+    async function loadRemoteData() {
+      const client = initSupabaseClient();
+      if (!client) return false;
+      const [{ data: settingsRow }, { data: activitiesRows }, { data: newsRows }] = await Promise.all([
+        client.from("site_settings").select("data").eq("id", "default").maybeSingle(),
+        client.from("activities").select("*").order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
+        client.from("news_posts").select("*").order("created_at", { ascending: false })
+      ]);
+
+      if (settingsRow?.data && Object.keys(settingsRow.data).length) {
+        appState.settings = mergeSettings(settingsRow.data);
+        writeStore(STORAGE.settings, appState.settings);
+      }
+      if (activitiesRows?.length) {
+        appState.activities = activitiesRows.map(rowToActivity);
+        writeStore(STORAGE.activities, appState.activities);
+      }
+      if (newsRows?.length) {
+        appState.news = newsRows.map(rowToNews);
+        writeStore(STORAGE.news, appState.news);
+      }
+      appState.remoteReady = true;
+      return true;
+    }
+
+    async function saveNews(value) {
+      appState.news = value;
+      writeStore(STORAGE.news, value);
+    }
+
+    function formatDate(value) {
+      return new Date(value).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.remove("hidden");
+      clearTimeout(window.gdrToastTimer);
+      window.gdrToastTimer = setTimeout(() => toast.classList.add("hidden"), 2800);
+    }
+
+    function fileToDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        if (!file) return resolve("");
         const reader = new FileReader();
-        reader.onload = function(e) {
-          const preview = document.getElementById('fotoPreview');
-          preview.src = e.target.result;
-          preview.classList.remove('hidden');
-        };
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
         reader.readAsDataURL(file);
-      }
-    });
+      });
+    }
 
-    // ===== FORM SUBMIT =====
-    document.getElementById('kabarForm')?.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const namaPengirim = document.getElementById('namaPengirim').value;
-      const kategori = document.getElementById('kategori').value;
-      const judul = document.getElementById('judul').value;
-      const isiKabar = document.getElementById('isiKabar').value;
-      
-      try {
-        let fotoUrl = '';
-        
-        // Upload foto jika ada
-        if (currentUploadedFile) {
-          showAlert('Mengompresi & upload foto...', 'success');
-          
-          const compressedFile = await imageCompression(currentUploadedFile, {
-            maxSizeMB: 0.5,
-            maxWidthOrHeight: 1920,
-            useWebWorker: true
-          });
-          
-          const fileExt = currentUploadedFile.name.split('.').pop();
-          const fileName = `berita-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
-          
-          const { data: uploadData, error: uploadError } = await supabase
-            .storage
-            .from(CONFIG.BUCKET)
-            .upload(fileName, compressedFile, {
-              cacheControl: '3600',
-              upsert: false
-            });
-          
-          if (uploadError) throw uploadError;
-          
-          const { data: { publicUrl } } = supabase
-            .storage
-            .from(CONFIG.BUCKET)
-            .getPublicUrl(fileName);
-          
-          fotoUrl = publicUrl;
-        }
-        
-        // Insert ke database
-        const { error } = await supabase
-          .from(CONFIG.TABLE)
-          .insert({
-            title: judul,
-            judul: judul,
-            content: isiKabar,
-            isi: isiKabar,
-            author: namaPengirim,
-            nama_pengirim: namaPengirim,
-            categories: kategori,
-            kategori: kategori,
-            image_url: fotoUrl,
-            foto_url: fotoUrl,
-            status: 'pending',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          });
-        
-        if (error) throw error;
-        
-        // Tampilkan alert sukses
-        showAlert('Kabar berhasil dikirim! Menunggu persetujuan pengurus.', 'success');
-        
-        // Tutup modal & reset form
-        closeModal();
-        
-        // Refresh berita
-        loadNews();
-        
-      } catch (err) {
-        console.error('Error:', err);
-        showAlert('Gagal mengirim kabar: ' + err.message, 'error');
-      }
-    });
+    async function uploadMedia(file, folder) {
+      if (!file) return "";
+      const client = initSupabaseClient();
+      if (!client) return fileToDataUrl(file);
+      const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, "-");
+      const path = `${folder}/${Date.now()}-${safeName}`;
+      const { error } = await client.storage.from(MEDIA_BUCKET).upload(path, file, {
+        cacheControl: "3600",
+        upsert: true
+      });
+      if (error) throw error;
+      const { data } = client.storage.from(MEDIA_BUCKET).getPublicUrl(path);
+      return data.publicUrl;
+    }
 
-    // ===== LOAD NEWS =====
-    async function loadNews() {
-      const container = document.getElementById('newsContainer');
-      
-      try {
-        let query = supabase
-          .from(CONFIG.TABLE)
-          .select('*')
-          .eq('status', 'approved')
-          .order('created_at', { ascending: false });
-        
-        if (currentCategory !== 'semua') {
-          query = query.or(`kategori.eq.${currentCategory},categories.eq.${currentCategory}`);
-        }
-        
-        const { data, error } = await query;
-        
-        if (error) throw error;
-        
-        if (!data || data.length === 0) {
-          container.innerHTML = `
-            <div class="text-center text-stone-500 py-12 col-span-full">
-              Belum ada kabar untuk kategori ini.<br/>
-              Coba kategori lain atau kirim kabar baru dari tombol di atas.
-            </div>
-          `;
-          return;
-        }
-        
-        container.innerHTML = data.map(berita => `
-          <article class="bg-white rounded-xl shadow-lg overflow-hidden card-hover transition">
-            ${berita.image_url || berita.foto_url ? `
-              <img src="${berita.image_url || berita.foto_url}" alt="${berita.title || berita.judul}" 
-                   class="w-full h-48 object-cover" onerror="this.style.display='none'">
-            ` : ''}
+    function setBg(id, image) {
+      const el = document.getElementById(id);
+      if (el) el.style.backgroundImage = image ? `url("${image}")` : "";
+    }
+
+    function applyCopy(copy) {
+      document.querySelectorAll("[data-copy]").forEach((element) => {
+        const key = element.dataset.copy;
+        if (copy[key]) element.textContent = copy[key];
+      });
+    }
+
+    function applySettings() {
+      const settings = getSettings();
+      setBg("hero-section", settings.heroImage);
+      setBg("about-photo", settings.aboutImage);
+      setBg("activities-photo", settings.activitiesImage);
+      setBg("mushola-photo", settings.musholaImage);
+      applyCopy(settings.copy);
+      renderFacilities();
+      renderActivities();
+      renderNews();
+    }
+
+    function renderFacilities() {
+      const grid = document.getElementById("facility-grid");
+      const { facilities } = getSettings();
+      grid.innerHTML = facilities.map((item) => `
+        <article class="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] shadow-sm">
+          <div class="image-cover h-44" style="background-image:url('${item.image}')"></div>
+          <div class="p-5">
+            <h3 class="font-extrabold">${item.title}</h3>
+            <p class="mt-3 text-sm leading-7 text-white/64">${item.desc}</p>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderActivities() {
+      const list = document.getElementById("activities-list");
+      list.innerHTML = getActivities().map((item) => `
+        <article class="grid gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-[132px_1fr]">
+          <div class="rounded-2xl bg-forest-50 p-4 text-center">
+            <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-forest-700">${item.label}</p>
+          </div>
+          <div>
+            <h3 class="text-xl font-extrabold">${item.title}</h3>
+            <p class="mt-3 text-sm leading-7 text-slate-600">${item.desc}</p>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderNews(category = currentCategory) {
+      currentCategory = category;
+      const news = getNews()
+        .filter((item) => item.status === "approved")
+        .filter((item) => category === "semua" || item.category === category)
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+      const grid = document.getElementById("news-grid");
+      const empty = document.getElementById("empty-news");
+      if (!news.length) {
+        grid.innerHTML = "";
+        empty.classList.remove("hidden");
+        return;
+      }
+      empty.classList.add("hidden");
+      grid.innerHTML = news.map((item) => {
+        const badge = categoryClasses[item.category] || categoryClasses.Berita;
+        const excerpt = item.content.length > 118 ? `${item.content.slice(0, 118)}...` : item.content;
+        return `
+          <article class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+            ${item.image ? `<button type="button" onclick='openDetailDialog(${JSON.stringify(item.id)})' class="image-cover block h-48 w-full" style="background-image:url('${item.image}')" aria-label="Buka ${item.title}"></button>` : ""}
             <div class="p-6">
-              <div class="flex items-center gap-2 mb-3">
-                <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">
-                  ${berita.categories || berita.kategori || 'Umum'}
-                </span>
-                <span class="text-stone-400 text-xs">${formatDateID(berita.created_at)}</span>
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <span class="rounded-full px-3 py-1 text-xs font-extrabold ${badge}">${item.category}</span>
+                <time class="text-xs font-bold text-slate-400">${formatDate(item.date)}</time>
               </div>
-              <h3 class="text-xl font-bold text-stone-900 mb-2">${berita.title || berita.judul}</h3>
-              <p class="text-stone-600 text-sm mb-4">${(berita.content || berita.isi || '').substring(0, 150)}...</p>
-              <div class="flex items-center justify-between text-sm text-stone-500">
-                <span>👤 ${berita.author || berita.nama_pengirim || 'Anonim'}</span>
+              <h3 class="mt-5 text-xl font-extrabold leading-snug">${item.title}</h3>
+              <p class="mt-3 text-sm leading-7 text-slate-600">${excerpt}</p>
+              <div class="mt-6 flex items-center justify-between gap-4 border-t border-slate-100 pt-4">
+                <span class="text-sm font-bold text-slate-500">${item.author}</span>
+                <button type="button" onclick='openDetailDialog(${JSON.stringify(item.id)})' class="text-sm font-extrabold text-forest-700 hover:text-forest-900">Baca</button>
               </div>
             </div>
           </article>
-        `).join('');
-        
-      } catch (err) {
-        console.error('Error loading news:', err);
-        container.innerHTML = '<div class="text-center text-red-500 py-12">Gagal memuat berita</div>';
-      }
+        `;
+      }).join("");
     }
 
-    // ===== LOAD AGENDA =====
-    async function loadAgenda() {
-      const container = document.getElementById('agendaContainer');
-      
-      try {
-        const { data, error } = await supabase
-          .from('agenda')
-          .select('*')
-          .order('tanggal', { ascending: true })
-          .limit(6);
-        
-        if (error) throw error;
-        
-        if (!data || data.length === 0) {
-          container.innerHTML = '<div class="text-center text-stone-500 py-12 col-span-full">Belum ada agenda</div>';
-          return;
-        }
-        
-        container.innerHTML = data.map(item => `
-          <div class="bg-white p-6 rounded-xl shadow-md card-hover transition" style="border-left: 4px solid ${item.warna || '#166534'}">
-            <div class="text-sm text-stone-500 mb-2">${formatDateID(item.tanggal)} ${item.waktu || ''}</div>
-            <h3 class="font-bold text-stone-900 mb-2">${item.judul}</h3>
-            <p class="text-stone-600 text-sm">${item.deskripsi || ''}</p>
+    function setActiveCategory(category) {
+      document.querySelectorAll(".category-button").forEach((button) => {
+        const active = button.dataset.category === category;
+        button.className = active
+          ? "category-button active rounded-full border border-forest-700 bg-forest-700 px-4 py-2 text-sm font-extrabold text-white"
+          : "category-button rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-forest-200 hover:bg-forest-50";
+      });
+      renderNews(category);
+    }
+
+    function openDialog(id) {
+      closeMobileMenu();
+      const el = document.getElementById(id);
+      el.classList.remove("hidden");
+      el.classList.add("flex");
+      document.body.classList.add("dialog-open");
+    }
+
+    function closeDialog(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.add("hidden");
+      el.classList.remove("flex");
+      if (!document.querySelector(".fixed.flex")) document.body.classList.remove("dialog-open");
+    }
+
+    function openPostDialog() {
+      openDialog("post-dialog");
+      setTimeout(() => document.getElementById("post-author").focus(), 50);
+    }
+
+    function openDetailDialog(id) {
+      const item = getNews().find((news) => news.id === id);
+      if (!item) return;
+      const badge = categoryClasses[item.category] || categoryClasses.Berita;
+      document.getElementById("detail-dialog").innerHTML = `
+        <div class="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-3xl bg-white p-5 shadow-2xl sm:p-7">
+          <div class="flex items-start justify-between gap-4">
+            <div><span class="rounded-full px-3 py-1 text-xs font-extrabold ${badge}">${item.category}</span><h2 class="mt-4 text-3xl font-extrabold">${item.title}</h2><p class="mt-2 text-sm font-bold text-slate-500">${item.author} - ${formatDate(item.date)}</p></div>
+            <button type="button" onclick="closeDialog('detail-dialog')" class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Tutup"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
           </div>
-        `).join('');
-        
-      } catch (err) {
-        console.error('Error loading agenda:', err);
-        container.innerHTML = '<div class="text-center text-stone-500 py-12 col-span-full">Gagal memuat agenda</div>';
-      }
+          ${item.image ? `<img src="${item.image}" alt="${item.title}" class="mt-6 max-h-[440px] w-full rounded-2xl object-cover">` : ""}
+          <p class="mt-6 whitespace-pre-line text-base leading-8 text-slate-700">${item.content}</p>
+        </div>
+      `;
+      openDialog("detail-dialog");
     }
 
-    // ===== FILTER KATEGORI =====
-    function filterKategori(kategori) {
-      currentCategory = kategori;
-      
-      // Update button active state
-      document.querySelectorAll('.kategori-btn').forEach(btn => {
-        if (btn.textContent === kategori || (kategori === 'semua' && btn.textContent === 'Semua')) {
-          btn.className = 'kategori-btn active bg-green-700 text-white px-6 py-2 rounded-full font-medium transition';
-        } else {
-          btn.className = 'kategori-btn bg-stone-200 text-stone-700 px-6 py-2 rounded-full font-medium hover:bg-stone-300 transition';
+    function openQrisDialog() {
+      const qrisImage = getSettings().qrisImage;
+      document.getElementById("qris-dialog").innerHTML = `
+        <div class="w-full max-w-md rounded-3xl bg-white p-6 text-center shadow-2xl">
+          <button type="button" onclick="closeDialog('qris-dialog')" class="ml-auto grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Tutup"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+          <h2 class="mt-2 text-2xl font-extrabold">Kotak Amal Mushola</h2>
+          <p class="mt-2 text-sm font-semibold leading-6 text-slate-500">Terima kasih atas infaq dan dukungan warga. Semoga menjadi amal kebaikan.</p>
+          <div class="mt-6 rounded-2xl border border-slate-200 bg-stone-50 p-4">
+            ${qrisImage ? `<img src="${qrisImage}" alt="QRIS Mushola" class="mx-auto max-h-[420px] rounded-xl object-contain">` : `<div class="grid min-h-[300px] place-items-center rounded-xl border border-dashed border-slate-300 p-6 text-sm font-bold text-slate-500">QRIS mushola akan segera tersedia.</div>`}
+          </div>
+        </div>
+      `;
+      openDialog("qris-dialog");
+    }
+
+    function closeMobileMenu() {
+      const menu = document.getElementById("mobile-menu");
+      const button = document.getElementById("menu-button");
+      menu.classList.add("hidden");
+      button.setAttribute("aria-expanded", "false");
+    }
+
+    document.addEventListener("submit", async (event) => {
+      if (event.target.id === "post-form") {
+        event.preventDefault();
+        try {
+          const file = document.getElementById("post-image").files[0];
+          const image = await uploadMedia(file, "posts");
+          const payload = {
+            title: document.getElementById("post-title").value.trim(),
+            content: document.getElementById("post-content").value.trim(),
+            category: document.getElementById("post-category").value,
+            author: document.getElementById("post-author").value.trim(),
+            status: "pending"
+          };
+          const client = initSupabaseClient();
+          if (client) {
+            const { error } = await client.from("news_posts").insert({
+              ...payload,
+              image_url: image || null
+            });
+            if (error) throw error;
+          } else {
+            const news = getNews();
+            news.push({ ...payload, id: Date.now(), date: new Date().toISOString().slice(0, 10), image });
+            await saveNews(news);
+          }
+          event.target.reset();
+          closeDialog("post-dialog");
+          showToast("Kabar terkirim. Menunggu pengurus approve.");
+        } catch (error) {
+          showToast(error.message || "Gagal mengirim kabar.");
         }
-      });
-      
-      loadNews();
-    }
+      }
 
-    // ===== FORMAT DATE =====
-    function formatDateID(dateStr) {
-      if (!dateStr) return '';
-      const date = new Date(dateStr);
-      return date.toLocaleDateString('id-ID', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      });
-    }
-
-    // ===== INIT =====
-    document.addEventListener('DOMContentLoaded', function() {
-      loadNews();
-      loadAgenda();
     });
 
-    // Close modal when clicking outside
-    document.getElementById('submitModal')?.addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeModal();
+    document.getElementById("menu-button").addEventListener("click", () => {
+      const menu = document.getElementById("mobile-menu");
+      const isOpen = !menu.classList.contains("hidden");
+      menu.classList.toggle("hidden");
+      document.getElementById("menu-button").setAttribute("aria-expanded", String(!isOpen));
+    });
+
+    document.querySelectorAll("#mobile-menu a").forEach((link) => link.addEventListener("click", closeMobileMenu));
+
+    document.getElementById("category-buttons").addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-category]");
+      if (button) setActiveCategory(button.dataset.category);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        ["post-dialog", "detail-dialog", "qris-dialog"].forEach(closeDialog);
       }
     });
+
+    window.addEventListener("scroll", () => {
+      const header = document.getElementById("site-header");
+      const isScrolled = window.scrollY > 24;
+      header.classList.toggle("glass-nav", isScrolled);
+      header.classList.toggle("bg-white/94", isScrolled);
+      header.classList.toggle("shadow-lg", isScrolled);
+      header.classList.toggle("shadow-slate-950/5", isScrolled);
+      document.querySelector(".brand-lockup").classList.toggle("text-forest-950", isScrolled);
+      document.querySelector(".brand-lockup").classList.toggle("text-white", !isScrolled);
+      document.querySelector(".brand-mark").classList.toggle("bg-forest-800", isScrolled);
+      document.querySelector(".brand-mark").classList.toggle("bg-white", !isScrolled);
+      document.querySelectorAll(".leaf-fill").forEach((path) => path.setAttribute("fill", isScrolled ? "#FFFFFF" : "#164C2C"));
+      document.querySelectorAll(".nav-shell").forEach((item) => {
+        item.classList.toggle("border-slate-200", isScrolled);
+        item.classList.toggle("bg-white", isScrolled);
+        item.classList.toggle("text-slate-700", isScrolled);
+        item.classList.toggle("border-white/15", !isScrolled);
+        item.classList.toggle("bg-white/10", !isScrolled);
+        item.classList.toggle("text-white", !isScrolled);
+      });
+      const menuButton = document.getElementById("menu-button");
+      menuButton.classList.toggle("border-slate-200", isScrolled);
+      menuButton.classList.toggle("bg-white", isScrolled);
+      menuButton.classList.toggle("text-forest-800", isScrolled);
+      menuButton.classList.toggle("border-white/20", !isScrolled);
+      menuButton.classList.toggle("bg-white/10", !isScrolled);
+      menuButton.classList.toggle("text-white", !isScrolled);
+    }, { passive: true });
+
+    async function initApp() {
+      loadLocalState();
+      applySettings();
+      try {
+        await loadRemoteData();
+        applySettings();
+      } catch (error) {
+        console.warn("Supabase belum siap, memakai fallback lokal.", error);
+      }
+    }
+
+    initApp();
   </script>
+  <!-- === SUPABASE INTEGRATION FOR GDR === -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // Inisialisasi Supabase
+  //const SUPABASE_URL = 'https://gyofijyebgtxzbtwlwbw.supabase.co';
+  //const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // Helper: Format tanggal Indonesia
+  function formatDateID(dateStr) {
+    return new Date(dateStr).toLocaleDateString('id-ID', { 
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' 
+    });
+  }
+
+  // === 1. LOAD AGENDA (Section Kegiatan) ===
+  async function loadAgenda() {
+    // Cari container: fallback ke beberapa kemungkinan selector
+    const container = document.querySelector('#kegiatan .grid') 
+      || document.querySelector('[class*="grid"]').closest('section')?.querySelector('.grid')
+      || document.body; // fallback
+
+    if (!container) return;
+
+    // Tampilkan loading
+    const loadingHTML = '<p class="text-center text-gray-500 col-span-full">Memuat agenda...</p>';
+    
+    try {
+      const { data, error } = await supabase
+        .from('agenda')
+        .select('*')
+        .order('tanggal', { ascending: true })
+        .limit(4);
+
+      if (error) throw error;
+
+      if (!data?.length) {
+        container.innerHTML = '<p class="text-center text-gray-500 col-span-full">Belum ada agenda terdekat</p>';
+        return;
+      }
+
+      container.innerHTML = data.map(item => `
+        <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition border-l-4" style="border-color: ${item.warna}">
+          <h4 class="font-semibold" style="color: ${item.warna}">${item.judul}</h4>
+          <p class="text-sm text-gray-500 mt-1">
+            📅 ${formatDateID(item.tanggal)}${item.waktu ? ' ⏰ ' + item.waktu.substring(0,5) : ''}
+          </p>
+          ${item.deskripsi ? `<p class="text-sm text-gray-600 mt-2">${item.deskripsi}</p>` : ''}
+        </div>
+      `).join('');
+    } catch (err) {
+      console.error('Agenda load error:', err);
+      container.innerHTML = '<p class="text-center text-red-500 col-span-full">Gagal memuat agenda</p>';
+    }
+  }
+
+  // === 2. LOAD BERITA WARGA (dengan foto Unsplash) ===
+  async function loadBerita() {
+    // Cari container berita - sesuaikan dengan struktur HTML kamu
+    const sectionBerita = Array.from(document.querySelectorAll('section'))
+      .find(s => s.innerHTML.toLowerCase().includes('berita warga') || s.innerHTML.toLowerCase().includes('kabar'));
+    
+    const container = sectionBerita?.querySelector('.grid') || sectionBerita;
+    if (!container) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('berita')
+        .select('*')
+        .eq('status', 'approved')
+        .order('created_at', { ascending: false })
+        .limit(6);
+
+      if (error) throw error;
+
+      if (!data?.length) {
+        container.innerHTML = '<p class="text-center text-gray-500 col-span-full">Belum ada kabar warga</p>';
+        return;
+      }
+
+      // Mapping kategori ke keyword Unsplash
+      const unsplashMap = {
+        'Pengumuman': 'announcement,community',
+        'Kegiatan': 'event,community gathering',
+        'DKM': 'mosque,prayer,islamic',
+        'Berita': 'neighborhood,local news',
+      };
+
+      container.innerHTML = `
+        <!-- Filter Tabs (optional, bisa dihapus kalau nggak perlu) -->
+        <div class="flex flex-wrap gap-2 mb-6" id="berita-filters">
+          <button class="px-4 py-2 rounded-full text-sm font-medium bg-green-600 text-white" data-filter="all">Semua</button>
+          <button class="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 hover:bg-gray-200" data-filter="Pengumuman">Pengumuman</button>
+          <button class="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 hover:bg-gray-200" data-filter="Kegiatan">Kegiatan</button>
+          <button class="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 hover:bg-gray-200" data-filter="DKM">DKM</button>
+          <button class="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 hover:bg-gray-200" data-filter="Berita">Berita</button>
+        </div>
+        <!-- Grid Items -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="berita-grid">
+          ${data.map(item => {
+            const keyword = unsplashMap[item.kategori] || 'community,indonesia';
+            const fotoUrl = `https://source.unsplash.com/400x300/?${keyword}&sig=${item.id}`;
+            return `
+              <article class="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden flex flex-col" data-kategori="${item.kategori}">
+                <img src="${fotoUrl}" alt="${item.judul}" class="w-full h-48 object-cover" onerror="this.src='https://source.unsplash.com/400x300/?community'">
+                <div class="p-5 flex-1 flex flex-col">
+                  <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full mb-2 self-start" style="background: #dcfce7; color: #166534;">${item.kategori}</span>
+                  <h3 class="font-bold text-lg mb-2">${item.judul}</h3>
+                  <p class="text-gray-600 text-sm mb-3 flex-1">${item.isi.substring(0, 120)}${item.isi.length > 120 ? '...' : ''}</p>
+                  <div class="flex justify-between items-center text-xs text-gray-400 pt-3 border-t">
+                    <span>Oleh: ${item.nama_pengirim}</span>
+                    <span>${new Date(item.created_at).toLocaleDateString('id-ID')}</span>
+                  </div>
+                </div>
+              </article>
+            `;
+          }).join('')}
+        </div>
+      `;
+
+      // Simple filter logic
+      document.querySelectorAll('#berita-filters button').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const filter = e.currentTarget.dataset.filter;
+          document.querySelectorAll('#berita-filters button').forEach(b => {
+            b.classList.remove('bg-green-600', 'text-white');
+            b.classList.add('bg-gray-100');
+          });
+          e.currentTarget.classList.remove('bg-gray-100');
+          e.currentTarget.classList.add('bg-green-600', 'text-white');
+          
+          document.querySelectorAll('#berita-grid > article').forEach(card => {
+            if (filter === 'all' || card.dataset.kategori === filter) {
+              card.style.display = 'flex';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+
+    } catch (err) {
+      console.error('Berita load error:', err);
+      container.innerHTML = '<p class="text-center text-red-500 col-span-full">Gagal memuat kabar warga</p>';
+    }
+  }
+
+  // === 3. LOAD TERMS & CONDITIONS (Footer) ===
+  async function loadTerms() {
+    // Cari footer atau section tentang
+    const footer = document.querySelector('footer') 
+      || Array.from(document.querySelectorAll('section')).reverse().find(s => s.innerHTML.toLowerCase().includes('kontak') || s.innerHTML.toLowerCase().includes('footer'));
+    
+    if (!footer) return;
+
+    // Cek apakah sudah ada container terms, kalau belum buat baru
+    let termsContainer = footer.querySelector('#terms-content');
+    if (!termsContainer) {
+      termsContainer = document.createElement('div');
+      termsContainer.id = 'terms-content';
+      termsContainer.className = 'text-sm text-gray-600 mt-4 space-y-2';
+      footer.appendChild(termsContainer);
+    }
+
+    try {
+      const { data } = await supabase.from('terms_conditions').select('konten').limit(1).single();
+      if (data?.konten) {
+        // Convert newline ke <br> dan paragraf
+        termsContainer.innerHTML = data.konten
+          .split('\n\n')
+          .map(p => `<p class="mb-2">${p.replace(/\n/g, '<br>')}</p>`)
+          .join('');
+      }
+    } catch (err) {
+      console.error('Terms load error:', err);
+      termsContainer.innerHTML = '<p class="text-gray-400">Syarat & ketentuan sedang dimuat...</p>';
+    }
+  }
+
+  // === 4. HANDLE FORM KIRIM KABAR ===
+  function setupKabarForm() {
+    // Cari form berdasarkan struktur HTML kamu
+    const form = document.querySelector('form') || Array.from(document.querySelectorAll('form')).find(f => f.innerHTML.toLowerCase().includes('kabar'));
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Ambil nilai dari form (sesuaikan name/id input dengan HTML kamu)
+      const nama = form.querySelector('input[placeholder*="Nama"]')?.value 
+        || form.querySelector('input[name="nama"]')?.value 
+        || 'Warga GDR';
+      
+      const kategori = form.querySelector('select')?.value || 'Berita';
+      const judul = form.querySelector('input[placeholder*="Judul"]')?.value 
+        || form.querySelector('input[name="judul"]')?.value 
+        || 'Kabar Baru';
+      
+      const isi = form.querySelector('textarea')?.value 
+        || form.querySelector('input[name="isi"]')?.value 
+        || '';
+
+      if (!isi.trim()) {
+        alert('Isi kabar tidak boleh kosong');
+        return;
+      }
+
+      const btn = form.querySelector('button[type="submit"]');
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Mengirim...';
+
+      try {
+        const { error } = await supabase.from('berita').insert([{
+          nama_pengirim: nama,
+          kategori: kategori,
+          judul: judul,
+          isi: isi,
+          status: 'pending',
+          foto_url: null
+        }]);
+
+        if (error) throw error;
+
+        alert('✅ Terima kasih! Kabar Anda sedang ditinjau pengurus.');
+        form.reset();
+      } catch (err) {
+        console.error('Submit error:', err);
+        alert('❌ Gagal mengirim: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    });
+  }
+
+  // === RUN ALL ON LOAD ===
+  document.addEventListener('DOMContentLoaded', () => {
+    loadAgenda();
+    loadBerita();
+    loadTerms();
+    setupKabarForm();
+  });
+</script>
 </body>
 </html>
