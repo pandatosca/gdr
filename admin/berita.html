@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Moderasi Berita - GDR Admin</title>
+  <link rel="stylesheet" href="admin.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div id="dashboard-view">
+    <aside class="sidebar">
+      <h2>GDR Admin</h2>
+      <button class="sidebar-btn" onclick="window.location.href='/admin'">📊 Dashboard</button>
+      <button class="sidebar-btn active" onclick="window.location.href='/admin/berita'">📝 Moderasi Berita</button>
+      <button class="sidebar-btn" onclick="window.location.href='/admin/agenda'">📅 Agenda</button>
+      <button class="sidebar-btn" onclick="window.location.href='/admin/terms'">📋 Terms & Conditions</button>
+      <button class="sidebar-btn logout" onclick="handleLogout()">🚪 Keluar</button>
+    </aside>
+
+    <main class="main-content">
+      <div class="header">
+        <h2>Moderasi Berita Warga</h2>
+        <span id="user-email"></span>
+      </div>
+
+      <div class="card" style="margin-bottom: 2rem;">
+        <h3 style="margin-bottom: 1rem;">Berita Menunggu Persetujuan</h3>
+        <div id="pending-list" class="loading">Memuat...</div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom: 1rem;">Berita Disetujui</h3>
+        <div id="approved-list" class="loading">Memuat...</div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://gyofijyebgtxzbtwlwbw.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo';
+    const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      const { data: { session } } = await _supabase.auth.getSession();
+      if (!session) {
+        window.location.href = '/admin';
+        return;
+      }
+      document.getElementById('user-email').textContent = session.user.email;
+      loadBerita();
+    });
+
+    async function loadBerita() {
+      // Load pending
+      const { data: pending } = await _supabase
+        .from('berita')
+        .select('*')
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false });
+
+      // Load approved
+      const { data: approved } = await _supabase
+        .from('berita')
+        .select('*')
+        .eq('status', 'approved')
+        .order('created_at', { ascending: false });
+
+      renderPending(pending || []);
+      renderApproved(approved || []);
+    }
+
+    function renderPending(beritaList) {
+      const container = document.getElementById('pending-list');
+      if (beritaList.length === 0) {
+        container.innerHTML = '<p style="color: #64748b;">Tidak ada berita menunggu</p>';
+        return;
+      }
+
+      container.innerHTML = beritaList.map(berita => `
+        <div style="border: 1px solid #e2e8f0; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <strong>${berita.judul}</strong>
+            <span style="background: #fbbf24; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">Pending</span>
+          </div>
+          <p style="color: #64748b; font-size: 0.875rem;">Pengirim: ${berita.nama_pengirim} | Kategori: ${berita.kategori}</p>
+          <p style="margin: 0.5rem 0;">${berita.isi.substring(0, 150)}...</p>
+          <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+            <button class="btn" style="width: auto; padding: 0.5rem 1rem;" onclick="approveBerita('${berita.id}')">✓ Setujui</button>
+            <button class="btn" style="width: auto; padding: 0.5rem 1rem; background: #dc2626;" onclick="rejectBerita('${berita.id}')">✗ Tolak</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderApproved(beritaList) {
+      const container = document.getElementById('approved-list');
+      if (beritaList.length === 0) {
+        container.innerHTML = '<p style="color: #64748b;">Belum ada berita disetujui</p>';
+        return;
+      }
+
+      container.innerHTML = beritaList.map(berita => `
+        <div style="border: 1px solid #e2e8f0; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <strong>${berita.judul}</strong>
+            <span style="background: #22c55e; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; color: white;">Published</span>
+          </div>
+          <p style="color: #64748b; font-size: 0.875rem;">Pengirim: ${berita.nama_pengirim} | Kategori: ${berita.kategori}</p>
+          <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+            <button class="btn" style="width: auto; padding: 0.5rem 1rem; background: #dc2626;" onclick="deleteBerita('${berita.id}')">🗑️ Hapus</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function approveBerita(id) {
+      const { error } = await _supabase
+        .from('berita')
+        .update({ 
+          status: 'approved',
+          approved_at: new Date().toISOString()
+        })
+        .eq('id', id);
+
+      if (error) {
+        alert('Error: ' + error.message);
+      } else {
+        loadBerita();
+      }
+    }
+
+    async function rejectBerita(id) {
+      if (!confirm('Tolak berita ini?')) return;
+      
+      const { error } = await _supabase
+        .from('berita')
+        .update({ status: 'rejected' })
+        .eq('id', id);
+
+      if (error) {
+        alert('Error: ' + error.message);
+      } else {
+        loadBerita();
+      }
+    }
+
+    async function deleteBerita(id) {
+      if (!confirm('Hapus berita ini secara permanen?')) return;
+      
+      const { error } = await _supabase
+        .from('berita')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        alert('Error: ' + error.message);
+      } else {
+        loadBerita();
+      }
+    }
+
+    async function handleLogout() {
+      await _supabase.auth.signOut();
+      window.location.href = '/admin';
+    }
+  </script>
+</body>
+</html>

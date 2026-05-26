@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Terms & Conditions - GDR Admin</title>
+  <link rel="stylesheet" href="admin.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div id="dashboard-view">
+    <aside class="sidebar">
+      <h2>GDR Admin</h2>
+      <button class="sidebar-btn" onclick="window.location.href='/admin'">📊 Dashboard</button>
+      <button class="sidebar-btn" onclick="window.location.href='/admin/berita'">📝 Moderasi Berita</button>
+      <button class="sidebar-btn" onclick="window.location.href='/admin/agenda'">📅 Agenda</button>
+      <button class="sidebar-btn active" onclick="window.location.href='/admin/terms'">📋 Terms & Conditions</button>
+      <button class="sidebar-btn logout" onclick="handleLogout()">🚪 Keluar</button>
+    </aside>
+
+    <main class="main-content">
+      <div class="header">
+        <h2>Edit Terms & Conditions</h2>
+        <span id="user-email"></span>
+      </div>
+
+      <div class="card">
+        <form id="terms-form">
+          <div class="form-group">
+            <label>Judul</label>
+            <input type="text" id="judul" required />
+          </div>
+          <div class="form-group">
+            <label>Konten (Gunakan enter untuk paragraf)</label>
+            <textarea id="konten" rows="20" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; font-family: monospace;" required></textarea>
+          </div>
+          <button type="submit" class="btn" style="width: auto;">💾 Simpan Perubahan</button>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://gyofijyebgtxzbtwlwbw.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo';
+    const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      const { data: { session } } = await _supabase.auth.getSession();
+      if (!session) { window.location.href = '/admin'; return; }
+      document.getElementById('user-email').textContent = session.user.email;
+      loadTerms();
+    });
+
+    async function loadTerms() {
+      const { data } = await _supabase.from('terms_conditions').select('*').limit(1).single();
+      if (data) {
+        document.getElementById('judul').value = data.judul;
+        document.getElementById('konten').value = data.konten;
+      }
+    }
+
+    document.getElementById('terms-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const judul = document.getElementById('judul').value;
+      const konten = document.getElementById('konten').value;
+
+      // Upsert: update jika ada, insert jika belum
+      const { data: existing } = await _supabase.from('terms_conditions').select('id').limit(1).single();
+      
+      const { error } = existing?.id
+        ? await _supabase.from('terms_conditions').update({ judul, konten }).eq('id', existing.id)
+        : await _supabase.from('terms_conditions').insert([{ judul, konten }]);
+
+      if (error) { alert('Error: ' + error.message); } 
+      else { alert('✅ Terms updated!'); }
+    });
+
+    async function handleLogout() {
+      await _supabase.auth.signOut();
+      window.location.href = '/admin';
+    }
+  </script>
+</body>
+</html>

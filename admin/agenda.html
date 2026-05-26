@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kelola Agenda - GDR Admin</title>
+  <link rel="stylesheet" href="admin.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div id="dashboard-view">
+    <aside class="sidebar">
+      <h2>GDR Admin</h2>
+      <button class="sidebar-btn" onclick="window.location.href='/admin'">📊 Dashboard</button>
+      <button class="sidebar-btn" onclick="window.location.href='/admin/berita'">📝 Moderasi Berita</button>
+      <button class="sidebar-btn active" onclick="window.location.href='/admin/agenda'">📅 Agenda</button>
+      <button class="sidebar-btn" onclick="window.location.href='/admin/terms'">📋 Terms & Conditions</button>
+      <button class="sidebar-btn logout" onclick="handleLogout()">🚪 Keluar</button>
+    </aside>
+
+    <main class="main-content">
+      <div class="header">
+        <h2>Kelola Agenda Kegiatan</h2>
+        <span id="user-email"></span>
+      </div>
+
+      <!-- Form Tambah/Edit -->
+      <div class="card" style="margin-bottom: 2rem;">
+        <h3 id="form-title" style="margin-bottom: 1rem;">Tambah Agenda Baru</h3>
+        <form id="agenda-form">
+          <input type="hidden" id="agenda-id">
+          <div style="display: grid; gap: 1rem; grid-template-columns: 1fr 1fr;">
+            <div class="form-group">
+              <label>Judul Kegiatan *</label>
+              <input type="text" id="judul" required placeholder="Contoh: Kerja Bakti" />
+            </div>
+            <div class="form-group">
+              <label>Warna Label</label>
+              <input type="color" id="warna" value="#166534" style="width: 100%; height: 40px; cursor: pointer;" />
+            </div>
+            <div class="form-group">
+              <label>Tanggal *</label>
+              <input type="date" id="tanggal" required />
+            </div>
+            <div class="form-group">
+              <label>Waktu</label>
+              <input type="time" id="waktu" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Deskripsi</label>
+            <textarea id="deskripsi" rows="3" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px;" placeholder="Jelaskan kegiatan..."></textarea>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="submit" class="btn" style="width: auto;">💾 Simpan</button>
+            <button type="button" class="btn" style="width: auto; background: #64748b;" onclick="resetForm()">🔄 Reset</button>
+            <button type="button" id="btn-delete" class="btn" style="width: auto; background: #dc2626; display: none;" onclick="deleteAgenda()">🗑️ Hapus</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- List Agenda -->
+      <div class="card">
+        <h3 style="margin-bottom: 1rem;">Daftar Agenda</h3>
+        <div id="agenda-list" class="loading">Memuat...</div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://gyofijyebgtxzbtwlwbw.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo';
+    const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let editMode = false;
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      const { data: { session } } = await _supabase.auth.getSession();
+      if (!session) { window.location.href = '/admin'; return; }
+      document.getElementById('user-email').textContent = session.user.email;
+      loadAgenda();
+    });
+
+    async function loadAgenda() {
+      const { data, error } = await _supabase
+        .from('agenda')
+        .select('*')
+        .order('tanggal', { ascending: true });
+
+      if (error) { console.error(error); return; }
+
+      const container = document.getElementById('agenda-list');
+      if (!data?.length) {
+        container.innerHTML = '<p style="color: #64748b;">Belum ada agenda</p>';
+        return;
+      }
+
+      container.innerHTML = data.map(item => `
+        <div style="border-left: 4px solid ${item.warna}; background: #f8fafc; padding: 1rem; border-radius: 0 8px 8px 0; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <strong style="color: ${item.warna};">${item.judul}</strong>
+            <p style="font-size: 0.875rem; color: #64748b; margin: 0.25rem 0;">
+              📅 ${formatDate(item.tanggal)} ${item.waktu ? '⏰ ' + item.waktu.substring(0,5) : ''}
+            </p>
+            <p style="font-size: 0.9rem; margin: 0.25rem 0;">${item.deskripsi || '-'}</p>
+          </div>
+          <button class="btn" style="width: auto; padding: 0.5rem 1rem;" onclick="editAgenda('${item.id}')">✏️ Edit</button>
+        </div>
+      `).join('');
+    }
+
+    function formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    document.getElementById('agenda-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('agenda-id').value;
+      const data = {
+        judul: document.getElementById('judul').value,
+        deskripsi: document.getElementById('deskripsi').value,
+        tanggal: document.getElementById('tanggal').value,
+        waktu: document.getElementById('waktu').value || null,
+        warna: document.getElementById('warna').value
+      };
+
+      const { error } = id 
+        ? await _supabase.from('agenda').update(data).eq('id', id)
+        : await _supabase.from('agenda').insert([data]);
+
+      if (error) { alert('Error: ' + error.message); } 
+      else { resetForm(); loadAgenda(); }
+    });
+
+    function editAgenda(id) {
+      _supabase.from('agenda').select('*').eq('id', id).single().then(({ data }) => {
+        if (!data) return;
+        document.getElementById('agenda-id').value = data.id;
+        document.getElementById('judul').value = data.judul;
+        document.getElementById('deskripsi').value = data.deskripsi || '';
+        document.getElementById('tanggal').value = data.tanggal;
+        document.getElementById('waktu').value = data.waktu?.substring(0,5) || '';
+        document.getElementById('warna').value = data.warna;
+        document.getElementById('form-title').textContent = 'Edit Agenda';
+        document.getElementById('btn-delete').style.display = 'inline-block';
+        editMode = true;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    async function deleteAgenda() {
+      const id = document.getElementById('agenda-id').value;
+      if (!id || !confirm('Hapus agenda ini?')) return;
+      const { error } = await _supabase.from('agenda').delete().eq('id', id);
+      if (error) { alert('Error: ' + error.message); } 
+      else { resetForm(); loadAgenda(); }
+    }
+
+    function resetForm() {
+      document.getElementById('agenda-form').reset();
+      document.getElementById('agenda-id').value = '';
+      document.getElementById('form-title').textContent = 'Tambah Agenda Baru';
+      document.getElementById('btn-delete').style.display = 'none';
+      editMode = false;
+    }
+
+    async function handleLogout() {
+      await _supabase.auth.signOut();
+      window.location.href = '/admin';
+    }
+  </script>
+</body>
+</html>
