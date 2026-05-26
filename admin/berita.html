@@ -286,14 +286,14 @@
     async function loadBerita() {
       // Load pending
       const { data: pending } = await supabase
-        .from('berita')
+        .from('news_posts')
         .select('*')
         .eq('status', 'pending')
         .order('created_at', { ascending: false });
 
       // Load approved
       const { data: approved } = await supabase
-        .from('berita')
+        .from('news_posts')
         .select('*')
         .eq('status', 'approved')
         .order('created_at', { ascending: false });
@@ -489,7 +489,7 @@
 
     async function editBerita(id) {
       const { data: berita } = await supabase
-        .from('berita')
+        .from('news_posts')
         .select('*')
         .eq('id', id)
         .single();
@@ -554,7 +554,7 @@
         if (id) {
           // Update existing
           const { error } = await supabase
-            .from('berita')
+            .from('news_posts')
             .update(beritaData)
             .eq('id', id);
           
@@ -568,7 +568,7 @@
           beritaData.created_at = new Date().toISOString();
           
           const { error } = await supabase
-            .from('berita')
+            .from('news_posts')
             .insert(beritaData);
           
           if (error) throw error;
@@ -589,7 +589,7 @@
     async function approveBerita(id) {
       const { data: { session } } = await supabase.auth.getSession();
       const { error } = await supabase
-        .from('berita')
+        .from('news_posts')
         .update({
           status: 'approved',
           approved_by: session?.user?.email,
@@ -608,7 +608,7 @@
       if (!confirm('Tolak berita ini?')) return;
       
       const { error } = await supabase
-        .from('berita')
+        .from('news_posts')
         .update({ status: 'rejected' })
         .eq('id', id);
       
@@ -623,7 +623,7 @@
       if (!confirm('Hapus berita ini secara permanen?')) return;
       
       const { error } = await supabase
-        .from('berita')
+        .from('news_posts')
         .delete()
         .eq('id', id);
       
