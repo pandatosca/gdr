@@ -5,89 +5,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>GDR CMS - Admin</title>
   <link rel="stylesheet" href="admin.css" />
-  <!-- Supabase JS v2 -->
+  <!-- Load Supabase JS SEKALI saja -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-  <!-- === LOGIN VIEW === -->
+  <!-- LOGIN VIEW -->
   <div id="auth-view" class="auth-container">
     <h1>GDR CMS</h1>
     <p>Masuk untuk kelola website.</p>
-    
     <form id="login-form">
       <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" required placeholder="admin@gdr.com" />
+        <label>Email</label>
+        <input type="email" id="email" required />
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" required placeholder="••••••••" />
+        <label>Password</label>
+        <input type="password" id="password" required />
       </div>
       <p id="login-error" class="error-msg"></p>
       <button type="submit" class="btn" id="login-btn">Masuk</button>
     </form>
   </div>
 
-  <!-- === DASHBOARD VIEW === -->
-  <div id="dashboard-view">
-    <!-- Sidebar -->
+  <!-- DASHBOARD VIEW -->
+  <div id="dashboard-view" class="hidden">
     <aside class="sidebar">
       <h2>GDR Admin</h2>
       <button class="sidebar-btn active" onclick="switchTab('dashboard')">📊 Dashboard</button>
       <button class="sidebar-btn" onclick="switchTab('content')">📝 Konten</button>
-      <button class="sidebar-btn" onclick="switchTab('settings')">⚙️ Pengaturan</button>
-      
       <button class="sidebar-btn logout" onclick="handleLogout()">🚪 Keluar</button>
     </aside>
-
-    <!-- Main Content -->
     <main class="main-content">
       <div class="header">
         <h2 id="page-title">Dashboard</h2>
-        <div>
-          <span id="user-email" style="margin-right: 1rem; font-size: 0.9rem; color: #64748b;"></span>
-        </div>
+        <span id="user-email"></span>
       </div>
-
-      <!-- Tab: Dashboard -->
       <section id="tab-dashboard" class="view-section active">
-        <div class="card">
-          <h3>Selamat Datang! 👋</h3>
-          <p style="margin-top: 0.5rem; color: #64748b;">
-            Sistem siap digunakan. Pilih menu di sebelah kiri untuk mulai mengelola.
-          </p>
-        </div>
+        <div class="card"><h3>Selamat Datang! 👋</h3></div>
       </section>
-
-      <!-- Tab: Content -->
       <section id="tab-content" class="view-section">
-        <div class="card">
-          <h3>Kelola Konten</h3>
-          <p style="margin-top: 0.5rem; color: #64748b;">
-            Fitur konten akan segera tersedia.
-          </p>
-        </div>
-      </section>
-
-      <!-- Tab: Settings -->
-      <section id="tab-settings" class="view-section">
-        <div class="card">
-          <h3>Pengaturan</h3>
-          <p style="margin-top: 0.5rem; color: #64748b;">
-            Konfigurasi website akan muncul di sini.
-          </p>
-        </div>
+        <div class="card"><h3>Konten</h3></div>
       </section>
     </main>
   </div>
 
+  <!-- SCRIPT UTAMA - HANYA SATU KALI INISIALISASI -->
   <script>
-    // ⚠️ KONFIGURASI SUPABASE
+    // ⚠️ GANTI DENGAN ANON KEY ASLI KAMU
     const SUPABASE_URL = 'https://gyofijyebgtxzbtwlwbw.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo'; // <--- GANTI INI!
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo';
     
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Inisialisasi Supabase - HANYA DI SINI
+    const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // DOM Elements
     const authView = document.getElementById('auth-view');
@@ -97,84 +67,62 @@
     const loginBtn = document.getElementById('login-btn');
     const userEmailSpan = document.getElementById('user-email');
 
-    // === 1. CEK SESI SAAT LOAD ===
+    // Cek sesi saat load
     window.addEventListener('DOMContentLoaded', async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        showDashboard(session.user.email);
-      } else {
-        showLogin();
-      }
-
-      // Listen perubahan auth (login/logout dari tab lain)
-      supabase.auth.onAuthStateChange((event, session) => {
-        if (event === 'SIGNED_IN' && session) {
-          showDashboard(session.user.email);
-        } else if (event === 'SIGNED_OUT') {
-          showLogin();
-        }
+      const { data: { session } } = await _supabase.auth.getSession();
+      if (session) showDashboard(session.user?.email);
+      
+      _supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN' && session) showDashboard(session.user?.email);
+        if (event === 'SIGNED_OUT') showLogin();
       });
     });
 
-    // === 2. HANDLE LOGIN ===
+    // Login handler
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       loginError.textContent = '';
       loginBtn.disabled = true;
       loginBtn.textContent = 'Memproses...';
 
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      const { data, error } = await _supabase.auth.signInWithPassword({
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+      });
 
-      try {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        
-        if (error) throw error;
-        // Sukses, onAuthStateChange akan handle redirect otomatis
-      } catch (err) {
-        loginError.textContent = 'Gagal: ' + err.message;
+      if (error) {
+        loginError.textContent = 'Error: ' + error.message;
         loginBtn.disabled = false;
         loginBtn.textContent = 'Masuk';
       }
+      // Jika sukses, onAuthStateChange handle sisanya
     });
 
-    // === 3. HANDLE LOGOUT ===
+    // Logout
     async function handleLogout() {
-      await supabase.auth.signOut();
+      await _supabase.auth.signOut();
       showLogin();
     }
 
-    // === 4. UI SWITCHER ===
+    // UI Helpers
     function showDashboard(email) {
       authView.classList.add('hidden');
-      dashboardView.classList.add('active');
+      dashboardView.classList.remove('hidden');
       userEmailSpan.textContent = email;
     }
-
     function showLogin() {
-      dashboardView.classList.remove('active');
+      dashboardView.classList.add('hidden');
       authView.classList.remove('hidden');
       loginForm.reset();
       loginBtn.disabled = false;
       loginBtn.textContent = 'Masuk';
     }
-
-    function switchTab(tabName) {
-      // Reset semua button & section
-      document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-      
-      // Aktifkan yang dipilih
-      event.target.classList.add('active');
-      document.getElementById(`tab-${tabName}`).classList.add('active');
-      
-      // Update judul
-      const titles = {
-        'dashboard': 'Dashboard',
-        'content': 'Kelola Konten',
-        'settings': 'Pengaturan'
-      };
-      document.getElementById('page-title').textContent = titles[tabName] || 'Admin';
+    function switchTab(tab) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.sidebar-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(`tab-${tab}`).classList.add('active');
+      event.currentTarget.classList.add('active');
+      document.getElementById('page-title').textContent = tab.charAt(0).toUpperCase() + tab.slice(1);
     }
   </script>
 </body>
