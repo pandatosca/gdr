@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Moderasi Berita - GDR Admin</title>
-  <link rel="stylesheet" href="../admin/admin.css" />
+  
+  <!-- CSS Path Fixed: karena file ini di /admin/, cukup 'admin.css' -->
+  <link rel="stylesheet" href="admin.css" />
   
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -164,16 +166,16 @@
 
   <script>
     // ===== KONFIGURASI =====
-    // PENTING: Pastikan nama tabel dan bucket SAMA dengan index.html
+    // PENTING: Nama tabel & bucket HARUS sama dengan index.html
     const CONFIG = {
-      TABLE: 'news_posts', // Ganti ke 'berita' jika tabel kamu namanya 'berita'
-      BUCKET: 'gdr-media'  // Ganti ke 'berita-foto' jika bucket kamu 'berita-foto'
+      TABLE: 'news_posts',  // ← Tabel yang dipakai index.html
+      BUCKET: 'gdr-media'   // ← Bucket yang dipakai index.html
     };
 
     const SUPABASE_URL = 'https://gyofijyebgtxzbtwlwbw.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo';
     
-    // Inisialisasi Supabase dengan aman (mencegah duplicate error)
+    // Inisialisasi Supabase (aman dari duplicate declaration)
     const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
     
     let currentUploadedFile = null;
@@ -222,15 +224,15 @@
       container.innerHTML = beritaList.map(berita => `
         <div class="card-item">
           <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-            <strong>${berita.judul || berita.title}</strong>
+            <strong>${berita.judul || berita.title || '-'}</strong>
             <span class="status-badge status-pending">Pending</span>
           </div>
           <p style="color: #64748b; font-size: 0.875rem;">Pengirim: ${berita.nama_pengirim || berita.author || 'Anonim'} | Kategori: ${berita.kategori || 'Umum'}</p>
-          <p style="margin: 0.5rem 0;">${(berita.isi || berita.content || '').substring(0,150)}...</p>
+          <p style="margin: 0.5rem 0;">${((berita.isi || berita.content) || '').substring(0,150)}...</p>
           ${(berita.foto_url || berita.image_url) ? `<img src="${berita.foto_url || berita.image_url}" style="max-width: 200px; max-height: 150px; object-fit: cover; border-radius: 4px; margin: 0.5rem 0;">` : ''}
           <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
             <button class="btn-primary" style="padding: 0.5rem 1rem;" onclick="approveBerita('${berita.id}')">✓ Setujui</button>
-            <button class="btn-primary" style="padding: 0.5rem 1rem; background: #3b82f6;" onclick="editBerita('${berita.id}')">️ Edit</button>
+            <button class="btn-primary" style="padding: 0.5rem 1rem; background: #3b82f6;" onclick="editBerita('${berita.id}')">✏️ Edit</button>
             <button class="btn-primary" style="padding: 0.5rem 1rem; background: #dc2626;" onclick="rejectBerita('${berita.id}')">✗ Tolak</button>
           </div>
         </div>
@@ -248,7 +250,7 @@
       container.innerHTML = beritaList.map(berita => `
         <div class="card-item">
           <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-            <strong>${berita.judul || berita.title}</strong>
+            <strong>${berita.judul || berita.title || '-'}</strong>
             <span class="status-badge status-approved">Published</span>
           </div>
           <p style="color: #64748b; font-size: 0.875rem;">Pengirim: ${berita.nama_pengirim || berita.author || 'Anonim'} | Kategori: ${berita.kategori || 'Umum'}</p>
@@ -406,12 +408,12 @@
         // Gunakan nama field yang umum (judul/title, isi/content, dll)
         const beritaData = {
           judul: judul,
-          title: judul, // Fallback
+          title: judul,
           kategori: kategori,
           isi: isi,
-          content: isi, // Fallback
+          content: isi,
           foto_url: fotoUrl,
-          image_url: fotoUrl, // Fallback
+          image_url: fotoUrl,
           updated_at: new Date().toISOString()
         };
         
