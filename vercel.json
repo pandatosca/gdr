@@ -1,8 +1,7 @@
 {
   "cleanUrls": true,
   "outputDirectory": ".",
-  "rewrites": [
-    { "source": "/admin", "destination": "/admin/admin.html" },
-    { "source": "/admin/:path*", "destination": "/admin/admin.html" }
+  "redirects": [
+    { "source": "/admin", "destination": "/admin/admin.html", "permanent": false }
   ]
 }
