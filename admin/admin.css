@@ -1,24 +1,187 @@
-body{
-  font-family:Inter,sans-serif;
+:root {
+  --primary: #166534;
+  --primary-hover: #14532d;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --danger: #dc2626;
 }
 
-.sidebar-btn{
-  transition:.2s;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
 }
 
-.sidebar-btn:hover{
-  background:#f1f5f9;
+/* Login Container */
+.auth-container {
+  background: var(--surface);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid var(--border);
 }
 
-.sidebar-btn.active{
-  background:#166534;
-  color:white;
+.auth-container h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
 }
 
-.view-section{
-  display:none;
+.auth-container p {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
 }
 
-.view-section.active{
-  display:block;
+.form-group { margin-bottom: 1rem; }
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgb(22 101 52 / 0.1);
+}
+
+.btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn:hover { background: var(--primary-hover); }
+.btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+.btn-logout {
+  background: var(--danger);
+  width: auto;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+.btn-logout:hover { background: #b91c1c; }
+
+/* Dashboard Layout */
+#dashboard-view {
+  display: none;
+  width: 100%;
+  max-width: 1200px;
+  height: 90vh;
+  background: var(--surface);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+#dashboard-view.active { display: flex; }
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: #f1f5f9;
+  border-right: 1px solid var(--border);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sidebar h2 {
+  font-size: 1.25rem;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-btn {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text);
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.sidebar-btn:hover { background: #e2e8f0; }
+.sidebar-btn.active {
+  background: var(--primary);
+  color: white;
+}
+.sidebar-btn.logout { margin-top: auto; color: var(--danger); }
+.sidebar-btn.logout:hover { background: #fee2e2; }
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.view-section { display: none; animation: fadeIn 0.2s ease; }
+.view-section.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Utils */
+.hidden { display: none !important; }
+.error-msg {
+  color: var(--danger);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+.loading {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 2rem;
+}
+.card {
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
 }

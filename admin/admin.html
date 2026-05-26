@@ -1,282 +1,181 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>GDR CMS Admin</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<link rel="stylesheet" href="./admin.css">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GDR CMS - Admin</title>
+  <link rel="stylesheet" href="admin.css" />
+  <!-- Supabase JS v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+<body>
 
-<body class="bg-slate-100 text-slate-900">
-
-<!-- LOADING -->
-
-<div
-  id="loading-screen"
-  class="fixed inset-0 z-50 grid place-items-center bg-white"
->
-
-  <div class="text-center">
-
-    <div class="mx-auto h-14 w-14 animate-spin rounded-full border-4 border-slate-200 border-t-green-700"></div>
-
-    <p class="mt-5 text-sm font-bold text-slate-500">
-      Loading CMS...
-    </p>
-
-  </div>
-
-</div>
-
-<!-- LOGIN -->
-
-<section
-  id="login-view"
-  class="grid min-h-screen place-items-center p-6"
->
-
-  <div class="w-full max-w-sm rounded-[32px] bg-white p-8 shadow-2xl">
-
-    <div class="text-center">
-
-      <img
-        src="../assets/logo2.svg"
-        class="mx-auto h-16 w-16"
-      >
-
-      <h1 class="mt-5 text-3xl font-black">
-        GDR CMS
-      </h1>
-
-      <p class="mt-2 text-sm text-slate-500">
-        Grand Depok Residence
-      </p>
-
-    </div>
-
-    <form
-      id="login-form"
-      class="mt-8 space-y-4"
-    >
-
-      <input
-        id="password"
-        type="password"
-        placeholder="Password"
-        class="w-full rounded-2xl border border-slate-200 px-5 py-4 font-semibold outline-none focus:border-green-700"
-      >
-
-      <button
-        type="submit"
-        class="w-full rounded-2xl bg-green-700 py-4 font-black text-white"
-      >
-        Masuk
-      </button>
-
+  <!-- === LOGIN VIEW === -->
+  <div id="auth-view" class="auth-container">
+    <h1>GDR CMS</h1>
+    <p>Masuk untuk kelola website.</p>
+    
+    <form id="login-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" required placeholder="admin@gdr.com" />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" required placeholder="••••••••" />
+      </div>
+      <p id="login-error" class="error-msg"></p>
+      <button type="submit" class="btn" id="login-btn">Masuk</button>
     </form>
-
-    <p
-      id="login-error"
-      class="mt-4 hidden rounded-2xl bg-red-50 p-4 text-sm font-bold text-red-700"
-    ></p>
-
   </div>
 
-</section>
+  <!-- === DASHBOARD VIEW === -->
+  <div id="dashboard-view">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>GDR Admin</h2>
+      <button class="sidebar-btn active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+      <button class="sidebar-btn" onclick="switchTab('content')">📝 Konten</button>
+      <button class="sidebar-btn" onclick="switchTab('settings')">⚙️ Pengaturan</button>
+      
+      <button class="sidebar-btn logout" onclick="handleLogout()">🚪 Keluar</button>
+    </aside>
 
-<!-- CMS -->
-
-<section
-  id="cms-view"
-  class="hidden min-h-screen"
->
-
-<div class="flex min-h-screen">
-
-<!-- SIDEBAR -->
-
-<aside class="hidden min-h-screen w-[280px] shrink-0 border-r border-slate-200 bg-white lg:flex lg:flex-col">
-
-  <div class="border-b border-slate-200 p-6">
-
-    <div class="flex items-center gap-3">
-
-      <img
-        src="../assets/logo2.svg"
-        class="h-12 w-12"
-      >
-
-      <div>
-
-        <h2 class="font-black">
-          GDR CMS
-        </h2>
-
-        <p class="text-xs text-slate-400">
-          Admin Panel
-        </p>
-
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="header">
+        <h2 id="page-title">Dashboard</h2>
+        <div>
+          <span id="user-email" style="margin-right: 1rem; font-size: 0.9rem; color: #64748b;"></span>
+        </div>
       </div>
 
-    </div>
+      <!-- Tab: Dashboard -->
+      <section id="tab-dashboard" class="view-section active">
+        <div class="card">
+          <h3>Selamat Datang! 👋</h3>
+          <p style="margin-top: 0.5rem; color: #64748b;">
+            Sistem siap digunakan. Pilih menu di sebelah kiri untuk mulai mengelola.
+          </p>
+        </div>
+      </section>
 
+      <!-- Tab: Content -->
+      <section id="tab-content" class="view-section">
+        <div class="card">
+          <h3>Kelola Konten</h3>
+          <p style="margin-top: 0.5rem; color: #64748b;">
+            Fitur konten akan segera tersedia.
+          </p>
+        </div>
+      </section>
+
+      <!-- Tab: Settings -->
+      <section id="tab-settings" class="view-section">
+        <div class="card">
+          <h3>Pengaturan</h3>
+          <p style="margin-top: 0.5rem; color: #64748b;">
+            Konfigurasi website akan muncul di sini.
+          </p>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <nav class="flex-1 space-y-2 p-4">
+  <script>
+    // ⚠️ KONFIGURASI SUPABASE
+    const SUPABASE_URL = 'https://gyofijyebgtxzbtwlwbw.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo'; // <--- GANTI INI!
+    
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    <button class="sidebar-btn active w-full rounded-2xl px-4 py-3 text-left font-bold" data-view="dashboard">
-      Dashboard
-    </button>
+    // DOM Elements
+    const authView = document.getElementById('auth-view');
+    const dashboardView = document.getElementById('dashboard-view');
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+    const loginBtn = document.getElementById('login-btn');
+    const userEmailSpan = document.getElementById('user-email');
 
-    <button class="sidebar-btn w-full rounded-2xl px-4 py-3 text-left font-bold" data-view="hero">
-      Hero
-    </button>
+    // === 1. CEK SESI SAAT LOAD ===
+    window.addEventListener('DOMContentLoaded', async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        showDashboard(session.user.email);
+      } else {
+        showLogin();
+      }
 
-    <button class="sidebar-btn w-full rounded-2xl px-4 py-3 text-left font-bold" data-view="fasilitas">
-      Fasilitas
-    </button>
+      // Listen perubahan auth (login/logout dari tab lain)
+      supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN' && session) {
+          showDashboard(session.user.email);
+        } else if (event === 'SIGNED_OUT') {
+          showLogin();
+        }
+      });
+    });
 
-    <button class="sidebar-btn w-full rounded-2xl px-4 py-3 text-left font-bold" data-view="kegiatan">
-      Kegiatan
-    </button>
+    // === 2. HANDLE LOGIN ===
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginError.textContent = '';
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Memproses...';
 
-    <button class="sidebar-btn w-full rounded-2xl px-4 py-3 text-left font-bold" data-view="mushola">
-      Mushola
-    </button>
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
 
-    <button class="sidebar-btn w-full rounded-2xl px-4 py-3 text-left font-bold" data-view="kontak">
-      Kontak
-    </button>
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        
+        if (error) throw error;
+        // Sukses, onAuthStateChange akan handle redirect otomatis
+      } catch (err) {
+        loginError.textContent = 'Gagal: ' + err.message;
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Masuk';
+      }
+    });
 
-  </nav>
+    // === 3. HANDLE LOGOUT ===
+    async function handleLogout() {
+      await supabase.auth.signOut();
+      showLogin();
+    }
 
-  <div class="border-t border-slate-200 p-4">
+    // === 4. UI SWITCHER ===
+    function showDashboard(email) {
+      authView.classList.add('hidden');
+      dashboardView.classList.add('active');
+      userEmailSpan.textContent = email;
+    }
 
-    <button
-      id="logout-button"
-      class="w-full rounded-2xl bg-slate-900 px-4 py-3 font-black text-white"
-    >
-      Logout
-    </button>
+    function showLogin() {
+      dashboardView.classList.remove('active');
+      authView.classList.remove('hidden');
+      loginForm.reset();
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'Masuk';
+    }
 
-  </div>
-
-</aside>
-
-<!-- CONTENT -->
-
-<main class="flex-1 p-5 lg:p-8">
-
-  <!-- DASHBOARD -->
-
-  <section
-    class="view-section active"
-    id="view-dashboard"
-  >
-
-    <div class="rounded-[32px] bg-white p-6 shadow-sm">
-
-      <h1 class="text-3xl font-black">
-        Dashboard
-      </h1>
-
-      <p class="mt-2 text-sm text-slate-500">
-        Kelola website realtime.
-      </p>
-
-    </div>
-
-    <div
-      id="posts-container"
-      class="mt-6 grid gap-5"
-    ></div>
-
-  </section>
-
-  <!-- HERO -->
-
-  <section
-    class="view-section"
-    id="view-hero"
-  >
-
-    <div id="hero-root"></div>
-
-  </section>
-
-  <!-- FASILITAS -->
-
-  <section
-    class="view-section"
-    id="view-fasilitas"
-  >
-
-    <div id="facilities-root"></div>
-
-  </section>
-
-  <!-- KEGIATAN -->
-
-  <section
-    class="view-section"
-    id="view-kegiatan"
-  >
-
-    <div id="activities-root"></div>
-
-  </section>
-
-  <!-- MUSHOLA -->
-
-  <section
-    class="view-section"
-    id="view-mushola"
-  >
-
-    <div id="mushola-root"></div>
-
-  </section>
-
-  <!-- KONTAK -->
-
-  <section
-    class="view-section"
-    id="view-kontak"
-  >
-
-    <div id="contact-root"></div>
-
-  </section>
-
-</main>
-
-</div>
-
-</section>
-
-<script>
-
-window.addEventListener("DOMContentLoaded",()=>{
-
-  document
-  .getElementById("loading-screen")
-  ?.classList.add("hidden");
-
-  document
-  .getElementById("login-view")
-  ?.classList.remove("hidden");
-
-});
-
-</script>
-
+    function switchTab(tabName) {
+      // Reset semua button & section
+      document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+      
+      // Aktifkan yang dipilih
+      event.target.classList.add('active');
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+      
+      // Update judul
+      const titles = {
+        'dashboard': 'Dashboard',
+        'content': 'Kelola Konten',
+        'settings': 'Pengaturan'
+      };
+      document.getElementById('page-title').textContent = titles[tabName] || 'Admin';
+    }
+  </script>
 </body>
 </html>
