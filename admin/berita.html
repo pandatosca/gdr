@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Moderasi Berita - GDR Admin</title>
-  <link rel="stylesheet" href="admin.css" />
+  <link rel="stylesheet" href="../admin/admin.css" />
   
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -21,10 +21,6 @@
       margin: 1.5rem 0;
       border: 2px dashed #d1d5db;
     }
-    .upload-section.dragover {
-      border-color: #3b82f6;
-      background: #eff6ff;
-    }
     .upload-preview { 
       max-width: 300px; 
       max-height: 200px; 
@@ -34,125 +30,40 @@
       display: none;
       border: 2px solid #e5e7eb;
     }
-    .upload-preview.show { 
-      display: block; 
-    }
-    .upload-progress { 
-      display: none; 
-      margin-top: 1rem; 
-    }
-    .upload-progress.active { 
-      display: block; 
-    }
-    .progress-bar { 
-      height: 6px; 
-      background: #e5e7eb; 
-      border-radius: 3px; 
-      overflow: hidden; 
-    }
-    .progress-fill { 
-      height: 100%; 
-      background: linear-gradient(90deg, #3b82f6, #60a5fa); 
-      width: 0%; 
-      transition: width 0.2s ease; 
-    }
+    .upload-preview.show { display: block; }
+    .upload-progress { display: none; margin-top: 1rem; }
+    .upload-progress.active { display: block; }
+    .progress-bar { height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #60a5fa); width: 0%; transition: width 0.2s ease; }
+    
+    /* Modal Styles */
     .edit-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000;
     }
-    .edit-modal.show {
-      display: flex;
-    }
+    .edit-modal.show { display: flex; }
     .edit-modal-content {
-      background: white;
-      padding: 2rem;
-      border-radius: 0.75rem;
-      max-width: 700px;
-      width: 90%;
-      max-height: 90vh;
-      overflow-y: auto;
+      background: white; padding: 2rem; border-radius: 0.75rem; max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto;
     }
-    .form-group {
-      margin-bottom: 1.5rem;
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #374151; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 1rem;
     }
-    .form-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: #374151;
-    }
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 0.5rem;
-      font-size: 1rem;
-    }
-    .form-group textarea {
-      min-height: 150px;
-      resize: vertical;
-    }
-    .btn-group {
-      display: flex;
-      gap: 0.75rem;
-      margin-top: 1.5rem;
-    }
-    .btn-primary {
-      background: #3b82f6;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-weight: 500;
-    }
-    .btn-primary:hover {
-      background: #2563eb;
-    }
-    .btn-secondary {
-      background: #6b7280;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-weight: 500;
-    }
-    .btn-secondary:hover {
-      background: #4b5563;
-    }
-    .file-input-wrapper {
-      position: relative;
-      overflow: hidden;
-      display: inline-block;
-    }
-    .file-input-wrapper input[type=file] {
-      position: absolute;
-      left: -9999px;
-    }
+    .form-group textarea { min-height: 150px; resize: vertical; }
+    .btn-group { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+    .btn-primary { background: #3b82f6; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 500; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-secondary { background: #6b7280; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 500; }
+    .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; }
+    .file-input-wrapper input[type=file] { position: absolute; left: -9999px; }
     .file-input-label {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      background: #e0e7ff;
-      color: #4338ca;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.2s;
+      display: inline-block; padding: 0.75rem 1.5rem; background: #e0e7ff; color: #4338ca; border-radius: 0.5rem; cursor: pointer; font-weight: 500;
     }
-    .file-input-label:hover {
-      background: #c7d2fe;
-    }
+    .status-badge { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+    .status-pending { background: #fef3c7; color: #92400e; }
+    .status-approved { background: #dcfce7; color: #166534; }
+    .card-item { border: 1px solid #e2e8f0; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; background: white; }
   </style>
 </head>
 <body>
@@ -204,10 +115,10 @@
           <label for="editKategori">Kategori *</label>
           <select id="editKategori" required>
             <option value="">Pilih Kategori</option>
-            <option value="Umum">Umum</option>
-            <option value="Kegiatan">Kegiatan</option>
             <option value="Pengumuman">Pengumuman</option>
-            <option value="Informasi">Informasi</option>
+            <option value="Kegiatan">Kegiatan</option>
+            <option value="DKM">DKM</option>
+            <option value="Berita">Berita</option>
             <option value="Lainnya">Lainnya</option>
           </select>
         </div>
@@ -222,15 +133,8 @@
           <label style="display: block; margin-bottom: 0.75rem; font-weight: 500;">📷 Foto Berita</label>
           
           <div class="file-input-wrapper">
-            <input 
-              type="file" 
-              id="inputFotoBerita" 
-              accept="image/jpeg,image/png,image/webp"
-              onchange="handleFileSelect(event)"
-            >
-            <label for="inputFotoBerita" class="file-input-label">
-              📁 Pilih File
-            </label>
+            <input type="file" id="inputFotoBerita" accept="image/jpeg,image/png,image/webp" onchange="handleFileSelect(event)">
+            <label for="inputFotoBerita" class="file-input-label">📁 Pilih File</label>
           </div>
           
           <span id="fileName" style="margin-left: 1rem; color: #6b7280; font-size: 0.875rem;"></span>
@@ -242,15 +146,10 @@
               <span id="uploadStatus">Mengompresi & uploading...</span>
               <span id="uploadPercent">0%</span>
             </div>
-            <div class="progress-bar">
-              <div id="progressFill" class="progress-fill"></div>
-            </div>
+            <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
           </div>
           
-          <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.75rem;">
-            💡 Maksimal 5MB. Foto akan dikompresi otomatis menjadi &lt;500KB.
-          </p>
-          
+          <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.75rem;">💡 Maksimal 5MB. Foto akan dikompresi otomatis.</p>
           <input type="hidden" id="fotoUrlValue">
         </div>
         <!-- END UPLOAD FOTO SECTION -->
@@ -264,15 +163,25 @@
   </div>
 
   <script>
-    // ===== KONFIGURASI SUPABASE =====
+    // ===== KONFIGURASI =====
+    // PENTING: Pastikan nama tabel dan bucket SAMA dengan index.html
+    const CONFIG = {
+      TABLE: 'news_posts', // Ganti ke 'berita' jika tabel kamu namanya 'berita'
+      BUCKET: 'gdr-media'  // Ganti ke 'berita-foto' jika bucket kamu 'berita-foto'
+    };
+
     const SUPABASE_URL = 'https://gyofijyebgtxzbtwlwbw.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // Inisialisasi Supabase dengan aman (mencegah duplicate error)
+    const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
     
     let currentUploadedFile = null;
 
     // ===== AUTH CHECK =====
     window.addEventListener('DOMContentLoaded', async () => {
+      if (!supabase) { alert('Supabase client error'); return; }
+      
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         window.location.href = '/admin';
@@ -286,14 +195,14 @@
     async function loadBerita() {
       // Load pending
       const { data: pending } = await supabase
-        .from('news_posts')
+        .from(CONFIG.TABLE)
         .select('*')
         .eq('status', 'pending')
         .order('created_at', { ascending: false });
 
       // Load approved
       const { data: approved } = await supabase
-        .from('news_posts')
+        .from(CONFIG.TABLE)
         .select('*')
         .eq('status', 'approved')
         .order('created_at', { ascending: false });
@@ -311,18 +220,18 @@
       }
 
       container.innerHTML = beritaList.map(berita => `
-        <div style="border: 1px solid #e2e8f0; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <div class="card-item">
           <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-            <strong>${berita.judul}</strong>
-            <span style="background: #fbbf24; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">Pending</span>
+            <strong>${berita.judul || berita.title}</strong>
+            <span class="status-badge status-pending">Pending</span>
           </div>
-          <p style="color: #64748b; font-size: 0.875rem;">Pengirim: ${berita.nama_pengirim} | Kategori: ${berita.kategori}</p>
-          <p style="margin: 0.5rem 0;">${berita.isi.substring(0,150)}...</p>
-          ${berita.foto_url ? `<img src="${berita.foto_url}" style="max-width: 200px; max-height: 150px; object-fit: cover; border-radius: 4px; margin: 0.5rem 0;">` : ''}
+          <p style="color: #64748b; font-size: 0.875rem;">Pengirim: ${berita.nama_pengirim || berita.author || 'Anonim'} | Kategori: ${berita.kategori || 'Umum'}</p>
+          <p style="margin: 0.5rem 0;">${(berita.isi || berita.content || '').substring(0,150)}...</p>
+          ${(berita.foto_url || berita.image_url) ? `<img src="${berita.foto_url || berita.image_url}" style="max-width: 200px; max-height: 150px; object-fit: cover; border-radius: 4px; margin: 0.5rem 0;">` : ''}
           <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
-            <button class="btn" style="width: auto; padding: 0.5rem 1rem; background: #22c55e; color: white;" onclick="approveBerita('${berita.id}')">✓ Setujui</button>
-            <button class="btn" style="width: auto; padding: 0.5rem 1rem; background: #3b82f6; color: white;" onclick="editBerita('${berita.id}')">✏️ Edit</button>
-            <button class="btn" style="width: auto; padding: 0.5rem 1rem; background: #dc2626; color: white;" onclick="rejectBerita('${berita.id}')">✗ Tolak</button>
+            <button class="btn-primary" style="padding: 0.5rem 1rem;" onclick="approveBerita('${berita.id}')">✓ Setujui</button>
+            <button class="btn-primary" style="padding: 0.5rem 1rem; background: #3b82f6;" onclick="editBerita('${berita.id}')">️ Edit</button>
+            <button class="btn-primary" style="padding: 0.5rem 1rem; background: #dc2626;" onclick="rejectBerita('${berita.id}')">✗ Tolak</button>
           </div>
         </div>
       `).join('');
@@ -337,16 +246,16 @@
       }
 
       container.innerHTML = beritaList.map(berita => `
-        <div style="border: 1px solid #e2e8f0; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <div class="card-item">
           <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-            <strong>${berita.judul}</strong>
-            <span style="background: #22c55e; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; color: white;">Published</span>
+            <strong>${berita.judul || berita.title}</strong>
+            <span class="status-badge status-approved">Published</span>
           </div>
-          <p style="color: #64748b; font-size: 0.875rem;">Pengirim: ${berita.nama_pengirim} | Kategori: ${berita.kategori}</p>
-          ${berita.foto_url ? `<img src="${berita.foto_url}" style="max-width: 200px; max-height: 150px; object-fit: cover; border-radius: 4px; margin: 0.5rem 0;">` : ''}
+          <p style="color: #64748b; font-size: 0.875rem;">Pengirim: ${berita.nama_pengirim || berita.author || 'Anonim'} | Kategori: ${berita.kategori || 'Umum'}</p>
+          ${(berita.foto_url || berita.image_url) ? `<img src="${berita.foto_url || berita.image_url}" style="max-width: 200px; max-height: 150px; object-fit: cover; border-radius: 4px; margin: 0.5rem 0;">` : ''}
           <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
-            <button class="btn" style="width: auto; padding: 0.5rem 1rem; background: #3b82f6; color: white;" onclick="editBerita('${berita.id}')">✏️ Edit</button>
-            <button class="btn" style="width: auto; padding: 0.5rem 1rem; background: #dc2626; color: white;" onclick="deleteBerita('${berita.id}')">🗑️ Hapus</button>
+            <button class="btn-primary" style="padding: 0.5rem 1rem; background: #3b82f6;" onclick="editBerita('${berita.id}')">✏️ Edit</button>
+            <button class="btn-primary" style="padding: 0.5rem 1rem; background: #dc2626;" onclick="deleteBerita('${berita.id}')">🗑️ Hapus</button>
           </div>
         </div>
       `).join('');
@@ -354,19 +263,15 @@
 
     // ===== UPLOAD FOTO FUNCTIONS =====
     
-    // Handle file selection
     function handleFileSelect(event) {
       const file = event.target.files[0];
       if (!file) return;
       
-      // Validasi tipe file
       if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
         alert('⚠️ Hanya format JPEG, PNG, atau WebP yang diperbolehkan');
         event.target.value = '';
         return;
       }
-      
-      // Validasi ukuran (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert('⚠️ Ukuran file maksimal 5MB');
         event.target.value = '';
@@ -374,11 +279,8 @@
       }
       
       currentUploadedFile = file;
-      
-      // Tampilkan nama file
       document.getElementById('fileName').textContent = file.name;
       
-      // Preview image
       const reader = new FileReader();
       reader.onload = (e) => {
         const preview = document.getElementById('previewFoto');
@@ -388,35 +290,25 @@
       reader.readAsDataURL(file);
     }
 
-    // Compress image
     async function compressImage(file) {
       const options = {
         maxSizeMB: 0.5,
         maxWidthOrHeight: 1920,
         useWebWorker: true,
         fileType: 'image/jpeg',
-        quality: 0.8,
-        initialQuality: 0.9
+        quality: 0.8
       };
-      
-      console.log('🗜️ Kompresi:', file.name, `(${(file.size/1024/1024).toFixed(2)}MB)`);
-      const compressed = await imageCompression(file, options);
-      console.log('✅ Hasil:', compressed.name, `(${(compressed.size/1024).toFixed(1)}KB)`);
-      return compressed;
+      console.log('🗜️ Kompresi:', file.name);
+      return await imageCompression(file, options);
     }
 
-    // Upload to Supabase Storage
     async function uploadToSupabase(file, beritaId = null) {
       const fileExt = file.name.split('.').pop().toLowerCase();
-      const timestamp = Date.now();
-      const randomStr = Math.random().toString(36).substr(2, 9);
-      const fileName = beritaId 
-        ? `berita-${beritaId}-${timestamp}.${fileExt}`
-        : `berita-${timestamp}-${randomStr}.${fileExt}`;
+      const fileName = `berita-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
       
       const { data, error } = await supabase
         .storage
-        .from('berita-foto')
+        .from(CONFIG.BUCKET)
         .upload(fileName, file, {
           cacheControl: '3600',
           upsert: false,
@@ -425,15 +317,10 @@
       
       if (error) throw error;
       
-      const { data: { publicUrl } } = supabase
-        .storage
-        .from('berita-foto')
-        .getPublicUrl(fileName);
-        
+      const { data: { publicUrl } } = supabase.storage.from(CONFIG.BUCKET).getPublicUrl(fileName);
       return { success: true, url: publicUrl, path: fileName };
     }
 
-    // Main upload handler
     async function handleFotoUpload(file, beritaId = null) {
       const progressEl = document.getElementById('uploadProgress');
       const fillEl = document.getElementById('progressFill');
@@ -442,39 +329,24 @@
       
       try {
         progressEl.classList.add('active');
-        
-        // Stage 1: Compress (30%)
-        fillEl.style.width = '30%';
-        percentEl.textContent = '30%';
-        statusEl.textContent = 'Mengompresi gambar...';
+        fillEl.style.width = '30%'; percentEl.textContent = '30%'; statusEl.textContent = 'Mengompresi...';
         const compressed = await compressImage(file);
         
-        // Stage 2: Upload (60% → 100%)
-        fillEl.style.width = '60%';
-        percentEl.textContent = '60%';
-        statusEl.textContent = 'Uploading ke server...';
+        fillEl.style.width = '60%'; percentEl.textContent = '60%'; statusEl.textContent = 'Uploading...';
         const result = await uploadToSupabase(compressed, beritaId);
         
-        fillEl.style.width = '100%';
-        percentEl.textContent = '100%';
-        statusEl.textContent = 'Upload selesai!';
-        
-        setTimeout(() => {
-          progressEl.classList.remove('active');
-          fillEl.style.width = '0%';
-        }, 500);
+        fillEl.style.width = '100%'; percentEl.textContent = '100%'; statusEl.textContent = 'Selesai!';
+        setTimeout(() => { progressEl.classList.remove('active'); fillEl.style.width = '0%'; }, 500);
         
         return result;
-        
       } catch (err) {
-        console.error('❌ Upload error:', err);
         progressEl.classList.remove('active');
         alert('❌ Gagal upload foto: ' + err.message);
         throw err;
       }
     }
 
-    // ===== MODAL FUNCTIONS =====
+    // ===== MODAL & CRUD =====
     
     function showAddBerita() {
       document.getElementById('modalTitle').textContent = 'Tambah Berita Baru';
@@ -488,28 +360,19 @@
     }
 
     async function editBerita(id) {
-      const { data: berita } = await supabase
-        .from('news_posts')
-        .select('*')
-        .eq('id', id)
-        .single();
-      
-      if (!berita) {
-        alert('Berita tidak ditemukan');
-        return;
-      }
+      const { data: berita } = await supabase.from(CONFIG.TABLE).select('*').eq('id', id).single();
+      if (!berita) { alert('Berita tidak ditemukan'); return; }
       
       document.getElementById('modalTitle').textContent = 'Edit Berita';
       document.getElementById('editId').value = berita.id;
-      document.getElementById('editJudul').value = berita.judul;
-      document.getElementById('editKategori').value = berita.kategori;
-      document.getElementById('editIsi').value = berita.isi;
-      document.getElementById('fotoUrlValue').value = berita.foto_url || '';
+      document.getElementById('editJudul').value = berita.judul || berita.title || '';
+      document.getElementById('editKategori').value = berita.kategori || '';
+      document.getElementById('editIsi').value = berita.isi || berita.content || '';
+      document.getElementById('fotoUrlValue').value = berita.foto_url || berita.image_url || '';
       
-      // Show existing photo if any
       const preview = document.getElementById('previewFoto');
-      if (berita.foto_url) {
-        preview.src = berita.foto_url;
+      if (berita.foto_url || berita.image_url) {
+        preview.src = berita.foto_url || berita.image_url;
         preview.classList.add('show');
         document.getElementById('fileName').textContent = 'Foto sudah ada';
       } else {
@@ -526,10 +389,8 @@
       currentUploadedFile = null;
     }
 
-    // ===== FORM SUBMIT =====
     document.getElementById('editForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      
       const id = document.getElementById('editId').value;
       const judul = document.getElementById('editJudul').value;
       const kategori = document.getElementById('editKategori').value;
@@ -537,40 +398,35 @@
       let fotoUrl = document.getElementById('fotoUrlValue').value;
       
       try {
-        // Jika ada file baru yang diupload
         if (currentUploadedFile) {
           const uploadResult = await handleFotoUpload(currentUploadedFile, id || null);
           fotoUrl = uploadResult.url;
         }
         
+        // Gunakan nama field yang umum (judul/title, isi/content, dll)
         const beritaData = {
-          judul,
-          kategori,
-          isi,
+          judul: judul,
+          title: judul, // Fallback
+          kategori: kategori,
+          isi: isi,
+          content: isi, // Fallback
           foto_url: fotoUrl,
+          image_url: fotoUrl, // Fallback
           updated_at: new Date().toISOString()
         };
         
         if (id) {
-          // Update existing
-          const { error } = await supabase
-            .from('news_posts')
-            .update(beritaData)
-            .eq('id', id);
-          
+          const { error } = await supabase.from(CONFIG.TABLE).update(beritaData).eq('id', id);
           if (error) throw error;
           alert('✅ Berita berhasil diperbarui');
         } else {
-          // Insert new
           const { data: { session } } = await supabase.auth.getSession();
           beritaData.nama_pengirim = session?.user?.email || 'Admin';
+          beritaData.author = session?.user?.email || 'Admin';
           beritaData.status = 'pending';
           beritaData.created_at = new Date().toISOString();
           
-          const { error } = await supabase
-            .from('news_posts')
-            .insert(beritaData);
-          
+          const { error } = await supabase.from(CONFIG.TABLE).insert(beritaData);
           if (error) throw error;
           alert('✅ Berita berhasil ditambahkan (status: pending)');
         }
@@ -584,54 +440,30 @@
       }
     });
 
-    // ===== CRUD FUNCTIONS =====
-    
     async function approveBerita(id) {
       const { data: { session } } = await supabase.auth.getSession();
-      const { error } = await supabase
-        .from('news_posts')
-        .update({
-          status: 'approved',
-          approved_by: session?.user?.email,
-          approved_at: new Date().toISOString()
-        })
-        .eq('id', id);
+      const { error } = await supabase.from(CONFIG.TABLE).update({
+        status: 'approved',
+        approved_by: session?.user?.email,
+        approved_at: new Date().toISOString()
+      }).eq('id', id);
 
-      if (error) {
-        alert('Error: ' + error.message);
-      } else {
-        loadBerita();
-      }
+      if (error) alert('Error: ' + error.message);
+      else loadBerita();
     }
 
     async function rejectBerita(id) {
       if (!confirm('Tolak berita ini?')) return;
-      
-      const { error } = await supabase
-        .from('news_posts')
-        .update({ status: 'rejected' })
-        .eq('id', id);
-      
-      if (error) {
-        alert('Error: ' + error.message);
-      } else {
-        loadBerita();
-      }
+      const { error } = await supabase.from(CONFIG.TABLE).update({ status: 'rejected' }).eq('id', id);
+      if (error) alert('Error: ' + error.message);
+      else loadBerita();
     }
 
     async function deleteBerita(id) {
       if (!confirm('Hapus berita ini secara permanen?')) return;
-      
-      const { error } = await supabase
-        .from('news_posts')
-        .delete()
-        .eq('id', id);
-      
-      if (error) {
-        alert('Error: ' + error.message);
-      } else {
-        loadBerita();
-      }
+      const { error } = await supabase.from(CONFIG.TABLE).delete().eq('id', id);
+      if (error) alert('Error: ' + error.message);
+      else loadBerita();
     }
 
     async function handleLogout() {
@@ -639,11 +471,8 @@
       window.location.href = '/admin';
     }
 
-    // Close modal when clicking outside
     document.getElementById('editModal').addEventListener('click', (e) => {
-      if (e.target.id === 'editModal') {
-        closeEditModal();
-      }
+      if (e.target.id === 'editModal') closeEditModal();
     });
   </script>
 </body>
