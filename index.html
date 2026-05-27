@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
+  <!-- Tambahkan ini di <head> -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Grand Depok Residence RT 09 RW 12, portal informasi warga Tanah Baru, Beji, Depok.">
@@ -18,6 +21,11 @@
   </style>
 </head>
 <body class="bg-stone-50 text-slate-950 antialiased">
+  <!-- Tambahkan ini tepat setelah <body> -->
+  <div id="globalAlert" style="position:fixed;top:20px;right:20px;z-index:9999;display:none;padding:1rem 1.5rem;border-radius:0.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.15);background:#10b981;color:white;font-weight:500;animation:slideIn 0.3s ease;">
+    <span id="alertIcon">✅</span> <span id="alertText">Pesan</span>
+  </div>
+  <style>@keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}@keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(400px);opacity:0}}</style>
   <header id="site-header" class="fixed inset-x-0 top-0 z-50 border-b border-white/10 transition-all duration-300">
     <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8" aria-label="Navigasi utama">
       <a href="#beranda" class="brand-lockup flex min-w-0 items-center gap-3 text-white">
@@ -1250,7 +1258,30 @@
       });
     });
   </script>
-</body>
-</html>
+    <script>
+// ===== ALERT FUNCTION (Minimal) =====
+function showAlert(msg, type='success') {
+  const alert = document.getElementById('globalAlert');
+  const icon = document.getElementById('alertIcon');
+  const text = document.getElementById('alertText');
+  
+  alert.style.background = type === 'success' ? '#10b981' : '#ef4444';
+  icon.textContent = type === 'success' ? '✅' : '❌';
+  text.textContent = msg;
+  alert.style.display = 'flex';
+  alert.style.animation = 'slideIn 0.3s ease';
+  
+  setTimeout(() => {
+    alert.style.animation = 'slideOut 0.3s ease';
+    setTimeout(() => { alert.style.display = 'none'; }, 300);
+  }, 4000);
+}
+
+// ===== PANGGIL ALERT SETELAH SUBMIT =====
+// Cari form submit di file kamu, tambahkan ini setelah berhasil insert:
+// showAlert('Kabar berhasil dikirim! Menunggu persetujuan pengurus.');
+</script>
+  </body>
+  </html>
 </body>
 </html>
