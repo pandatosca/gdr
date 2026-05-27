@@ -1,6 +1,9 @@
 {
+  "buildCommand": "npx tailwindcss -i ./src/input.css -o ./dist/index.css --minify",
+  "outputDirectory": ".",
   "rewrites": [
-    { "source": "/admin", "destination": "/admin/admin.html" },
+    { "source": "/admin", "destination": "/admin/index.html" },
+    { "source": "/admin/login", "destination": "/admin/login.html" },
     { "source": "/admin/berita", "destination": "/admin/berita.html" },
     { "source": "/admin/agenda", "destination": "/admin/agenda.html" },
     { "source": "/admin/terms", "destination": "/admin/terms.html" }
