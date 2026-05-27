@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login — GDR RT 09</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config/supabase.js"></script>
+    <script src="../js/admin/auth.js"></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --forest-950: #0a1f10;
+        --forest-800: #164c2c;
+        --forest-700: #1a5e35;
+        --forest-100: #dcf0e4;
+        --amber-400: #fbbf24;
+        --amber-300: #fcd34d;
+        --slate-50: #f8fafc;
+        --slate-200: #e2e8f0;
+        --slate-400: #94a3b8;
+        --slate-600: #475569;
+        --slate-900: #0f172a;
+      }
+
+      body {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: var(--forest-950);
+        background-image:
+          radial-gradient(
+            circle at 70% 10%,
+            rgba(251, 191, 36, 0.12),
+            transparent 40%
+          ),
+          linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size:
+          auto,
+          44px 44px,
+          44px 44px;
+        font-family: "Georgia", serif;
+        padding: 1.5rem;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 400px;
+        background: white;
+        border-radius: 28px;
+        padding: 2.5rem 2rem;
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 2rem;
+      }
+
+      .brand-mark {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--forest-800);
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+      }
+
+      .brand-mark svg {
+        width: 28px;
+        height: 28px;
+      }
+
+      .brand-text p:first-child {
+        font-size: 0.9rem;
+        font-weight: 800;
+        color: var(--forest-950);
+        font-family: system-ui, sans-serif;
+      }
+
+      .brand-text p:last-child {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--slate-400);
+        letter-spacing: 0.15em;
+        font-family: system-ui, sans-serif;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: var(--slate-900);
+        font-family: system-ui, sans-serif;
+        line-height: 1.2;
+      }
+
+      .subtitle {
+        margin-top: 0.4rem;
+        font-size: 0.85rem;
+        color: var(--slate-400);
+        font-family: system-ui, sans-serif;
+      }
+
+      .form {
+        margin-top: 1.75rem;
+        display: grid;
+        gap: 1rem;
+      }
+
+      label {
+        display: grid;
+        gap: 6px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--slate-600);
+        font-family: system-ui, sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1.5px solid var(--slate-200);
+        border-radius: 14px;
+        font-size: 0.92rem;
+        font-family: system-ui, sans-serif;
+        font-weight: 500;
+        color: var(--slate-900);
+        outline: none;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
+      }
+
+      input:focus {
+        border-color: var(--forest-700);
+        box-shadow: 0 0 0 4px rgba(26, 94, 53, 0.1);
+      }
+
+      .error {
+        font-size: 0.82rem;
+        color: #dc2626;
+        font-family: system-ui, sans-serif;
+        font-weight: 600;
+        min-height: 1.2em;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 0.85rem;
+        background: var(--forest-800);
+        color: white;
+        font-size: 0.9rem;
+        font-weight: 800;
+        font-family: system-ui, sans-serif;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          transform 0.1s;
+        margin-top: 0.25rem;
+      }
+
+      .btn:hover:not(:disabled) {
+        background: var(--forest-700);
+        transform: translateY(-1px);
+      }
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg viewBox="0 0 61 60" fill="none">
+            <path
+              d="M51.5 29.07C42.4 28.64 24.47 29.72 24.47 45.28 24.47 50.47 37.11 49.82 51.5 29.07Z"
+              fill="white"
+            />
+            <path
+              d="M29.8 31.01C28.46 27.12 25.8 20.64 40.46 12.86 43.12 16.75 43.12 27.12 29.8 31.01Z"
+              fill="white"
+            />
+            <path
+              d="M24.47 36.2C17.8 36.2 7.94 25.05 13.81 14.15 19.8 16.54 32.46 25.83 24.47 36.2Z"
+              fill="white"
+            />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <p>Grand Depok Residence</p>
+          <p>RT 09 RW 12 · ADMIN</p>
+        </div>
+      </div>
+
+      <h1>Masuk ke Dashboard</h1>
+      <p class="subtitle">Khusus pengurus yang berwenang.</p>
+
+      <form class="form" id="login-form">
+        <label>
+          Email
+          <input
+            type="email"
+            id="email"
+            required
+            placeholder="admin@gdr.com"
+            autocomplete="email"
+          />
+        </label>
+        <label>
+          Password
+          <input
+            type="password"
+            id="password"
+            required
+            placeholder="••••••••"
+            autocomplete="current-password"
+          />
+        </label>
+        <p class="error" id="error-msg"></p>
+        <button type="submit" class="btn" id="login-btn">Masuk</button>
+      </form>
+    </div>
+
+    <script>
+      // Kalau sudah login, langsung ke dashboard
+      window.addEventListener("DOMContentLoaded", async () => {
+        try {
+          const {
+            data: { session },
+          } = await window.supabaseClient.auth.getSession();
+          if (session?.user) window.location.href = "/admin/index.html";
+        } catch (e) {}
+      });
+
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const btn = document.getElementById("login-btn");
+          const errEl = document.getElementById("error-msg");
+          errEl.textContent = "";
+          btn.disabled = true;
+          btn.textContent = "Memproses...";
+
+          try {
+            await window.loginAdmin(
+              document.getElementById("email").value.trim(),
+              document.getElementById("password").value,
+            );
+            window.location.href = "/admin/index.html";
+          } catch (err) {
+            errEl.textContent = err.message?.includes("Invalid")
+              ? "Email atau password salah."
+              : err.message || "Gagal masuk.";
+            btn.disabled = false;
+            btn.textContent = "Masuk";
+          }
+        });
+    </script>
+  </body>
+</html>

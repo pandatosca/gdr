@@ -565,16 +565,13 @@
             id="news-grid"
             class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3"
           ></div>
-          <div
-            id="empty-news"
-            class="mt-8 hidden rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center"
-          >
-            <p class="text-lg font-extrabold">
-              Belum ada kabar untuk kategori ini.
-            </p>
-            <p class="mt-2 text-sm text-slate-500">
-              Coba kategori lain atau kirim kabar baru dari tombol di atas.
-            </p>
+          <div class="mt-10 flex justify-center">
+            <button
+              id="load-more-news"
+              class="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-100"
+            >
+              Load More
+            </button>
           </div>
         </div>
       </section>
@@ -734,13 +731,22 @@
               class="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none transition focus:border-forest-500 focus:ring-4 focus:ring-forest-100"
               placeholder="Contoh: Jadwal kerja bakti bulan ini"
           /></label>
-          <label class="grid gap-2 text-sm font-bold text-slate-700"
-            >Foto kabar<input
+          <label class="grid gap-2 text-sm font-bold text-slate-700">
+            Foto kabar (maksimal 10 foto)
+
+            <input
               id="post-image"
               type="file"
               accept="image/*"
+              multiple
               class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold file:mr-4 file:rounded-full file:border-0 file:bg-forest-700 file:px-4 file:py-2 file:text-sm file:font-extrabold file:text-white"
-          /></label>
+            />
+
+            <div
+              id="image-preview"
+              class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3"
+            ></div>
+          </label>
           <label class="grid gap-2 text-sm font-bold text-slate-700"
             >Isi kabar<textarea
               id="post-content"
@@ -770,10 +776,6 @@
     </div>
 
     <div
-      id="detail-dialog"
-      class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/70 p-4"
-    ></div>
-    <div
       id="qris-dialog"
       class="fixed inset-0 z-[80] hidden items-center justify-center bg-slate-950/70 p-4"
     ></div>
@@ -796,6 +798,7 @@
       const MEDIA_BUCKET = "gdr-media";
       let supabaseClient = null;
       window.currentCategory = "semua";
+      window.newsLimit = 6;
 
       const defaults = {
         settings: {
@@ -984,8 +987,16 @@
           category: row.category,
           author: row.author,
           date: row.created_at || row.updated_at || new Date().toISOString(),
+
           status: row.status,
+
           image: row.image_url || "",
+
+          images: row.images?.length
+            ? row.images
+            : row.image_url
+              ? [row.image_url]
+              : [],
         };
       }
 
@@ -1063,7 +1074,10 @@
           client
             .from("news_posts")
             .select("*")
-            .order("created_at", { ascending: false }),
+            .eq("status", "approved")
+            .order("created_at", {
+              ascending: false,
+            }),
         ]);
 
         if (settingsRow?.data && Object.keys(settingsRow.data).length) {
@@ -1134,14 +1148,14 @@
         grid.innerHTML = facilities
           .map(
             (item) => `
-        <article class="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] shadow-sm">
-          <div class="image-cover h-44" style="background-image:url('${item.image}')"></div>
-          <div class="p-5">
-            <h3 class="font-extrabold">${item.title}</h3>
-            <p class="mt-3 text-sm leading-7 text-white/64">${item.desc}</p>
-          </div>
-        </article>
-      `,
+              <article class="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] shadow-sm">
+                <div class="image-cover h-44" style="background-image:url('${item.image}')"></div>
+                <div class="p-5">
+                  <h3 class="font-extrabold">${item.title}</h3>
+                  <p class="mt-3 text-sm leading-7 text-white/64">${item.desc}</p>
+                </div>
+              </article>
+            `,
           )
           .join("");
       }
@@ -1151,16 +1165,16 @@
         list.innerHTML = getActivities()
           .map(
             (item) => `
-        <article class="grid gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-[132px_1fr]">
-          <div class="rounded-2xl bg-forest-50 p-4 text-center">
-            <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-forest-700">${item.label}</p>
-          </div>
-          <div>
-            <h3 class="text-xl font-extrabold">${item.title}</h3>
-            <p class="mt-3 text-sm leading-7 text-slate-600">${item.desc}</p>
-          </div>
-        </article>
-      `,
+              <article class="grid gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-[132px_1fr]">
+                <div class="rounded-2xl bg-forest-50 p-4 text-center">
+                  <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-forest-700">${item.label}</p>
+                </div>
+                <div>
+                  <h3 class="text-xl font-extrabold">${item.title}</h3>
+                  <p class="mt-3 text-sm leading-7 text-slate-600">${item.desc}</p>
+                </div>
+              </article>
+            `,
           )
           .join("");
       }
@@ -1175,35 +1189,107 @@
         renderNews(category);
       }
 
-      function openDetailDialog(id) {
-        const item = getNews().find((news) => news.id === id);
+      window.currentGalleryIndex = 0;
+
+      window.openDetailDialog = function (id) {
+        const item = appState.news.find(
+          (news) => String(news.id) === String(id),
+        );
+
         if (!item) return;
-        const badge = categoryClasses[item.category] || categoryClasses.Berita;
-        document.getElementById("detail-dialog").innerHTML = `
-        <div class="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-3xl bg-white p-5 shadow-2xl sm:p-7">
-          <div class="flex items-start justify-between gap-4">
-            <div><span class="rounded-full px-3 py-1 text-xs font-extrabold ${badge}">${item.category}</span><h2 class="mt-4 text-3xl font-extrabold">${item.title}</h2><p class="mt-2 text-sm font-bold text-slate-500">${item.author} - ${formatDate(item.date)}</p></div>
-            <button type="button" onclick="closeDialog('detail-dialog')" class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Tutup"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+
+        const content = document.getElementById("detail-content");
+
+        const image = item.image || "";
+
+        const catClass =
+          categoryClasses[item.category] || "bg-slate-100 text-slate-700";
+
+        content.innerHTML = `
+          <div class="mx-auto w-full max-w-3xl">
+            ${
+              image
+                ? `
+              <div class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
+                <img
+                  src="${image}"
+                  loading="lazy" class="h-[240px] w-full object-cover sm:h-[380px]" alt="${item.title || ""}" />
+              </div>
+            `
+                : ""
+            }
+
+            <div class="mt-6 flex flex-wrap items-center gap-2">
+              <span class="rounded-full px-3 py-1 text-xs font-bold ${catClass}">
+                ${item.category || ""}
+              </span>
+              <span class="text-sm text-slate-400">·</span>
+              <span class="text-sm font-medium text-slate-500">
+                ${formatDate(item.date || new Date())}
+              </span>
+            </div>
+
+            <h2 class="mt-4 text-3xl font-black leading-tight tracking-tight text-slate-900 sm:text-4xl">
+              ${item.title || ""}
+            </h2>
+
+            <p class="mt-5 whitespace-pre-line break-words text-[15px] leading-8 text-slate-700">
+              ${item.content || ""}
+            </p>
+
+            <div class="mt-6">
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Penulis</p>
+              <p class="text-sm font-bold text-slate-800">${item.author || ""}</p>
+            </div>
+
+            <button
+              onclick="closeDialog('detail-dialog')"
+              class="mt-8 mb-6 w-full rounded-full border border-slate-200 py-3 text-sm font-bold text-slate-600 transition hover:bg-slate-50"
+            >
+              Tutup
+            </button>
           </div>
-          ${item.image ? `<img src="${item.image}" alt="${item.title}" class="mt-6 max-h-[440px] w-full rounded-2xl object-cover">` : ""}
-          <p class="mt-6 whitespace-pre-line text-base leading-8 text-slate-700">${item.content}</p>
-        </div>
-      `;
+          </div>
+        `;
+
         openDialog("detail-dialog");
-      }
+      };
+      window.setGalleryImage = function (index) {
+        window.currentGalleryIndex = index;
+
+        document.getElementById("detail-main-image").src =
+          window.currentGalleryImages[index];
+      };
+
+      window.nextGalleryImage = function () {
+        window.currentGalleryIndex =
+          (window.currentGalleryIndex + 1) % window.currentGalleryImages.length;
+
+        setGalleryImage(window.currentGalleryIndex);
+      };
+
+      window.prevGalleryImage = function () {
+        window.currentGalleryIndex =
+          (window.currentGalleryIndex -
+            1 +
+            window.currentGalleryImages.length) %
+          window.currentGalleryImages.length;
+
+        setGalleryImage(window.currentGalleryIndex);
+      };
 
       function openQrisDialog() {
         const qrisImage = getSettings().qrisImage;
         document.getElementById("qris-dialog").innerHTML = `
-        <div class="w-full max-w-md rounded-3xl bg-white p-6 text-center shadow-2xl">
-          <button type="button" onclick="closeDialog('qris-dialog')" class="ml-auto grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Tutup"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-          <h2 class="mt-2 text-2xl font-extrabold">Kotak Amal Mushola</h2>
-          <p class="mt-2 text-sm font-semibold leading-6 text-slate-500">Terima kasih atas infaq dan dukungan warga. Semoga menjadi amal kebaikan.</p>
-          <div class="mt-6 rounded-2xl border border-slate-200 bg-stone-50 p-4">
-            ${qrisImage ? `<img src="${qrisImage}" alt="QRIS Mushola" class="mx-auto max-h-[420px] rounded-xl object-contain">` : `<div class="grid min-h-[300px] place-items-center rounded-xl border border-dashed border-slate-300 p-6 text-sm font-bold text-slate-500">QRIS mushola akan segera tersedia.</div>`}
-          </div>
-        </div>
-      `;
+              <div class="w-full max-w-md rounded-3xl bg-white p-6 text-center shadow-2xl">
+                <button type="button" onclick="closeDialog('qris-dialog')" class="ml-auto grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Tutup"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+                <h2 class="mt-2 text-2xl font-extrabold">Kotak Amal Mushola</h2>
+                <p class="mt-2 text-sm font-semibold leading-6 text-slate-500">Terima kasih atas infaq dan dukungan warga. Semoga menjadi amal kebaikan.</p>
+                <div class="mt-6 rounded-2xl border border-slate-200 bg-stone-50 p-4">
+                  ${qrisImage ? `<img src="${qrisImage}" alt="QRIS Mushola" class="mx-auto max-h-[420px] rounded-xl object-contain">` : `<div class="grid min-h-[300px] place-items-center rounded-xl border border-dashed border-slate-300 p-6 text-sm font-bold text-slate-500">QRIS mushola akan segera tersedia.</div>`}
+                </div>
+              </div>
+            `;
         openDialog("qris-dialog");
       }
 
@@ -1211,32 +1297,43 @@
         if (event.target.id === "post-form") {
           event.preventDefault();
           try {
-            const file = document.getElementById("post-image").files[0];
-            const image = await uploadMedia(file, "posts");
-            const payload = {
-              title: document.getElementById("post-title").value.trim(),
-              content: document.getElementById("post-content").value.trim(),
-              category: document.getElementById("post-category").value,
-              author: document.getElementById("post-author").value.trim(),
-              status: "pending",
-            };
-            const client = initSupabaseClient();
-            if (client) {
-              const { error } = await client.from("news_posts").insert({
-                ...payload,
-                image_url: image || null,
+            const files = window.selectedImages || [];
+
+            const primaryIndex = Number(
+              document.querySelector('input[name="primary-image"]:checked')
+                ?.value || 0,
+            );
+
+            const uploadedImages = [];
+
+            for (const file of files) {
+              const compressedFile = await window.imageCompression(file, {
+                maxSizeMB: 1,
+                maxWidthOrHeight: 1600,
+                useWebWorker: true,
               });
-              if (error) throw error;
-            } else {
-              const news = getNews();
-              news.push({
-                ...payload,
-                id: Date.now(),
-                date: new Date().toISOString().slice(0, 10),
-                image,
-              });
-              await saveNews(news);
+
+              const image = await uploadMedia(compressedFile, "posts");
+
+              uploadedImages.push(image);
             }
+
+            const primaryImage =
+              uploadedImages[primaryIndex] || uploadedImages[0] || "";
+            const client = initSupabaseClient();
+            if (!client) throw new Error("Koneksi database tidak tersedia.");
+            await client.from("news_posts").insert({
+              title: document.getElementById("post-title").value,
+              content: document.getElementById("post-content").value,
+              category: document.getElementById("post-category").value,
+              author: document.getElementById("post-author").value,
+
+              status: "pending",
+
+              image_url: primaryImage,
+
+              images: uploadedImages,
+            });
             event.target.reset();
             closeDialog("post-dialog");
             showToast("Kabar terkirim. Menunggu pengurus approve.");
@@ -1268,6 +1365,69 @@
           if (button) setActiveCategory(button.dataset.category);
         });
 
+      window.selectedImages = window.selectedImages || [];
+
+      document
+        .getElementById("post-image")
+        .addEventListener("change", (event) => {
+          const newFiles = Array.from(event.target.files);
+
+          window.selectedImages = [...window.selectedImages, ...newFiles].slice(
+            0,
+            10,
+          );
+
+          renderImagePreview();
+
+          event.target.value = "";
+        });
+
+      window.renderImagePreview = function () {
+        const preview = document.getElementById("image-preview");
+
+        preview.innerHTML = "";
+
+        window.selectedImages.forEach((file, index) => {
+          const url = URL.createObjectURL(file);
+
+          preview.innerHTML += `
+                <label class="overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+                  <img
+                    src="${url}"
+                    loading="lazy"
+                    class="h-32 w-full rounded-xl object-cover"
+                  />
+
+                  <div class="mt-2 flex items-center justify-between gap-2 text-xs font-bold text-slate-700">
+                    <label class="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="primary-image"
+                        value="${index}"
+                        ${index === 0 ? "checked" : ""}
+                      />
+
+                      Utama
+                    </label>
+
+                    <button
+                      type="button"
+                      onclick="removeSelectedImage(${index})"
+                      class="text-red-500"
+                    >
+                      Hapus
+                    </button>
+                  </div>
+                </label>
+              `;
+        });
+      };
+
+      window.removeSelectedImage = function (index) {
+        window.selectedImages.splice(index, 1);
+
+        renderImagePreview();
+      };
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
           ["post-dialog", "detail-dialog", "qris-dialog"].forEach(closeDialog);
@@ -1318,7 +1478,45 @@
         },
         { passive: true },
       );
+      document
+        .getElementById("load-more-news")
+        ?.addEventListener("click", () => {
+          window.newsLimit += 6;
+
+          renderNews();
+        });
     </script>
     <script src="./js/app.js"></script>
+    <div
+      id="detail-dialog"
+      class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 p-4 sm:p-6"
+    >
+      <div
+        class="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-[28px] bg-white shadow-2xl"
+      >
+        <div
+          class="sticky top-0 z-10 flex justify-end p-4 bg-white/80 backdrop-blur-sm"
+        >
+          <button
+            onclick="closeDialog('detail-dialog')"
+            class="grid h-9 w-9 place-items-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:bg-slate-50"
+            aria-label="Tutup"
+          >
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none">
+              <path
+                d="m6 6 12 12M18 6 6 18"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          id="detail-content"
+          class="px-5 pb-14 -mt-2 sm:px-8 lg:px-10 lg:pb-16"
+        ></div>
+      </div>
+    </div>
   </body>
 </html>
