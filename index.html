@@ -742,11 +742,7 @@
   <!-- === SUPABASE INTEGRATION FOR GDR === -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // Inisialisasi Supabase
-  //const SUPABASE_URL = 'https://gyofijyebgtxzbtwlwbw.supabase.co';
-  //const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo';
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
   // Helper: Format tanggal Indonesia
   function formatDateID(dateStr) {
     return new Date(dateStr).toLocaleDateString('id-ID', { 
@@ -983,5 +979,278 @@
     setupKabarForm();
   });
 </script>
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- Browser Image Compression -->
+  <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
+  
+  <script>
+    // ===== KONFIGURASI =====
+    const CONFIG = {
+      SUPABASE_URL: 'https://gyofijyebgtxzbtwlwbw.supabase.co',
+      SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo',
+      TABLE: 'news_posts',
+      BUCKET: 'gdr-media'
+    };
+
+    // ===== ALERT FUNCTION =====
+    function showAlert(message, type = 'success') {
+      // Remove existing
+      document.querySelectorAll('.custom-alert').forEach(el => el.remove());
+      
+      const alert = document.createElement('div');
+      alert.className = `custom-alert`;
+      alert.style.cssText = `
+        position: fixed; top: 20px; right: 20px; z-index: 9999;
+        padding: 1rem 1.5rem; border-radius: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        background: ${type === 'success' ? '#10b981' : '#ef4444'};
+        color: white; font-weight: 500;
+        animation: slideIn 0.3s ease;
+      `;
+      alert.innerHTML = `<span>${type === 'success' ? '✅' : '❌'}</span> <span>${message}</span>`;
+      
+      document.body.appendChild(alert);
+      
+      setTimeout(() => {
+        alert.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => alert.remove(), 300);
+      }, 4000);
+    }
+
+    // Tambahkan CSS untuk animasi
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+      @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(400px); opacity: 0; } }
+    `;
+    document.head.appendChild(style);
+
+    // ===== MODAL FUNCTIONS =====
+    function openModal() {
+      document.getElementById('submitModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('submitModal').classList.remove('show');
+      document.body.style.overflow = '';
+      document.getElementById('kabarForm').reset();
+      const preview = document.getElementById('fotoPreview');
+      if (preview) preview.classList.add('hidden');
+      currentUploadedFile = null;
+    }
+
+    // ===== FILE PREVIEW =====
+    document.getElementById('fotoInput')?.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        currentUploadedFile = file;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const preview = document.getElementById('fotoPreview');
+          preview.src = e.target.result;
+          preview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // ===== FORM SUBMIT =====
+    document.getElementById('kabarForm')?.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const namaPengirim = document.getElementById('namaPengirim').value;
+      const kategori = document.getElementById('kategori').value;
+      const judul = document.getElementById('judul').value;
+      const isiKabar = document.getElementById('isiKabar').value;
+      
+      try {
+        let fotoUrl = '';
+        
+        if (currentUploadedFile) {
+          showAlert('Mengompresi & upload foto...');
+          
+          const compressedFile = await imageCompression(currentUploadedFile, {
+            maxSizeMB: 0.5,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true
+          });
+          
+          const fileExt = currentUploadedFile.name.split('.').pop();
+          const fileName = `berita-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+          
+          const { error: uploadError } = await supabase
+            .storage
+            .from(CONFIG.BUCKET)
+            .upload(fileName, compressedFile, {
+              cacheControl: '3600',
+              upsert: false
+            });
+          
+          if (uploadError) throw uploadError;
+          
+          const { data: { publicUrl } } = supabase
+            .storage
+            .from(CONFIG.BUCKET)
+            .getPublicUrl(fileName);
+          
+          fotoUrl = publicUrl;
+        }
+        
+        const { error } = await supabase
+          .from(CONFIG.TABLE)
+          .insert({
+            title: judul,
+            content: isiKabar,
+            author: namaPengirim,
+            categories: kategori,
+            image_url: fotoUrl,
+            status: 'pending',
+            created_at: new Date().toISOString()
+          });
+        
+        if (error) throw error;
+        
+        showAlert('Kabar berhasil dikirim! Menunggu persetujuan pengurus.');
+        closeModal();
+        loadNews();
+        
+      } catch (err) {
+        console.error('Error:', err);
+        showAlert('Gagal mengirim kabar: ' + err.message, 'error');
+      }
+    });
+
+    // ===== LOAD NEWS =====
+    async function loadNews() {
+      const container = document.getElementById('newsContainer');
+      if (!container) return;
+      
+      try {
+        let query = supabase
+          .from(CONFIG.TABLE)
+          .select('*')
+          .eq('status', 'approved')
+          .order('created_at', { ascending: false });
+        
+        if (currentCategory !== 'semua') {
+          query = query.or(`kategori.eq.${currentCategory},categories.eq.${currentCategory}`);
+        }
+        
+        const { data, error } = await query;
+        
+        if (error) throw error;
+        
+        if (!data || data.length === 0) {
+          container.innerHTML = `
+            <div class="text-center text-stone-500 py-12 col-span-full">
+              Belum ada kabar untuk kategori ini.<br/>
+              Coba kategori lain atau kirim kabar baru dari tombol di atas.
+            </div>
+          `;
+          return;
+        }
+        
+        container.innerHTML = data.map(berita => `
+          <article class="bg-white rounded-xl shadow-lg overflow-hidden">
+            ${berita.image_url ? `
+              <img src="${berita.image_url}" alt="${berita.title}" 
+                   class="w-full h-48 object-cover" onerror="this.style.display='none'">
+            ` : ''}
+            <div class="p-6">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">
+                  ${berita.categories || berita.kategori || 'Umum'}
+                </span>
+                <span class="text-stone-400 text-xs">${formatDateID(berita.created_at)}</span>
+              </div>
+              <h3 class="text-xl font-bold text-stone-900 mb-2">${berita.title || berita.judul}</h3>
+              <p class="text-stone-600 text-sm mb-4">${(berita.content || berita.isi || '').substring(0, 150)}...</p>
+              <div class="flex items-center justify-between text-sm text-stone-500">
+                <span>👤 ${berita.author || berita.nama_pengirim || 'Anonim'}</span>
+              </div>
+            </div>
+          </article>
+        `).join('');
+        
+      } catch (err) {
+        console.error('Error loading news:', err);
+        container.innerHTML = '<div class="text-center text-red-500 py-12">Gagal memuat berita</div>';
+      }
+    }
+
+    // ===== LOAD AGENDA =====
+    async function loadAgenda() {
+      const container = document.getElementById('agendaContainer');
+      if (!container) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('agenda')
+          .select('*')
+          .order('tanggal', { ascending: true })
+          .limit(6);
+        
+        if (error) throw error;
+        
+        if (!data || data.length === 0) {
+          container.innerHTML = '<div class="text-center text-stone-500 py-12 col-span-full">Belum ada agenda</div>';
+          return;
+        }
+        
+        container.innerHTML = data.map(item => `
+          <div class="bg-white p-6 rounded-xl shadow-md" style="border-left: 4px solid ${item.warna || '#166534'}">
+            <div class="text-sm text-stone-500 mb-2">${formatDateID(item.tanggal)} ${item.waktu || ''}</div>
+            <h3 class="font-bold text-stone-900 mb-2">${item.judul}</h3>
+            <p class="text-stone-600 text-sm">${item.deskripsi || ''}</p>
+          </div>
+        `).join('');
+        
+      } catch (err) {
+        console.error('Error loading agenda:', err);
+        container.innerHTML = '<div class="text-center text-stone-500 py-12 col-span-full">Gagal memuat agenda</div>';
+      }
+    }
+
+    // ===== FILTER KATEGORI =====
+    function filterKategori(kategori) {
+      currentCategory = kategori;
+      document.querySelectorAll('.kategori-btn').forEach(btn => {
+        btn.className = 'kategori-btn bg-stone-200 text-stone-700 px-6 py-2 rounded-full font-medium hover:bg-stone-300 transition';
+      });
+      
+      const activeBtn = Array.from(document.querySelectorAll('.kategori-btn')).find(btn => 
+        btn.textContent.toLowerCase().includes(kategori === 'semua' ? 'semua' : kategori.toLowerCase())
+      );
+      if (activeBtn) {
+        activeBtn.className = 'kategori-btn active bg-green-700 text-white px-6 py-2 rounded-full font-medium transition';
+      }
+      
+      loadNews();
+    }
+
+    // ===== FORMAT DATE =====
+    function formatDateID(dateStr) {
+      if (!dateStr) return '';
+      return new Date(dateStr).toLocaleDateString('id-ID', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+      });
+    }
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', function() {
+      loadNews();
+      loadAgenda();
+      
+      // Close modal when clicking outside
+      document.getElementById('submitModal')?.addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+      });
+    });
+  </script>
+</body>
+</html>
 </body>
 </html>
