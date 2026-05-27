@@ -1,7 +1,8 @@
 {
-  "cleanUrls": true,
-  "outputDirectory": ".",
-  "redirects": [
-    { "source": "/admin", "destination": "/admin/admin.html", "permanent": false }
+  "rewrites": [
+    { "source": "/admin", "destination": "/admin/admin.html" },
+    { "source": "/admin/berita", "destination": "/admin/berita.html" },
+    { "source": "/admin/agenda", "destination": "/admin/agenda.html" },
+    { "source": "/admin/terms", "destination": "/admin/terms.html" }
   ]
 }

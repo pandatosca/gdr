@@ -750,7 +750,6 @@
   <!-- === SUPABASE INTEGRATION FOR GDR === -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   // Helper: Format tanggal Indonesia
   function formatDateID(dateStr) {
     return new Date(dateStr).toLocaleDateString('id-ID', { 
