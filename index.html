@@ -1165,32 +1165,58 @@
           .from("finance_reports")
           .select("id,period,pdf_url,created_at")
           .order("created_at", { ascending: false });
-        const reports = data || [];
+        const reports = (data || []).filter((r) => r.pdf_url);
         const el = document.getElementById("finance-card");
         if (!el) return;
         if (!reports.length) {
           el.innerHTML = `<div class="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">Laporan keuangan akan segera tersedia.</div>`;
           return;
         }
+        const latest = reports[0];
+        const older = reports.slice(1);
+        const dlIcon = `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
         el.innerHTML = `
-          <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 divide-y divide-slate-100">
-            ${reports
-              .map(
-                (r) => `
-              <div class="flex flex-wrap items-center justify-between gap-3 py-3 first:pt-1 last:pb-1">
-                <div>
-                  <p class="font-bold text-slate-900">${r.period || "Laporan"}</p>
-                  <p class="text-xs text-slate-400">Diterbitkan ${formatDate(r.created_at)}</p>
-                </div>
-                ${
-                  r.pdf_url
-                    ? `<a href="${r.pdf_url}" target="_blank" rel="noreferrer" download class="inline-flex items-center gap-2 rounded-full bg-forest-700 px-5 py-2.5 text-sm font-extrabold text-white shadow transition hover:bg-forest-800"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Download PDF</a>`
-                    : ""
-                }
-              </div>`,
-              )
-              .join("")}
-          </div>`;
+          <div class="overflow-hidden rounded-3xl border border-forest-700/15 bg-gradient-to-br from-forest-700 to-forest-800 p-6 text-white shadow-xl shadow-forest-900/10 sm:p-8">
+            <div class="flex flex-wrap items-center justify-between gap-5">
+              <div class="min-w-0">
+                <p class="text-xs font-extrabold uppercase tracking-[0.22em] text-amber-300">Laporan Terbaru</p>
+                <p class="mt-2 text-2xl font-extrabold sm:text-3xl">${latest.period || "Laporan"}</p>
+                <p class="mt-1 text-sm text-white/70">Diterbitkan ${formatDate(latest.created_at)}</p>
+              </div>
+              <a href="${latest.pdf_url}" target="_blank" rel="noreferrer" download
+                class="inline-flex items-center gap-2 rounded-full bg-amber-400 px-6 py-3.5 text-sm font-extrabold text-forest-950 shadow-lg transition hover:bg-amber-300">
+                ${dlIcon} Download PDF
+              </a>
+            </div>
+          </div>
+          ${
+            older.length
+              ? `
+          <details class="mt-5 rounded-3xl border border-slate-200 bg-white shadow-sm">
+            <summary class="flex cursor-pointer items-center justify-between gap-3 px-6 py-4 text-sm font-bold text-slate-700">
+              <span>Laporan sebelumnya (${older.length})</span>
+              <svg class="h-4 w-4 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </summary>
+            <div class="divide-y divide-slate-100 border-t border-slate-100">
+              ${older
+                .map(
+                  (r) => `
+                <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-3">
+                  <div>
+                    <p class="font-bold text-slate-900">${r.period || "Laporan"}</p>
+                    <p class="text-xs text-slate-400">${formatDate(r.created_at)}</p>
+                  </div>
+                  <a href="${r.pdf_url}" target="_blank" rel="noreferrer" download
+                    class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-forest-700 transition hover:bg-slate-50">
+                    ${dlIcon} Download
+                  </a>
+                </div>`,
+                )
+                .join("")}
+            </div>
+          </details>`
+              : ""
+          }`;
       }
       window.loadFinanceReports = loadFinanceReports;
 
