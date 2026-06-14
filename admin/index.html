@@ -575,7 +575,7 @@
         <button class="nav-btn" data-tab="activities">🎯 Kelola Kegiatan</button>
         <button class="nav-btn" data-tab="youtube">📺 YouTube Videos</button>
         <button class="nav-btn" data-tab="keuangan">💰 Keuangan</button>
-        <button class="nav-btn" data-tab="settings">⚙️ Pengaturan</button>
+        <button class="nav-btn" data-tab="settings" data-super-only>⚙️ Pengaturan</button>
         <button class="nav-btn logout" id="logoutBtn">🚪 Keluar</button>
       </div>
     </aside>
@@ -584,6 +584,7 @@
       <div class="topbar">
         <h1 id="pageTitle">Dashboard</h1>
         <div class="user-info">
+          <span id="roleBadge" style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:30px; background:var(--primary-light); color:var(--primary); text-transform:uppercase; letter-spacing:0.04em;"></span>
           <div class="avatar" id="userAvatar">A</div>
           <span class="user-email" id="userEmailSpan"></span>
         </div>
@@ -797,11 +798,23 @@
       document.getElementById('dashboardView').style.display = 'none';
     }
 
+    function applyRoleGating(user) {
+      const role = (user && user.app_metadata && user.app_metadata.role) || 'editor';
+      window.currentRole = role;
+      const isSuper = role === 'super_admin';
+      document.querySelectorAll('[data-super-only]').forEach(el => {
+        el.style.display = isSuper ? '' : 'none';
+      });
+      const badge = document.getElementById('roleBadge');
+      if (badge) badge.textContent = isSuper ? 'Super Admin' : 'Editor';
+    }
+
     function showDashboardUI(email) {
       document.getElementById('authView').style.display = 'none';
       document.getElementById('dashboardView').style.display = 'block';
       document.getElementById('userEmailSpan').textContent = email;
       document.getElementById('userAvatar').textContent = email.charAt(0).toUpperCase();
+      applyRoleGating(currentUser);
       loadDashboardStats();
       loadPreviewPending();
       loadPendingPosts();
@@ -1291,6 +1304,10 @@
     };
 
     function switchTab(tabId) {
+      if (tabId === 'settings' && window.currentRole !== 'super_admin') {
+        showToast('Akses ditolak: khusus Super Admin');
+        return;
+      }
       document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
       document.getElementById(`tab${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`).classList.add('active');
       document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
