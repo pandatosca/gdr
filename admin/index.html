@@ -1,764 +1,1033 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin — GDR RT 09</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/config/supabase.js"></script>
-    <script src="../js/admin/auth.js"></script>
-    <script src="../js/admin/posts.js"></script>
-    <style>
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      :root {
-        --forest-950: #0a1f10;
-        --forest-800: #164c2c;
-        --forest-700: #1a5e35;
-        --forest-100: #dcf0e4;
-        --forest-50: #f0f9f4;
-        --amber-400: #fbbf24;
-        --amber-100: #fef3c7;
-        --amber-800: #92400e;
-        --red-100: #fee2e2;
-        --red-600: #dc2626;
-        --slate-50: #f8fafc;
-        --slate-100: #f1f5f9;
-        --slate-200: #e2e8f0;
-        --slate-300: #cbd5e1;
-        --slate-400: #94a3b8;
-        --slate-500: #64748b;
-        --slate-600: #475569;
-        --slate-700: #334155;
-        --slate-900: #0f172a;
-        --radius: 16px;
-        --sidebar-w: 240px;
-      }
-      body {
-        font-family: system-ui, sans-serif;
-        background: var(--slate-100);
-        color: var(--slate-900);
-        min-height: 100vh;
-        display: flex;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>GDR Admin Panel — RT 09</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-      /* SIDEBAR */
-      .sidebar {
-        width: var(--sidebar-w);
-        min-height: 100vh;
-        background: var(--forest-950);
-        display: flex;
-        flex-direction: column;
-        padding: 1.5rem 1rem;
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        z-index: 40;
-      }
-      .sidebar-brand {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 0 0.5rem 1.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        margin-bottom: 1.25rem;
-      }
-      .sidebar-brand .mark {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        background: white;
-        display: grid;
-        place-items: center;
-        flex-shrink: 0;
-      }
-      .sidebar-brand .mark svg {
-        width: 24px;
-        height: 24px;
-      }
-      .brand-name {
-        font-size: 0.78rem;
-        font-weight: 800;
-        color: white;
-        line-height: 1.2;
-      }
-      .brand-sub {
-        font-size: 0.65rem;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.4);
-        letter-spacing: 0.14em;
-        margin-top: 1px;
-      }
-      .nav {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        flex: 1;
-      }
-      .nav-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 0.65rem 0.85rem;
-        border-radius: 10px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.55);
-        cursor: pointer;
-        border: none;
-        background: none;
-        text-align: left;
-        width: 100%;
-        transition:
-          background 0.15s,
-          color 0.15s;
-      }
-      .nav-item:hover {
-        background: rgba(255, 255, 255, 0.07);
-        color: white;
-      }
-      .nav-item.active {
-        background: rgba(255, 255, 255, 0.12);
-        color: white;
-      }
-      .nav-item .icon {
-        font-size: 1rem;
-        width: 20px;
-        text-align: center;
-      }
-      .nav-badge {
-        margin-left: auto;
-        background: var(--amber-400);
-        color: var(--forest-950);
-        font-size: 0.65rem;
-        font-weight: 800;
-        padding: 2px 7px;
-        border-radius: 20px;
-        display: none;
-      }
-      .nav-badge.show {
-        display: block;
-      }
-      .sidebar-footer {
-        margin-top: auto;
-        padding-top: 1rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-      }
-      .logout-btn {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 0.65rem 0.85rem;
-        border-radius: 10px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.45);
-        cursor: pointer;
-        border: none;
-        background: none;
-        width: 100%;
-        transition:
-          background 0.15s,
-          color 0.15s;
-      }
-      .logout-btn:hover {
-        background: rgba(220, 38, 38, 0.15);
-        color: #fca5a5;
-      }
+    :root {
+      --primary: #0f3b2c;
+      --primary-dark: #072c20;
+      --primary-light: #e2f0ea;
+      --accent: #f59e0b;
+      --accent-dark: #b45309;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
+      --success: #10b981;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+      --sidebar-w: 260px;
+    }
 
-      /* MAIN */
-      .main {
-        margin-left: var(--sidebar-w);
-        flex: 1;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
-      .topbar {
-        background: white;
-        border-bottom: 1px solid var(--slate-200);
-        padding: 1rem 1.75rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        position: sticky;
-        top: 0;
-        z-index: 30;
-      }
-      .topbar h1 {
-        font-size: 1.1rem;
-        font-weight: 800;
-      }
-      .topbar-user {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .user-avatar {
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        background: var(--forest-800);
-        color: white;
-        font-size: 0.8rem;
-        font-weight: 800;
-        display: grid;
-        place-items: center;
-      }
-      .user-email {
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: var(--slate-500);
-      }
-      .content {
-        padding: 1.75rem;
-        flex: 1;
-      }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-800);
+      height: 100vh;
+      overflow: hidden;
+    }
 
-      /* TABS */
-      .tab-section {
-        display: none;
-      }
-      .tab-section.active {
-        display: block;
-      }
+    /* Login View */
+    .auth-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      padding: 1rem;
+    }
 
-      /* STATS */
-      .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1rem;
-        margin-bottom: 1.75rem;
-      }
-      .stat-card {
-        background: white;
-        border: 1px solid var(--slate-200);
-        border-radius: var(--radius);
-        padding: 1.25rem;
-      }
-      .stat-label {
-        font-size: 0.72rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        color: var(--slate-400);
-      }
-      .stat-value {
-        font-size: 2rem;
-        font-weight: 800;
-        color: var(--forest-800);
-        margin-top: 0.25rem;
-        line-height: 1;
-      }
+    .auth-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 2rem 2rem 2.5rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
 
-      /* SECTION HEADER */
-      .section-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1rem;
-      }
-      .section-title {
-        font-size: 1rem;
-        font-weight: 800;
-      }
-      .refresh-btn {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 0.45rem 0.9rem;
-        border-radius: 50px;
-        border: 1px solid var(--slate-200);
-        background: white;
-        font-size: 0.78rem;
-        font-weight: 700;
-        color: var(--slate-600);
-        cursor: pointer;
-        transition: background 0.15s;
-      }
-      .refresh-btn:hover {
-        background: var(--slate-50);
-      }
+    .auth-card h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
 
-      /* CARDS */
-      .posts-list {
-        display: grid;
-        gap: 0.85rem;
-      }
-      .post-card {
-        background: white;
-        border: 1px solid var(--slate-200);
-        border-radius: var(--radius);
-        padding: 1.25rem 1.5rem;
-        display: grid;
-        gap: 0.75rem;
-      }
-      .post-meta {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        flex-wrap: wrap;
-      }
-      .badge {
-        font-size: 0.68rem;
-        font-weight: 700;
-        padding: 3px 10px;
-        border-radius: 20px;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-      }
-      .badge-pending {
-        background: var(--amber-100);
-        color: var(--amber-800);
-      }
-      .badge-kegiatan {
-        background: var(--forest-100);
-        color: var(--forest-800);
-      }
-      .badge-berita {
-        background: var(--slate-100);
-        color: var(--slate-600);
-      }
-      .badge-dkm {
-        background: #e0f2fe;
-        color: #075985;
-      }
-      .badge-pengumuman {
-        background: var(--amber-100);
-        color: var(--amber-800);
-      }
-      .post-date {
-        font-size: 0.75rem;
-        color: var(--slate-400);
-        font-weight: 500;
-        margin-left: auto;
-      }
-      .post-title {
-        font-size: 1rem;
-        font-weight: 800;
-        color: var(--slate-900);
-        line-height: 1.3;
-      }
-      .post-body {
-        font-size: 0.85rem;
-        line-height: 1.7;
-        color: var(--slate-600);
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-      .post-author {
-        font-size: 0.78rem;
-        font-weight: 600;
-        color: var(--slate-500);
-      }
-      .post-image {
-        width: 100%;
-        max-height: 220px;
-        object-fit: cover;
-        border-radius: 10px;
-        border: 1px solid var(--slate-200);
-      }
-      .post-actions {
-        display: flex;
-        gap: 0.6rem;
-        padding-top: 0.5rem;
-        border-top: 1px solid var(--slate-100);
-      }
-      .btn {
-        padding: 0.5rem 1.25rem;
-        border-radius: 50px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        cursor: pointer;
-        border: none;
-        transition:
-          opacity 0.15s,
-          transform 0.1s;
-      }
-      .btn:hover {
-        opacity: 0.88;
-        transform: translateY(-1px);
-      }
-      .btn-approve {
-        background: var(--forest-800);
-        color: white;
-      }
-      .btn-delete {
-        background: var(--red-100);
-        color: var(--red-600);
-      }
+    .auth-card p {
+      color: var(--gray-500);
+      margin-bottom: 1.75rem;
+    }
 
-      /* EMPTY / SKELETON */
-      .empty-state {
-        text-align: center;
-        padding: 3rem 1rem;
-        background: white;
-        border: 1.5px dashed var(--slate-200);
-        border-radius: var(--radius);
-        color: var(--slate-400);
-        font-size: 0.9rem;
-        font-weight: 600;
-      }
-      .empty-state .emoji {
-        font-size: 2rem;
-        display: block;
-        margin-bottom: 0.75rem;
-      }
-      .skeleton {
-        background: linear-gradient(
-          90deg,
-          var(--slate-100) 25%,
-          var(--slate-200) 50%,
-          var(--slate-100) 75%
-        );
-        background-size: 200% 100%;
-        animation: shimmer 1.2s infinite;
-        border-radius: 8px;
-        height: 120px;
-      }
-      @keyframes shimmer {
-        to {
-          background-position: -200% 0;
-        }
-      }
+    .form-group {
+      margin-bottom: 1.25rem;
+      text-align: left;
+    }
 
-      /* TOAST */
-      #toast {
-        position: fixed;
-        bottom: 1.5rem;
-        left: 50%;
-        transform: translateX(-50%) translateY(8px);
-        background: var(--slate-900);
-        color: white;
-        padding: 0.65rem 1.25rem;
-        border-radius: 50px;
-        font-size: 0.82rem;
-        font-weight: 700;
-        z-index: 999;
-        opacity: 0;
-        transition:
-          opacity 0.2s,
-          transform 0.2s;
-        pointer-events: none;
-        white-space: nowrap;
-      }
-      #toast.show {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-      }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 0.4rem;
+      color: var(--gray-700);
+    }
 
-      @media (max-width: 640px) {
-        .sidebar {
-          width: 200px;
-        }
-        .main {
-          margin-left: 200px;
-        }
-        .content {
-          padding: 1rem;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <aside class="sidebar">
-      <div class="sidebar-brand">
-        <div class="mark">
-          <svg viewBox="0 0 61 60" fill="none">
-            <path
-              d="M51.5 29.07C42.4 28.64 24.47 29.72 24.47 45.28 24.47 50.47 37.11 49.82 51.5 29.07Z"
-              fill="#164c2c"
-            />
-            <path
-              d="M29.8 31.01C28.46 27.12 25.8 20.64 40.46 12.86 43.12 16.75 43.12 27.12 29.8 31.01Z"
-              fill="#164c2c"
-            />
-            <path
-              d="M24.47 36.2C17.8 36.2 7.94 25.05 13.81 14.15 19.8 16.54 32.46 25.83 24.47 36.2Z"
-              fill="#164c2c"
-            />
-          </svg>
-        </div>
-        <div>
-          <p class="brand-name">GDR Admin</p>
-          <p class="brand-sub">RT 09 · RW 12</p>
-        </div>
+    .form-group input {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      transition: 0.2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 59, 44, 0.1);
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
+      width: 100%;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .error-msg {
+      color: var(--danger);
+      font-size: 0.8rem;
+      margin-top: -0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Dashboard Layout */
+    .dashboard-layout {
+      display: flex;
+      height: 100vh;
+      width: 100%;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: white;
+      border-right: 1px solid var(--gray-200);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 40;
+      transition: 0.2s;
+    }
+
+    .sidebar-header {
+      padding: 1.5rem 1.25rem;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .sidebar-header h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .sidebar-header p {
+      font-size: 0.7rem;
+      color: var(--gray-500);
+      margin-top: 4px;
+    }
+
+    .nav {
+      flex: 1;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0.7rem 1rem;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: 0.2s;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-btn:hover {
+      background: var(--gray-100);
+      color: var(--primary);
+    }
+
+    .nav-btn.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .nav-btn.logout {
+      margin-top: auto;
+      color: var(--danger);
+    }
+
+    .nav-btn.logout:hover {
+      background: var(--danger-light);
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      background: var(--gray-50);
+    }
+
+    .topbar {
+      background: white;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .topbar h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .user-email {
+      font-size: 0.85rem;
+      color: var(--gray-600);
+    }
+
+    /* Tab sections */
+    .view-section {
+      display: none;
+      padding: 2rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    /* Cards & Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--gray-500);
+      letter-spacing: 0.05em;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-top: 0.25rem;
+    }
+
+    /* Posts & Activities */
+    .posts-list, .activities-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card-item {
+      background: white;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--gray-200);
+      padding: 1.25rem;
+      transition: 0.1s;
+    }
+
+    .post-meta {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+    }
+
+    .badge-pending {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .badge-approved {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-kegiatan { background: #e0f2fe; color: #0369a1; }
+    .badge-berita { background: #f1f5f9; color: #334155; }
+    .badge-pengumuman { background: #fef9c3; color: #854d0e; }
+    .badge-dkm { background: #e9d5ff; color: #5b21b6; }
+
+    .post-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .post-body {
+      font-size: 0.85rem;
+      color: var(--gray-600);
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+
+    .post-image {
+      max-width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      margin: 0.75rem 0;
+      border: 1px solid var(--gray-200);
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--gray-100);
+    }
+
+    .btn-sm {
+      padding: 0.4rem 1rem;
+      font-size: 0.75rem;
+      border-radius: 30px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-approve { background: var(--success); color: white; }
+    .btn-delete { background: var(--danger-light); color: var(--danger); }
+    .btn-edit { background: var(--gray-200); color: var(--gray-700); }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      background: white;
+      border-radius: var(--radius-md);
+      border: 1px dashed var(--gray-300);
+      color: var(--gray-500);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal.active {
+      display: flex;
+    }
+    .modal-content {
+      background: white;
+      width: 90%;
+      max-width: 550px;
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-lg);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .modal input, .modal textarea, .modal select {
+      width: 100%;
+      padding: 0.6rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-sm);
+    }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gray-900);
+      color: white;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      z-index: 1100;
+      opacity: 0;
+      transition: 0.2s;
+      pointer-events: none;
+    }
+    .toast.show {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 220px; }
+      .main-content { margin-left: 220px; }
+      .view-section { padding: 1rem; }
+    }
+  </style>
+<base target="_blank">
+</head>
+<body>
+
+<!-- LOGIN SECTION -->
+<div id="authView" class="auth-container">
+  <div class="auth-card">
+    <h1>GDR CMS</h1>
+    <p>Masuk ke panel admin RT 09</p>
+    <form id="loginForm">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" required autocomplete="email" />
       </div>
-      <nav class="nav">
-        <button class="nav-item active" onclick="switchTab('dashboard', this)">
-          <span class="icon">📊</span> Dashboard
-        </button>
-        <button class="nav-item" onclick="switchTab('pending', this)">
-          <span class="icon">📝</span> Pending
-          <span class="nav-badge" id="pending-badge">0</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('approved', this)">
-          <span class="icon">✅</span> Approved
-        </button>
-      </nav>
-      <div class="sidebar-footer">
-        <button class="logout-btn" onclick="logoutAdmin()">
-          <span>🚪</span> Keluar
-        </button>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" required autocomplete="current-password" />
+      </div>
+      <div id="loginError" class="error-msg"></div>
+      <button type="submit" class="btn">Masuk</button>
+    </form>
+  </div>
+</div>
+
+<!-- DASHBOARD (setelah login) -->
+<div id="dashboardView" style="display: none;">
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>GDR Admin</h2>
+        <p>RT 09 / RW 12</p>
+      </div>
+      <div class="nav">
+        <button class="nav-btn active" data-tab="dashboard">📊 Dashboard</button>
+        <button class="nav-btn" data-tab="pending">📝 Pending Posts</button>
+        <button class="nav-btn" data-tab="approved">✅ Approved Posts</button>
+        <button class="nav-btn" data-tab="activities">🎯 Kelola Kegiatan</button>
+        <button class="nav-btn" data-tab="youtube">📺 YouTube Videos</button>
+        <button class="nav-btn" data-tab="settings">⚙️ Pengaturan</button>
+        <button class="nav-btn logout" id="logoutBtn">🚪 Keluar</button>
       </div>
     </aside>
 
-    <div class="main">
+    <div class="main-content">
       <div class="topbar">
-        <h1 id="page-title">Dashboard</h1>
-        <div class="topbar-user">
-          <div class="user-avatar" id="user-avatar">A</div>
-          <span class="user-email" id="user-email"></span>
+        <h1 id="pageTitle">Dashboard</h1>
+        <div class="user-info">
+          <div class="avatar" id="userAvatar">A</div>
+          <span class="user-email" id="userEmailSpan"></span>
         </div>
       </div>
 
-      <div class="content">
-        <!-- DASHBOARD -->
-        <section id="tab-dashboard" class="tab-section active">
-          <div class="stats-grid">
-            <div class="stat-card">
-              <p class="stat-label">Pending</p>
-              <p class="stat-value" id="stat-pending">—</p>
-            </div>
-            <div class="stat-card">
-              <p class="stat-label">Approved</p>
-              <p class="stat-value" id="stat-approved">—</p>
-            </div>
-            <div class="stat-card">
-              <p class="stat-label">Total Post</p>
-              <p class="stat-value" id="stat-total">—</p>
-            </div>
-          </div>
-          <div class="section-header">
-            <p class="section-title">Post Pending Terbaru</p>
-          </div>
-          <div id="dashboard-preview"></div>
-        </section>
+      <!-- DASHBOARD TAB -->
+      <section id="tabDashboard" class="view-section active">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value" id="statPending">0</div></div>
+          <div class="stat-card"><div class="stat-label">Approved</div><div class="stat-value" id="statApproved">0</div></div>
+          <div class="stat-card"><div class="stat-label">Total Kegiatan</div><div class="stat-value" id="statActivities">0</div></div>
+        </div>
+        <div style="background: white; border-radius: var(--radius-md); padding: 1rem;">
+          <h3>Post Pending Terbaru</h3>
+          <div id="previewPending" style="margin-top: 1rem;"></div>
+        </div>
+      </section>
 
-        <!-- PENDING -->
-        <section id="tab-pending" class="tab-section">
-          <div class="section-header">
-            <p class="section-title">Menunggu Persetujuan</p>
-            <button class="refresh-btn" onclick="refreshPending()">
-              ↻ Refresh
-            </button>
-          </div>
-          <div id="pending-posts" class="posts-list"></div>
-        </section>
+      <!-- PENDING TAB -->
+      <section id="tabPending" class="view-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3>Menunggu Persetujuan</h3>
+          <button class="btn-sm" id="refreshPendingBtn" style="background: var(--gray-200);">⟳ Refresh</button>
+        </div>
+        <div id="pendingList" class="posts-list"></div>
+      </section>
 
-        <!-- APPROVED -->
-        <section id="tab-approved" class="tab-section">
-          <div class="section-header">
-            <p class="section-title">Sudah Disetujui</p>
-            <button class="refresh-btn" onclick="refreshApproved()">
-              ↻ Refresh
-            </button>
-          </div>
-          <div id="approved-posts" class="posts-list"></div>
-        </section>
-      </div>
+      <!-- APPROVED TAB -->
+      <section id="tabApproved" class="view-section">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+          <h3>Sudah Disetujui</h3>
+          <button class="btn-sm" id="refreshApprovedBtn" style="background: var(--gray-200);">⟳ Refresh</button>
+        </div>
+        <div id="approvedList" class="posts-list"></div>
+      </section>
+
+      <!-- KEGIATAN TAB -->
+      <section id="tabActivities" class="view-section">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+          <h3>Daftar Kegiatan</h3>
+          <button class="btn" id="addActivityBtn" style="width: auto; padding: 0.4rem 1rem;">+ Tambah Kegiatan</button>
+        </div>
+        <div id="activitiesList" class="activities-list"></div>
+      </section>
+
+      <!-- YOUTUBE TAB -->
+      <section id="tabYoutube" class="view-section">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+          <h3>Daftar Video YouTube</h3>
+          <button class="btn" id="addYoutubeBtn" style="width: auto; padding: 0.4rem 1rem;">+ Tambah Video</button>
+        </div>
+        <div id="youtubeList" class="activities-list"></div>
+      </section>
+
+      <!-- SETTINGS TAB -->
+      <section id="tabSettings" class="view-section">
+        <div class="card-item">
+          <h3>Pengaturan Umum</h3>
+          <p style="margin: 0.5rem 0">Role: Administrator</p>
+          <button id="changePasswordBtn" class="btn-sm" style="background: var(--primary); color: white;">Ganti Password</button>
+        </div>
+      </section>
     </div>
+  </div>
+</div>
 
-    <div id="toast"></div>
+<!-- MODAL UNTUK KEGIATAN (Tambah/Edit) -->
+<div id="activityModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalTitle">Tambah Kegiatan</h3>
+      <button style="background: none; border: none; font-size: 1.5rem; cursor: pointer;" id="closeModalBtn">&times;</button>
+    </div>
+    <input type="hidden" id="activityId" />
+    <input type="text" id="activityLabel" placeholder="Label (misal: Rapat, Lomba)" required />
+    <input type="text" id="activityTitle" placeholder="Judul Kegiatan" required />
+    <textarea id="activityDesc" rows="3" placeholder="Deskripsi"></textarea>
+    <input type="text" id="activityWarna" placeholder="Warna (opsional, contoh: #164c2c)" />
+    <button id="saveActivityBtn" class="btn">Simpan</button>
+  </div>
+</div>
 
-    <script>
-      function showToast(msg, ms = 2500) {
-        const t = document.getElementById("toast");
-        t.textContent = msg;
-        t.classList.add("show");
-        setTimeout(() => t.classList.remove("show"), ms);
+<!-- MODAL YOUTUBE VIDEO (Tambah/Edit) -->
+<div id="youtubeModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="youtubeModalTitle">Tambah Video YouTube</h3>
+      <button style="background: none; border: none; font-size: 1.5rem; cursor: pointer;" id="closeYoutubeModalBtn">&times;</button>
+    </div>
+    <input type="hidden" id="youtubeId" />
+    <input type="text" id="youtubeTitle" placeholder="Judul Video" required />
+    <input type="url" id="youtubeUrl" placeholder="Link Video YouTube (contoh: https://youtu.be/xxxx)" required />
+    <input type="text" id="youtubeChannel" placeholder="Nama Channel" required />
+    <textarea id="youtubeDesc" rows="3" placeholder="Deskripsi video (opsional)"></textarea>
+    <input type="url" id="youtubeThumbnail" placeholder="URL Thumbnail (opsional, auto-generate jika kosong)" />
+    <button id="saveYoutubeBtn" class="btn">Simpan</button>
+  </div>
+</div>
+
+<!-- MODAL GANTI PASSWORD -->
+<div id="passwordModal" class="modal">
+  <div class="modal-content">
+    <h3>Ganti Password</h3>
+    <input type="password" id="newPassword" placeholder="Password baru" required />
+    <input type="password" id="confirmPassword" placeholder="Konfirmasi password" />
+    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+      <button id="confirmPasswordBtn" class="btn">Simpan</button>
+      <button id="cancelPasswordBtn" style="background: gray;" class="btn">Batal</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastMsg" class="toast"></div>
+
+<script>
+  (function() {
+    // ---------- SUPABASE CONFIG (gunakan variabel unik agar tidak bentrok) ----------
+    const SUPABASE_URL = 'https://gyofijyebgtxzbtwlwbw.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5b2ZpanllYmd0eHpidHdsd2J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2ODAzNDQsImV4cCI6MjA5NTI1NjM0NH0.4h8ZBSTHlJgag2V2Z-lSd_IgrcbcU5UmCfprzJpMQOo';
+    // Gunakan nama variabel yang tidak umum untuk menghindari tabrakan dengan script lain
+    window.__gdrSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabase = window.__gdrSupabase;  // alias internal
+    
+    let currentUser = null;
+
+    // Helper: Toast
+    function showToast(msg, duration = 2500) {
+      const toast = document.getElementById('toastMsg');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), duration);
+    }
+
+    // Helper: format date
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      return new Date(dateStr).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    // Badge category
+    function getCategoryBadge(cat) {
+      const map = { Pengumuman: 'badge-pengumuman', Kegiatan: 'badge-kegiatan', DKM: 'badge-dkm', Berita: 'badge-berita' };
+      return map[cat] || 'badge-berita';
+    }
+
+    // Escape HTML untuk keamanan XSS
+    function escapeHtml(str) { 
+      if (!str) return ''; 
+      return str.replace(/[&<>]/g, function(m){ 
+        if(m === '&') return '&amp;'; 
+        if(m === '<') return '&lt;'; 
+        if(m === '>') return '&gt;'; 
+        return m;
+      }); 
+    }
+
+    // ========== AUTH ==========
+    async function checkSession() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        currentUser = session.user;
+        showDashboardUI(currentUser.email);
+      } else {
+        showLoginUI();
       }
+    }
 
-      function fmtDate(d) {
-        if (!d) return "";
-        return new Date(d).toLocaleDateString("id-ID", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        });
+    function showLoginUI() {
+      document.getElementById('authView').style.display = 'flex';
+      document.getElementById('dashboardView').style.display = 'none';
+    }
+
+    function showDashboardUI(email) {
+      document.getElementById('authView').style.display = 'none';
+      document.getElementById('dashboardView').style.display = 'block';
+      document.getElementById('userEmailSpan').textContent = email;
+      document.getElementById('userAvatar').textContent = email.charAt(0).toUpperCase();
+      loadDashboardStats();
+      loadPreviewPending();
+      loadPendingPosts();
+      loadApprovedPosts();
+      loadActivities();
+    }
+
+    // Login handler
+    document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const errorDiv = document.getElementById('loginError');
+      errorDiv.textContent = '';
+      try {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        showToast('Login berhasil!');
+      } catch (err) {
+        errorDiv.textContent = err.message || 'Login gagal';
       }
+    });
 
-      function badgeClass(cat) {
-        return (
-          {
-            Pengumuman: "badge-pengumuman",
-            Kegiatan: "badge-kegiatan",
-            DKM: "badge-dkm",
-            Berita: "badge-berita",
-          }[cat] || "badge-berita"
-        );
+    // Logout
+    document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      showLoginUI();
+      showToast('Anda keluar');
+    });
+
+    // ========== DASHBOARD STATS ==========
+    async function loadDashboardStats() {
+      const { count: pending } = await supabase.from('news_posts').select('*', { count: 'exact', head: true }).eq('status', 'pending');
+      const { count: approved } = await supabase.from('news_posts').select('*', { count: 'exact', head: true }).eq('status', 'approved');
+      const { count: activities } = await supabase.from('activities').select('*', { count: 'exact', head: true });
+      document.getElementById('statPending').innerText = pending || 0;
+      document.getElementById('statApproved').innerText = approved || 0;
+      document.getElementById('statActivities').innerText = activities || 0;
+    }
+
+    async function loadPreviewPending() {
+      const { data } = await supabase.from('news_posts').select('*').eq('status', 'pending').order('created_at', { ascending: false }).limit(3);
+      const container = document.getElementById('previewPending');
+      if (!data?.length) {
+        container.innerHTML = '<div class="empty-state">✨ Tidak ada pending</div>';
+        return;
       }
+      container.innerHTML = `<div class="posts-list">${data.map(post => renderPostCard(post, true)).join('')}</div>`;
+    }
 
-      function renderCard(item, actions = true) {
-        return `
-          <div class="post-card" id="card-${item.id}">
-            <div class="post-meta">
-              <span class="badge ${badgeClass(item.category)}">${item.category || ""}</span>
-              ${item.status === "pending" ? '<span class="badge badge-pending">Pending</span>' : ""}
-              <span class="post-date">${fmtDate(item.created_at || item.date)}</span>
+    // ========== POSTS (PENDING & APPROVED) ==========
+    function renderPostCard(post, showActions = true) {
+      return `
+        <div class="card-item" id="post-${post.id}">
+          <div class="post-meta">
+            <span class="badge ${getCategoryBadge(post.category)}">${escapeHtml(post.category || 'Berita')}</span>
+            ${post.status === 'pending' ? '<span class="badge badge-pending">Pending</span>' : '<span class="badge badge-approved">Disetujui</span>'}
+            <span style="margin-left: auto; font-size:0.7rem; color:gray;">${formatDate(post.created_at)}</span>
+          </div>
+          ${post.image_url ? `<img src="${escapeHtml(post.image_url)}" class="post-image" alt="gambar" />` : ''}
+          <div class="post-title">${escapeHtml(post.title || 'Tanpa judul')}</div>
+          <div class="post-body">${escapeHtml(post.content || '')}</div>
+          <div class="post-meta"><span>✍️ ${escapeHtml(post.author || 'anonim')}</span></div>
+          ${showActions ? `
+            <div class="actions">
+              ${post.status === 'pending' ? `<button class="btn-sm btn-approve" onclick="window.approvePost('${post.id}')">✓ Approve</button>` : ''}
+              <button class="btn-sm btn-delete" onclick="window.deletePost('${post.id}')">🗑 Hapus</button>
             </div>
-            ${item.image_url ? `<img src="${item.image_url}" class="post-image" loading="lazy" alt=""/>` : ""}
-            <p class="post-title">${item.title || ""}</p>
-            <p class="post-body">${item.content || ""}</p>
-            <p class="post-author">✍️ ${item.author || ""}</p>
-            ${
-              actions
-                ? `
-              <div class="post-actions">
-                ${item.status === "pending" ? `<button class="btn btn-approve" onclick="handleApprove('${item.id}')">✓ Approve</button>` : ""}
-                <button class="btn btn-delete" onclick="handleDelete('${item.id}')">✕ Hapus</button>
-              </div>`
-                : ""
-            }
-          </div>`;
+          ` : ''}
+        </div>
+      `;
+    }
+
+    async function loadPendingPosts() {
+      const { data } = await supabase.from('news_posts').select('*').eq('status', 'pending').order('created_at', { ascending: false });
+      const container = document.getElementById('pendingList');
+      if (!data?.length) { container.innerHTML = '<div class="empty-state">📭 Tidak ada post pending</div>'; return; }
+      container.innerHTML = data.map(p => renderPostCard(p, true)).join('');
+    }
+
+    async function loadApprovedPosts() {
+      const { data } = await supabase.from('news_posts').select('*').eq('status', 'approved').order('created_at', { ascending: false });
+      const container = document.getElementById('approvedList');
+      if (!data?.length) { container.innerHTML = '<div class="empty-state">✅ Belum ada post disetujui</div>'; return; }
+      container.innerHTML = data.map(p => renderPostCard(p, false)).join('');
+    }
+
+    window.approvePost = async (id) => {
+      const { error } = await supabase.from('news_posts').update({ status: 'approved' }).eq('id', id);
+      if (error) { showToast('Gagal approve: ' + error.message); return; }
+      showToast('✅ Post disetujui');
+      loadDashboardStats();
+      loadPendingPosts();
+      loadPreviewPending();
+      loadApprovedPosts();
+    };
+
+    window.deletePost = async (id) => {
+      if (!confirm('Hapus post ini permanen?')) return;
+      const { error } = await supabase.from('news_posts').delete().eq('id', id);
+      if (error) { showToast('Gagal hapus: ' + error.message); return; }
+      showToast('🗑 Post dihapus');
+      loadDashboardStats();
+      loadPendingPosts();
+      loadApprovedPosts();
+      loadPreviewPending();
+    };
+
+    // ========== KEGIATAN (CRUD) ==========
+    async function loadActivities() {
+      const { data } = await supabase.from('activities').select('*').order('created_at', { ascending: false });
+      const container = document.getElementById('activitiesList');
+      if (!data?.length) { container.innerHTML = '<div class="empty-state">🎉 Belum ada kegiatan. Tambahkan sekarang!</div>'; return; }
+      container.innerHTML = data.map(act => `
+        <div class="card-item" id="act-${act.id}">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div><span class="badge" style="background: ${act.warna || '#e2f0ea'}; color: #1f2937;">${escapeHtml(act.label || 'Kegiatan')}</span>
+            <strong style="margin-left: 8px;">${escapeHtml(act.title)}</strong></div>
+            <div><button class="btn-sm btn-edit" onclick="window.editActivity('${act.id}')">Edit</button>
+            <button class="btn-sm btn-delete" onclick="window.deleteActivity('${act.id}')">Hapus</button></div>
+          </div>
+          <p style="margin-top: 8px; color: #4b5563;">${escapeHtml(act.description || '')}</p>
+        </div>
+      `).join('');
+      loadDashboardStats();
+    }
+
+    // ========== YOUTUBE VIDEOS (CRUD) ==========
+    async function loadYoutubeVideos() {
+      const { data } = await supabase.from('youtube_videos').select('*').order('created_at', { ascending: false }).limit(20);
+      const container = document.getElementById('youtubeList');
+      if (!data?.length) { container.innerHTML = '<div class="empty-state">📺 Belum ada video. Tambahkan sekarang!</div>'; return; }
+      container.innerHTML = data.map(vid => `
+        <div class="card-item" id="yt-${vid.id}">
+          <div style="display: flex; gap: 1rem; align-items: flex-start;">
+            <div style="width: 160px; height: 90px; border-radius: 8px; overflow: hidden; background: #e5e7eb; flex-shrink: 0;">
+              <img src="${vid.thumbnail_url || getYoutubeThumbnail(vid.video_url)}" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=display:flex;align-items:center;justify-content:center;height:100%;color:#9ca3af;font-size:0.75rem;>No Thumb</div>';">
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
+                <strong style="font-size: 1rem; color: var(--gray-800);">${escapeHtml(vid.title)}</strong>
+                <div style="display: flex; gap: 0.5rem; flex-shrink: 0;">
+                  <button class="btn-sm btn-edit" onclick="window.editYoutubeVideo('${vid.id}')">Edit</button>
+                  <button class="btn-sm btn-delete" onclick="window.deleteYoutubeVideo('${vid.id}')">Hapus</button>
+                </div>
+              </div>
+              <p style="margin-top: 4px; font-size: 0.8rem; color: var(--gray-500);">Channel: ${escapeHtml(vid.channel_name || '-')}</p>
+              <p style="margin-top: 4px; font-size: 0.8rem; color: var(--gray-500); line-height: 1.4;">${escapeHtml(vid.description || '')}</p>
+              <a href="${escapeHtml(vid.video_url)}" target="_blank" rel="noreferrer" style="margin-top: 6px; display: inline-block; font-size: 0.75rem; color: var(--danger); font-weight: 600;">🔗 Buka Link</a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getYoutubeThumbnail(url) {
+      if (!url) return '';
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+      const match = url.match(regExp);
+      const id = (match && match[2].length === 11) ? match[2] : null;
+      return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : '';
+    }
+
+    window.editYoutubeVideo = async (id) => {
+      const { data } = await supabase.from('youtube_videos').select('*').eq('id', id).single();
+      if (data) {
+        document.getElementById('youtubeId').value = data.id;
+        document.getElementById('youtubeTitle').value = data.title || '';
+        document.getElementById('youtubeUrl').value = data.video_url || '';
+        document.getElementById('youtubeChannel').value = data.channel_name || '';
+        document.getElementById('youtubeDesc').value = data.description || '';
+        document.getElementById('youtubeThumbnail').value = data.thumbnail_url || '';
+        document.getElementById('youtubeModalTitle').innerText = 'Edit Video YouTube';
+        document.getElementById('youtubeModal').classList.add('active');
       }
+    };
 
-      function renderEmpty(msg) {
-        return `<div class="empty-state"><span class="emoji">📭</span>${msg}</div>`;
+    window.deleteYoutubeVideo = async (id) => {
+      if (!confirm('Hapus video ini?')) return;
+      const { error } = await supabase.from('youtube_videos').delete().eq('id', id);
+      if (error) { showToast('Gagal hapus video'); return; }
+      showToast('Video dihapus');
+      loadYoutubeVideos();
+    };
+
+    document.getElementById('addYoutubeBtn')?.addEventListener('click', () => {
+      document.getElementById('youtubeId').value = '';
+      document.getElementById('youtubeTitle').value = '';
+      document.getElementById('youtubeUrl').value = '';
+      document.getElementById('youtubeChannel').value = '';
+      document.getElementById('youtubeDesc').value = '';
+      document.getElementById('youtubeThumbnail').value = '';
+      document.getElementById('youtubeModalTitle').innerText = 'Tambah Video YouTube';
+      document.getElementById('youtubeModal').classList.add('active');
+    });
+
+    document.getElementById('closeYoutubeModalBtn')?.addEventListener('click', () => {
+      document.getElementById('youtubeModal').classList.remove('active');
+    });
+
+    document.getElementById('saveYoutubeBtn')?.addEventListener('click', async () => {
+      const id = document.getElementById('youtubeId').value;
+      const title = document.getElementById('youtubeTitle').value.trim();
+      const video_url = document.getElementById('youtubeUrl').value.trim();
+      const channel_name = document.getElementById('youtubeChannel').value.trim();
+      const description = document.getElementById('youtubeDesc').value.trim();
+      const thumbnail_url = document.getElementById('youtubeThumbnail').value.trim();
+      if (!title || !video_url || !channel_name) { showToast('Judul, Link, dan Channel wajib diisi'); return; }
+      if (id) {
+        const { error } = await supabase.from('youtube_videos').update({ title, video_url, channel_name, description, thumbnail_url }).eq('id', id);
+        if (error) { showToast('Gagal update: ' + error.message); return; }
+        showToast('Video diperbarui');
+      } else {
+        const { error } = await supabase.from('youtube_videos').insert([{ title, video_url, channel_name, description, thumbnail_url }]);
+        if (error) { showToast('Gagal tambah: ' + error.message); return; }
+        showToast('Video ditambahkan');
       }
+      document.getElementById('youtubeModal').classList.remove('active');
+      loadYoutubeVideos();
+    });
 
-      function renderSkeleton() {
-        return `<div class="post-card"><div class="skeleton"></div></div>`.repeat(
-          3,
-        );
+    window.editActivity = async (id) => {
+      const { data } = await supabase.from('activities').select('*').eq('id', id).single();
+      if (data) {
+        document.getElementById('activityId').value = data.id;
+        document.getElementById('activityLabel').value = data.label || '';
+        document.getElementById('activityTitle').value = data.title || '';
+        document.getElementById('activityDesc').value = data.description || '';
+        document.getElementById('activityWarna').value = data.warna || '';
+        document.getElementById('modalTitle').innerText = 'Edit Kegiatan';
+        document.getElementById('activityModal').classList.add('active');
       }
+    };
 
-      const pageTitles = {
-        dashboard: "Dashboard",
-        pending: "Pending Posts",
-        approved: "Approved Posts",
-      };
+    window.deleteActivity = async (id) => {
+      if (!confirm('Hapus kegiatan ini?')) return;
+      const { error } = await supabase.from('activities').delete().eq('id', id);
+      if (error) { showToast('Gagal hapus kegiatan'); return; }
+      showToast('Kegiatan dihapus');
+      loadActivities();
+    };
 
-      function switchTab(name, el) {
-        document
-          .querySelectorAll(".tab-section")
-          .forEach((s) => s.classList.remove("active"));
-        document
-          .querySelectorAll(".nav-item")
-          .forEach((b) => b.classList.remove("active"));
-        document.getElementById(`tab-${name}`).classList.add("active");
-        el.classList.add("active");
-        document.getElementById("page-title").textContent =
-          pageTitles[name] || name;
-        if (name === "pending") refreshPending();
-        if (name === "approved") refreshApproved();
+    // Modal kegiatan
+    document.getElementById('addActivityBtn')?.addEventListener('click', () => {
+      document.getElementById('activityId').value = '';
+      document.getElementById('activityLabel').value = '';
+      document.getElementById('activityTitle').value = '';
+      document.getElementById('activityDesc').value = '';
+      document.getElementById('activityWarna').value = '';
+      document.getElementById('modalTitle').innerText = 'Tambah Kegiatan';
+      document.getElementById('activityModal').classList.add('active');
+    });
+
+    document.getElementById('closeModalBtn')?.addEventListener('click', () => {
+      document.getElementById('activityModal').classList.remove('active');
+    });
+
+    document.getElementById('saveActivityBtn')?.addEventListener('click', async () => {
+      const id = document.getElementById('activityId').value;
+      const label = document.getElementById('activityLabel').value;
+      const title = document.getElementById('activityTitle').value;
+      const description = document.getElementById('activityDesc').value;
+      const warna = document.getElementById('activityWarna').value;
+      if (!title) { showToast('Judul kegiatan wajib diisi'); return; }
+      if (id) {
+        const { error } = await supabase.from('activities').update({ label, title, description, warna }).eq('id', id);
+        if (error) { showToast('Gagal update'); return; }
+        showToast('Kegiatan diperbarui');
+      } else {
+        const { error } = await supabase.from('activities').insert([{ label, title, description, warna }]);
+        if (error) { showToast('Gagal tambah: ' + error.message); return; }
+        showToast('Kegiatan ditambahkan');
       }
+      document.getElementById('activityModal').classList.remove('active');
+      loadActivities();
+    });
 
-      async function loadStats() {
-        const c = window.supabaseClient;
-        const [{ count: p }, { count: a }, { count: tot }] = await Promise.all([
-          c
-            .from("news_posts")
-            .select("*", { count: "exact", head: true })
-            .eq("status", "pending"),
-          c
-            .from("news_posts")
-            .select("*", { count: "exact", head: true })
-            .eq("status", "approved"),
-          c.from("news_posts").select("*", { count: "exact", head: true }),
-        ]);
-        document.getElementById("stat-pending").textContent = p ?? "—";
-        document.getElementById("stat-approved").textContent = a ?? "—";
-        document.getElementById("stat-total").textContent = tot ?? "—";
-        const badge = document.getElementById("pending-badge");
-        badge.textContent = p || 0;
-        badge.classList.toggle("show", p > 0);
+    // Ganti password
+    document.getElementById('changePasswordBtn')?.addEventListener('click', () => {
+      document.getElementById('passwordModal').classList.add('active');
+    });
+    document.getElementById('cancelPasswordBtn')?.addEventListener('click', () => {
+      document.getElementById('passwordModal').classList.remove('active');
+    });
+    document.getElementById('confirmPasswordBtn')?.addEventListener('click', async () => {
+      const newPass = document.getElementById('newPassword').value;
+      const confirm = document.getElementById('confirmPassword').value;
+      if (newPass !== confirm) { showToast('Password tidak cocok'); return; }
+      if (newPass.length < 6) { showToast('Minimal 6 karakter'); return; }
+      const { error } = await supabase.auth.updateUser({ password: newPass });
+      if (error) { showToast('Gagal: ' + error.message); return; }
+      showToast('Password berhasil diubah');
+      document.getElementById('passwordModal').classList.remove('active');
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmPassword').value = '';
+    });
+
+    // Tab switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+      document.getElementById(`tab${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`).classList.add('active');
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(btn => btn.getAttribute('data-tab') === tabId);
+      if (activeBtn) activeBtn.classList.add('active');
+      const titles = { dashboard:'Dashboard', pending:'Pending Posts', approved:'Approved Posts', activities:'Kelola Kegiatan', youtube:'YouTube Videos', settings:'Pengaturan' };
+      document.getElementById('pageTitle').innerText = titles[tabId] || 'Admin';
+      if (tabId === 'pending') loadPendingPosts();
+      if (tabId === 'approved') loadApprovedPosts();
+      if (tabId === 'activities') loadActivities();
+      if (tabId === 'youtube') loadYoutubeVideos();
+      if (tabId === 'dashboard') { loadDashboardStats(); loadPreviewPending(); }
+    }
+
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const tab = btn.getAttribute('data-tab');
+        if (tab) switchTab(tab);
+      });
+    });
+    document.getElementById('refreshPendingBtn')?.addEventListener('click', loadPendingPosts);
+    document.getElementById('refreshApprovedBtn')?.addEventListener('click', loadApprovedPosts);
+
+    // Init session
+    checkSession();
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        currentUser = session.user;
+        showDashboardUI(session.user.email);
       }
-
-      async function loadDashboardPreview() {
-        const el = document.getElementById("dashboard-preview");
-        el.innerHTML = renderSkeleton();
-        const { data } = await window.supabaseClient
-          .from("news_posts")
-          .select("*")
-          .eq("status", "pending")
-          .order("created_at", { ascending: false })
-          .limit(3);
-        if (!data?.length) {
-          el.innerHTML = renderEmpty("Tidak ada post pending. 🎉");
-          return;
-        }
-        el.innerHTML = `<div class="posts-list">${data.map((i) => renderCard(i)).join("")}</div>`;
-      }
-
-      async function refreshPending() {
-        const el = document.getElementById("pending-posts");
-        el.innerHTML = renderSkeleton();
-        const { data, error } = await window.supabaseClient
-          .from("news_posts")
-          .select("*")
-          .eq("status", "pending")
-          .order("created_at", { ascending: false });
-        el.innerHTML =
-          !data?.length || error
-            ? renderEmpty("Tidak ada post pending.")
-            : data.map((i) => renderCard(i)).join("");
-      }
-
-      async function refreshApproved() {
-        const el = document.getElementById("approved-posts");
-        el.innerHTML = renderSkeleton();
-        const { data, error } = await window.supabaseClient
-          .from("news_posts")
-          .select("*")
-          .eq("status", "approved")
-          .order("created_at", { ascending: false });
-        el.innerHTML =
-          !data?.length || error
-            ? renderEmpty("Belum ada post disetujui.")
-            : data.map((i) => renderCard(i)).join("");
-      }
-
-      async function handleApprove(id) {
-        const { error } = await window.supabaseClient
-          .from("news_posts")
-          .update({ status: "approved" })
-          .eq("id", id);
-        if (error) {
-          showToast("Gagal: " + error.message);
-          return;
-        }
-        document.getElementById(`card-${id}`)?.remove();
-        showToast("✅ Post disetujui.");
-        loadStats();
-        loadDashboardPreview();
-      }
-
-      async function handleDelete(id) {
-        if (!confirm("Hapus post ini permanen?")) return;
-        const { error } = await window.supabaseClient
-          .from("news_posts")
-          .delete()
-          .eq("id", id);
-        if (error) {
-          showToast("Gagal: " + error.message);
-          return;
-        }
-        document.getElementById(`card-${id}`)?.remove();
-        showToast("🗑️ Post dihapus.");
-        loadStats();
-      }
-
-      async function initAdmin() {
-        const session = await requireAdmin();
-        if (!session) return;
-        const email = session.user.email;
-        document.getElementById("user-email").textContent = email;
-        document.getElementById("user-avatar").textContent = email
-          .charAt(0)
-          .toUpperCase();
-        await Promise.all([loadStats(), loadDashboardPreview()]);
-      }
-
-      initAdmin();
-    </script>
-  </body>
+      if (event === 'SIGNED_OUT') showLoginUI();
+    });
+  })();
+</script>
+</body>
 </html>

@@ -10,9 +10,34 @@
     />
     <title>Grand Depok Residence RT 09 RW 12</title>
     <link rel="icon" href="./assets/logo2.svg" type="image/svg+xml" />
-    <link href="./dist/index.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              forest: {
+                50: '#f0fdf4',
+                100: '#dcfce7',
+                200: '#bbf7d0',
+                300: '#86efac',
+                400: '#4ade80',
+                500: '#22c55e',
+                600: '#16a34a',
+                700: '#15803d',
+                800: '#166534',
+                900: '#14532d',
+                950: '#052e16',
+              }
+            }
+          }
+        }
+      }
+    </script>
     <link rel="stylesheet" href="./css/main.css" />
-  </head>
+  <base target="_blank">
+</head>
   <body class="bg-stone-50 text-slate-950 antialiased">
     <!-- Tambahkan ini tepat setelah <body> -->
     <div
@@ -88,31 +113,12 @@
         <div
           class="nav-shell hidden items-center gap-1 rounded-full border border-white/15 bg-white/10 px-2 py-2 text-sm font-semibold text-white shadow-sm lg:flex"
         >
-          <a
-            class="rounded-full px-4 py-2 transition hover:bg-white/14"
-            href="#tentang"
-            >Tentang</a
-          >
-          <a
-            class="rounded-full px-4 py-2 transition hover:bg-white/14"
-            href="#fasilitas"
-            >Fasilitas</a
-          >
-          <a
-            class="rounded-full px-4 py-2 transition hover:bg-white/14"
-            href="#kegiatan"
-            >Kegiatan</a
-          >
-          <a
-            class="rounded-full px-4 py-2 transition hover:bg-white/14"
-            href="#berita"
-            >Berita</a
-          >
-          <a
-            class="rounded-full px-4 py-2 transition hover:bg-white/14"
-            href="#kontak"
-            >Kontak</a
-          >
+          <a class="rounded-full px-4 py-2 transition hover:bg-white/14" href="#berita">Berita</a>
+          <a class="rounded-full px-4 py-2 transition hover:bg-white/14" href="#tentang">Tentang</a>
+          <a class="rounded-full px-4 py-2 transition hover:bg-white/14" href="#fasilitas">Fasilitas</a>
+          <a class="rounded-full px-4 py-2 transition hover:bg-white/14" href="#kegiatan">Kegiatan</a>
+          <a class="rounded-full px-4 py-2 transition hover:bg-white/14" href="#mushola">Mushola</a>
+          <a class="rounded-full px-4 py-2 transition hover:bg-white/14" href="#kontak">Kontak</a>
         </div>
 
         <div class="hidden items-center gap-3 lg:flex">
@@ -153,21 +159,12 @@
         class="hidden border-t border-forest-100 bg-white px-4 py-4 shadow-2xl lg:hidden"
       >
         <div class="grid gap-2 text-sm font-bold text-slate-700">
-          <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#tentang"
-            >Tentang</a
-          >
-          <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#fasilitas"
-            >Fasilitas</a
-          >
-          <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#kegiatan"
-            >Kegiatan</a
-          >
-          <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#berita"
-            >Berita</a
-          >
-          <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#kontak"
-            >Kontak</a
-          >
+          <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#berita">Berita</a>
+          <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#tentang">Tentang</a>
+          <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#fasilitas">Fasilitas</a>
+          <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#kegiatan">Kegiatan</a>
+          <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#mushola">Mushola</a>
+          <a class="rounded-xl px-4 py-3 hover:bg-forest-50" href="#kontak">Kontak</a>
           <button
             type="button"
             onclick="openPostDialog()"
@@ -269,22 +266,25 @@
                 <div class="mt-8 grid grid-cols-3 gap-3">
                   <div class="rounded-2xl bg-white/12 p-4">
                     <div class="text-3xl font-extrabold">24</div>
-                    <div class="mt-1 text-xs font-semibold text-white/72">
-                      Jam keamanan
-                    </div>
+                    <div class="mt-1 text-xs font-semibold text-white/72">Jam keamanan</div>
                   </div>
                   <div class="rounded-2xl bg-white/12 p-4">
                     <div class="text-3xl font-extrabold">12+</div>
-                    <div class="mt-1 text-xs font-semibold text-white/72">
-                      Fasilitas
-                    </div>
+                    <div class="mt-1 text-xs font-semibold text-white/72">Fasilitas</div>
                   </div>
                   <div class="rounded-2xl bg-white/12 p-4">
                     <div class="text-3xl font-extrabold">RT09</div>
-                    <div class="mt-1 text-xs font-semibold text-white/72">
-                      RW 12
-                    </div>
+                    <div class="mt-1 text-xs font-semibold text-white/72">RW 12</div>
                   </div>
+                </div>
+                <div class="mt-4 rounded-2xl bg-white/12 p-4">
+                  <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-200">Ketua RT 09</p>
+                  <p class="mt-1 text-base font-extrabold">Guntur Utomo</p>
+                  <a href="https://wa.me/6285691448299" target="_blank" rel="noreferrer"
+                    class="mt-2 inline-flex items-center gap-2 text-xs font-bold text-amber-200 hover:text-amber-100">
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.8 8.8 0 0 1-3.9-.9L3 20l1.2-4.7A8.2 8.2 0 0 1 3 11.5a8.5 8.5 0 0 1 18 0Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                    +62 856-9144-8299
+                  </a>
                 </div>
               </div>
             </div>
@@ -327,6 +327,33 @@
             <p class="mt-2 text-sm font-semibold text-slate-500">
               Kegiatan sosial, olahraga, ibadah, dan kebersihan.
             </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="berita" class="bg-stone-50 py-20 sm:py-24">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+            <div class="max-w-2xl">
+              <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-forest-700" data-copy="newsEyebrow">Berita warga</p>
+              <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="newsTitle">Kabar terbaru dari lingkungan.</h2>
+              <p class="mt-4 text-sm font-semibold leading-7 text-slate-500" data-copy="newsBody">Kabar lingkungan yang sudah dikurasi tampil di sini agar warga mudah mengikuti informasi terbaru.</p>
+            </div>
+            <button type="button" onclick="openPostDialog()"
+              class="inline-flex w-full items-center justify-center rounded-full bg-forest-700 px-6 py-3.5 text-sm font-extrabold text-white shadow-lg transition hover:bg-forest-800 sm:w-auto">
+              Kirim Kabar Warga
+            </button>
+          </div>
+          <div class="mt-10 flex flex-wrap gap-2" id="category-buttons">
+            <button class="category-button active rounded-full border border-forest-700 bg-forest-700 px-4 py-2 text-sm font-extrabold text-white" data-category="semua">Semua</button>
+            <button class="category-button rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-forest-200 hover:bg-forest-50" data-category="Pengumuman">Pengumuman</button>
+            <button class="category-button rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-forest-200 hover:bg-forest-50" data-category="Kegiatan">Kegiatan</button>
+            <button class="category-button rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-forest-200 hover:bg-forest-50" data-category="DKM">DKM</button>
+            <button class="category-button rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-forest-200 hover:bg-forest-50" data-category="Berita">Berita</button>
+          </div>
+          <div id="news-grid" class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3"></div>
+          <div class="mt-10 flex justify-center">
+            <button id="load-more-news" class="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-100">Load More</button>
           </div>
         </div>
       </section>
@@ -451,193 +478,79 @@
         </div>
       </section>
 
-      <section id="mushola" class="bg-white py-20 sm:py-24">
-        <div
-          class="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[1.1fr_.9fr] lg:px-8"
-        >
-          <div
-            id="mushola-photo"
-            class="image-cover min-h-[460px] rounded-[2rem] border border-slate-200 bg-stone-100 shadow-sm"
-          ></div>
-          <div
-            class="flex flex-col justify-center rounded-[2rem] bg-forest-800 p-8 text-white shadow-xl"
-          >
-            <p
-              class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-200"
-              data-copy="musholaEyebrow"
-            >
-              Mushola
-            </p>
-            <h2
-              class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl"
-              data-copy="musholaTitle"
-            >
-              Ruang ibadah yang dekat dengan keseharian warga.
-            </h2>
-            <p
-              class="mt-5 text-base leading-8 text-white/72"
-              data-copy="musholaBody"
-            >
-              Mushola menjadi titik temu untuk shalat berjamaah, kajian,
-              pengajian anak, dan kegiatan sosial.
-            </p>
-            <button
-              type="button"
-              onclick="openQrisDialog()"
-              class="mt-8 inline-flex w-fit items-center justify-center rounded-full bg-amber-400 px-6 py-3.5 text-sm font-extrabold text-forest-950 shadow-lg transition hover:bg-amber-300"
-              data-copy="musholaCta"
-            >
-              Kotak Amal
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section id="berita" class="bg-stone-50 py-20 sm:py-24">
+      <section id="youtube" class="bg-stone-50 py-20 sm:py-24">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div
-            class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end"
-          >
-            <div class="max-w-2xl">
-              <p
-                class="text-sm font-extrabold uppercase tracking-[0.24em] text-forest-700"
-                data-copy="newsEyebrow"
-              >
-                Berita warga
-              </p>
-              <h2
-                class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl"
-                data-copy="newsTitle"
-              >
-                Kabar terbaru dari lingkungan.
-              </h2>
-              <p
-                class="mt-4 text-sm font-semibold leading-7 text-slate-500"
-                data-copy="newsBody"
-              >
-                Kabar lingkungan yang sudah dikurasi tampil di sini agar warga
-                mudah mengikuti informasi terbaru.
-              </p>
+          <div class="flex flex-col items-center text-center mb-12">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#FF0000] shadow-lg shadow-red-500/30">
+                <img src="./assets/youtube-icon.svg" alt="YouTube" class="h-5 w-5 invert">
+              </div>
+              <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-[#FF0000]">YouTube Channel</p>
             </div>
-            <button
-              type="button"
-              onclick="openPostDialog()"
-              class="inline-flex w-full items-center justify-center rounded-full bg-forest-700 px-6 py-3.5 text-sm font-extrabold text-white shadow-lg transition hover:bg-forest-800 sm:w-auto"
-            >
-              Kirim Kabar Warga
-            </button>
+            <h2 class="text-balance text-4xl font-extrabold tracking-tight sm:text-5xl text-slate-900">Konten & Dokumentasi<br/>Warga GDR</h2>
+            <p class="mt-5 max-w-xl text-base leading-8 text-slate-600">Ikuti channel YouTube kami untuk menyaksikan momen kebersamaan, dokumentasi kegiatan warga, dan video informatif seputar lingkungan GDR.</p>
           </div>
-
-          <div class="mt-10 flex flex-wrap gap-2" id="category-buttons">
-            <button
-              class="category-button active rounded-full border border-forest-700 bg-forest-700 px-4 py-2 text-sm font-extrabold text-white"
-              data-category="semua"
-            >
-              Semua
-            </button>
-            <button
-              class="category-button rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-forest-200 hover:bg-forest-50"
-              data-category="Pengumuman"
-            >
-              Pengumuman
-            </button>
-            <button
-              class="category-button rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-forest-200 hover:bg-forest-50"
-              data-category="Kegiatan"
-            >
-              Kegiatan
-            </button>
-            <button
-              class="category-button rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-forest-200 hover:bg-forest-50"
-              data-category="DKM"
-            >
-              DKM
-            </button>
-            <button
-              class="category-button rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-forest-200 hover:bg-forest-50"
-              data-category="Berita"
-            >
-              Berita
-            </button>
-          </div>
-
-          <div
-            id="news-grid"
-            class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3"
-          ></div>
-          <div class="mt-10 flex justify-center">
-            <button
-              id="load-more-news"
-              class="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-100"
-            >
-              Load More
-            </button>
+          <div id="youtube-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+        </div>
+      </section>
+      <section id="mushola" class="bg-white py-20 sm:py-24">
+        <div class="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[1.1fr_.9fr] lg:px-8">
+          <div id="mushola-photo" class="image-cover min-h-[460px] rounded-[2rem] border border-slate-200 bg-stone-100 shadow-sm"></div>
+          <div class="flex flex-col justify-center rounded-[2rem] bg-forest-800 p-8 text-white shadow-xl">
+            <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-200" data-copy="musholaEyebrow">Mushola & DKM</p>
+            <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="musholaTitle">Ruang ibadah yang dekat dengan keseharian warga.</h2>
+            <p class="mt-5 text-base leading-8 text-white/72" data-copy="musholaBody">Mushola menjadi titik temu untuk shalat berjamaah, kajian, pengajian anak, dan kegiatan sosial.</p>
+            <div class="mt-5 rounded-2xl bg-white/10 p-5">
+              <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-200 mb-3">DKM GDR — Kegiatan Rutin</p>
+              <ul class="space-y-2 text-sm text-white/80">
+                <li class="flex items-start gap-2"><span class="mt-0.5 text-amber-300">▸</span> Shalat berjamaah 5 waktu</li>
+                <li class="flex items-start gap-2"><span class="mt-0.5 text-amber-300">▸</span> Kajian rutin ba'da Maghrib</li>
+                <li class="flex items-start gap-2"><span class="mt-0.5 text-amber-300">▸</span> Pengajian anak-anak (TPQ)</li>
+                <li class="flex items-start gap-2"><span class="mt-0.5 text-amber-300">▸</span> Santunan sosial & kegiatan Ramadan</li>
+                <li class="flex items-start gap-2"><span class="mt-0.5 text-amber-300">▸</span> Peringatan hari besar Islam</li>
+              </ul>
+            </div>
+            <div class="mt-4 flex flex-col gap-3 sm:flex-row">
+              <button type="button" onclick="openQrisDialog()"
+                class="inline-flex w-fit items-center justify-center rounded-full bg-amber-400 px-6 py-3.5 text-sm font-extrabold text-forest-950 shadow-lg transition hover:bg-amber-300" data-copy="musholaCta">
+                Kotak Amal
+              </button>
+              <a href="https://www.youtube.com/@MasjidRizqonHasanan" target="_blank" rel="noreferrer"
+                class="inline-flex w-fit items-center gap-2 justify-center rounded-full bg-[#FF0000] px-6 py-3.5 text-sm font-extrabold text-white shadow-lg transition hover:brightness-90">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/></svg>
+                Masjid Rizqon Hasanan
+              </a>
+            </div>
           </div>
         </div>
       </section>
-
       <section id="kontak" class="bg-white py-14 sm:py-16">
-        <div
-          class="mx-auto grid max-w-7xl gap-6 px-4 sm:px-6 lg:grid-cols-[.62fr_1.38fr] lg:px-8"
-        >
-          <div
-            class="rounded-[2rem] bg-gradient-to-br from-forest-800 via-forest-700 to-emerald-600 p-7 text-white shadow-xl shadow-forest-900/10 sm:p-8"
-          >
-            <p
-              class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-200"
-              data-copy="contactEyebrow"
-            >
-              Kontak
-            </p>
-            <h2
-              class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl"
-              data-copy="contactTitle"
-            >
-              Perlu koordinasi dengan pengurus?
-            </h2>
-            <p
-              class="mt-5 text-base leading-8 text-white/72"
-              data-copy="contactBody"
-            >
-              Gunakan WhatsApp resmi pengurus untuk pengumuman, perizinan
-              kegiatan, keamanan, dan informasi lingkungan.
-            </p>
-            <a
-              href="https://wa.me/6281288696521?text=Halo%20Pengurus%20GDR%2C%20saya%20ingin%20bertanya%20tentang%20lingkungan%20RT%2009%20RW%2012."
-              target="_blank"
-              rel="noreferrer"
-              class="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3.5 text-sm font-extrabold text-white shadow-lg transition hover:brightness-95 sm:w-auto"
-            >
-              <svg
-                class="h-5 w-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.8 8.8 0 0 1-3.9-.9L3 20l1.2-4.7A8.2 8.2 0 0 1 3 11.5a8.5 8.5 0 0 1 18 0Z"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linejoin="round"
-                />
-              </svg>
+        <div class="mx-auto grid max-w-7xl gap-6 px-4 sm:px-6 lg:grid-cols-[.62fr_1.38fr] lg:px-8">
+          <div class="rounded-[2rem] bg-gradient-to-br from-forest-800 via-forest-700 to-emerald-600 p-7 text-white shadow-xl shadow-forest-900/10 sm:p-8">
+            <p class="text-sm font-extrabold uppercase tracking-[0.24em] text-amber-200" data-copy="contactEyebrow">Kontak</p>
+            <h2 class="mt-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl" data-copy="contactTitle">Perlu koordinasi dengan pengurus?</h2>
+            <p class="mt-5 text-base leading-8 text-white/72" data-copy="contactBody">Gunakan WhatsApp resmi pengurus untuk pengumuman, perizinan kegiatan, keamanan, dan informasi lingkungan.</p>
+            <a href="https://wa.me/6281288696521?text=Halo%20Pengurus%20GDR%2C%20saya%20ingin%20bertanya%20tentang%20lingkungan%20RT%2009%20RW%2012."
+              target="_blank" rel="noreferrer"
+              class="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3.5 text-sm font-extrabold text-white shadow-lg transition hover:brightness-95 sm:w-auto">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.8 8.8 0 0 1-3.9-.9L3 20l1.2-4.7A8.2 8.2 0 0 1 3 11.5a8.5 8.5 0 0 1 18 0Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
               <span data-copy="contactCta">WhatsApp</span>
             </a>
           </div>
-          <div
-            class="overflow-hidden rounded-[2rem] border border-slate-200 bg-stone-50 p-4 shadow-sm"
-          >
-            <iframe
-              title="Peta Grand Depok Residence"
-              class="h-[340px] w-full rounded-[1.5rem] lg:h-[400px]"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-              src="https://www.google.com/maps?q=Grand%20Depok%20Residence%20Tanah%20Baru%20Beji%20Depok&output=embed"
-            >
+          <div class="overflow-hidden rounded-[2rem] border border-slate-200 bg-stone-50 p-4 shadow-sm">
+            <iframe title="Peta Grand Depok Residence"
+              class="h-[340px] w-full rounded-[1.5rem] lg:h-[380px]"
+              loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps?q=Grand%20Depok%20Residence%20Tanah%20Baru%20Beji%20Depok&output=embed">
             </iframe>
+            <div class="mt-4 flex items-start gap-3 px-2 pb-2">
+              <svg class="mt-0.5 h-5 w-5 shrink-0 text-forest-700" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor"/></svg>
+              <p class="text-sm font-semibold text-slate-600">Grand Depok Residence, Jl. M. Zakaria - Tanah Baru, Beji, Depok City, Jawa Barat 16514</p>
+            </div>
           </div>
         </div>
       </section>
+
     </main>
 
     <footer class="bg-slate-950 py-10 text-white">
@@ -793,6 +706,7 @@
         settings: "gdr-settings-v4",
         news: "gdr-news-v4",
         activities: "gdr-activities-v4",
+        youtube: "gdr-youtube-v4",
       };
 
       const MEDIA_BUCKET = "gdr-media";
@@ -961,6 +875,7 @@
             image: "./assets/news-security.jpg",
           },
         ],
+        youtube_videos: [],
       };
 
       const categoryClasses = {
@@ -1009,6 +924,18 @@
         };
       }
 
+      function rowToYouTube(row) {
+        return {
+          id: row.id,
+          title: row.title,
+          description: row.description,
+          video_url: row.video_url,
+          channel_name: row.channel_name,
+          thumbnail_url: row.thumbnail_url || "",
+          created_at: row.created_at,
+        };
+      }
+
       function readStore(key, fallback) {
         try {
           const stored = localStorage.getItem(key);
@@ -1033,6 +960,10 @@
           defaults.activities,
         );
         appState.news = readStore(STORAGE.news, defaults.news);
+        appState.youtube_videos = readStore(
+          STORAGE.youtube,
+          defaults.youtube_videos,
+        );
       }
 
       function mergeSettings(stored) {
@@ -1061,6 +992,7 @@
           { data: settingsRow },
           { data: activitiesRows },
           { data: newsRows },
+          { data: youtubeRows },
         ] = await Promise.all([
           client
             .from("site_settings")
@@ -1078,6 +1010,11 @@
             .order("created_at", {
               ascending: false,
             }),
+          client
+            .from("youtube_videos")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(6),
         ]);
 
         if (settingsRow?.data && Object.keys(settingsRow.data).length) {
@@ -1091,6 +1028,10 @@
         if (newsRows?.length) {
           appState.news = newsRows.map(rowToNews);
           writeStore(STORAGE.news, appState.news);
+        }
+        if (youtubeRows?.length) {
+          appState.youtube_videos = youtubeRows.map(rowToYouTube);
+          writeStore(STORAGE.youtube, appState.youtube_videos);
         }
         appState.remoteReady = true;
         return true;
@@ -1132,14 +1073,61 @@
 
       function applySettings() {
         const settings = getSettings();
-        setBg("hero-section", settings.heroImage);
-        setBg("about-photo", settings.aboutImage);
-        setBg("activities-photo", settings.activitiesImage);
-        setBg("mushola-photo", settings.musholaImage);
+        const cacheBuster = '?v=' + Date.now();
+        setBg("hero-section", settings.heroImage + cacheBuster);
+        setBg("about-photo", settings.aboutImage + cacheBuster);
+        setBg("activities-photo", settings.activitiesImage + cacheBuster);
+        setBg("mushola-photo", settings.musholaImage + cacheBuster);
         applyCopy(settings.copy);
         renderFacilities();
         renderActivities();
         renderNews();
+        renderYouTubeVideos();
+      }
+
+      function extractYouTubeId(url) {
+        if (!url) return null;
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+      }
+
+      function renderYouTubeVideos() {
+        const grid = document.getElementById("youtube-grid");
+        const videos = (appState.youtube_videos || []).slice(0, 6);
+        if (!videos.length) {
+          grid.innerHTML = `
+            <div class="col-span-full flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-300 bg-white p-12 text-center">
+              <div class="h-12 w-12 rounded-2xl bg-slate-100 flex items-center justify-center mb-3">
+                <img src="./assets/youtube-icon.svg" alt="YouTube" class="h-6 w-6 opacity-40">
+              </div>
+              <p class="text-sm font-bold text-slate-400">Video warga akan segera hadir</p>
+            </div>
+          `;
+          return;
+        }
+        grid.innerHTML = videos.map(video => {
+          const videoId = extractYouTubeId(video.video_url);
+          const thumbnail = video.thumbnail_url || (videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : './assets/youtube-icon.svg');
+          return `
+            <a href="${video.video_url}" target="_blank" rel="noreferrer" class="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+              <div class="relative overflow-hidden aspect-video bg-slate-900">
+                <img src="${thumbnail}" alt="${video.title}" class="h-full w-full object-cover transition duration-300 group-hover:scale-105" loading="lazy" onerror="const vid='${videoId}'; if(vid && this.src.includes('hqdefault')){this.src='https://img.youtube.com/vi/'+vid+'/mqdefault.jpg';} else if(vid && this.src.includes('mqdefault')){this.src='https://img.youtube.com/vi/'+vid+'/default.jpg';} else {this.src='./assets/youtube-icon.svg';this.classList.add('p-12','opacity-50');this.classList.remove('object-cover');}">
+                <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition">
+                  <div class="h-12 w-12 rounded-full bg-[#FF0000] flex items-center justify-center shadow-lg transition group-hover:scale-110">
+                    <svg class="h-5 w-5 text-white ml-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="p-5">
+                <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-[#FF0000] mb-1">${video.channel_name || 'GDR Channel'}</p>
+                <h3 class="font-extrabold text-slate-900 transition group-hover:text-[#FF0000] line-clamp-2">${video.title}</h3>
+                <p class="mt-2 text-sm text-slate-500 leading-6 line-clamp-2">${video.description || ''}</p>
+                <span class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-[#FF0000]">Tonton di YouTube →</span>
+              </div>
+            </a>
+          `;
+        }).join('');
       }
 
       function renderFacilities() {
@@ -1149,7 +1137,7 @@
           .map(
             (item) => `
               <article class="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] shadow-sm">
-                <div class="image-cover h-44" style="background-image:url('${item.image}')"></div>
+                <div class="image-cover h-44" style="background-image:url('${item.image}?v=${Date.now()}')"></div>
                 <div class="p-5">
                   <h3 class="font-extrabold">${item.title}</h3>
                   <p class="mt-3 text-sm leading-7 text-white/64">${item.desc}</p>
@@ -1242,6 +1230,33 @@
               <p class="text-sm font-bold text-slate-800">${item.author || ""}</p>
             </div>
 
+            <div class="mt-6 border-t border-slate-100 pt-5">
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">Bagikan</p>
+              <div class="flex flex-wrap gap-2">
+                <a href="https://wa.me/?text=${encodeURIComponent((item.title||'') + ' — ' + window.location.href)}" target="_blank" rel="noreferrer"
+                  class="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-xs font-extrabold text-white transition hover:brightness-95">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.8 8.8 0 0 1-3.9-.9L3 20l1.2-4.7A8.2 8.2 0 0 1 3 11.5a8.5 8.5 0 0 1 18 0Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                  WhatsApp
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" target="_blank" rel="noreferrer"
+                  class="inline-flex items-center gap-2 rounded-full bg-[#1877F2] px-4 py-2 text-xs font-extrabold text-white transition hover:brightness-95">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.8V24C19.62 23.1 24 18.1 24 12.07z"/></svg>
+                  Facebook
+                </a>
+                <a href="https://www.instagram.com/" target="_blank" rel="noreferrer"
+                  class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold text-white transition hover:brightness-95"
+                  style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+                  Instagram
+                </a>
+                <button onclick="navigator.clipboard.writeText(window.location.href).then(()=>{ const t=document.getElementById('toast'); t.textContent='Link disalin!'; t.classList.remove('hidden'); setTimeout(()=>t.classList.add('hidden'),2000); })"
+                  class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600 transition hover:bg-slate-50">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  Salin Link
+                </button>
+              </div>
+            </div>
+
             <button
               onclick="closeDialog('detail-dialog')"
               class="mt-8 mb-6 w-full rounded-full border border-slate-200 py-3 text-sm font-bold text-slate-600 transition hover:bg-slate-50"
@@ -1279,15 +1294,22 @@
       };
 
       function openQrisDialog() {
-        const qrisImage = getSettings().qrisImage;
+        const qrisImage = './assets/qris-kotakamal.jpg';
         document.getElementById("qris-dialog").innerHTML = `
               <div class="w-full max-w-md rounded-3xl bg-white p-6 text-center shadow-2xl">
-                <button type="button" onclick="closeDialog('qris-dialog')" class="ml-auto grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Tutup"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+                <div class="flex justify-end">
+                  <button type="button" onclick="closeDialog('qris-dialog')" class="grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Tutup"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+                </div>
                 <h2 class="mt-2 text-2xl font-extrabold">Kotak Amal Mushola</h2>
                 <p class="mt-2 text-sm font-semibold leading-6 text-slate-500">Terima kasih atas infaq dan dukungan warga. Semoga menjadi amal kebaikan.</p>
                 <div class="mt-6 rounded-2xl border border-slate-200 bg-stone-50 p-4">
-                  ${qrisImage ? `<img src="${qrisImage}" alt="QRIS Mushola" class="mx-auto max-h-[420px] rounded-xl object-contain">` : `<div class="grid min-h-[300px] place-items-center rounded-xl border border-dashed border-slate-300 p-6 text-sm font-bold text-slate-500">QRIS mushola akan segera tersedia.</div>`}
+                  <img src="${qrisImage}" alt="QRIS Kotak Amal Mushola" class="mx-auto max-h-[420px] rounded-xl object-contain" onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">
+                  <div class="hidden grid min-h-[300px] place-items-center rounded-xl border border-dashed border-slate-300 p-6 text-sm font-bold text-slate-500">QRIS mushola akan segera tersedia.</div>
                 </div>
+                <a href="${qrisImage}" download="qris-kotakamal.jpg" class="mt-4 inline-flex w-full items-center justify-center rounded-full bg-forest-700 px-6 py-3 text-sm font-extrabold text-white shadow-lg transition hover:bg-forest-800">
+                  <svg class="h-4 w-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Download QRIS
+                </a>
               </div>
             `;
         openDialog("qris-dialog");
@@ -1308,9 +1330,11 @@
 
             for (const file of files) {
               const compressedFile = await window.imageCompression(file, {
-                maxSizeMB: 1,
-                maxWidthOrHeight: 1600,
+                maxSizeMB: 0.3,           // 300KB max (dari 1MB)
+                maxWidthOrHeight: 1200,   // 1200px max (dari 1600px)
                 useWebWorker: true,
+                fileType: 'image/jpeg',   // paksa JPEG
+                initialQuality: 0.7,      // kualitas 70%
               });
 
               const image = await uploadMedia(compressedFile, "posts");
