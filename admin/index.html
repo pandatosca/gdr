@@ -441,6 +441,8 @@
     .pc-author { font-size: 0.75rem; color: var(--gray-500); }
     .pc-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
     .post-compact .btn-sm { padding: 0.3rem 0.75rem; font-size: 0.7rem; }
+    .pc-click { cursor: pointer; }
+    .post-compact .post-title.pc-click:hover { color: var(--primary); }
 
     /* Empty state */
     .empty-state {
@@ -670,6 +672,17 @@
   </div>
 </div>
 
+<!-- MODAL DETAIL POST -->
+<div id="postModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="postModalTitle">Detail Post</h3>
+      <button style="background: none; border: none; font-size: 1.5rem; cursor: pointer;" id="closePostModalBtn">&times;</button>
+    </div>
+    <div id="postModalBody"></div>
+  </div>
+</div>
+
 <div id="toastMsg" class="toast"></div>
 
 <script>
@@ -796,8 +809,8 @@
               ${post.status === 'pending' ? '<span class="badge badge-pending">Pending</span>' : '<span class="badge badge-approved">Disetujui</span>'}
               <span class="pc-date">${formatDate(post.created_at)}</span>
             </div>
-            <div class="post-title">${escapeHtml(post.title || 'Tanpa judul')}</div>
-            <div class="post-body">${escapeHtml(post.content || '')}</div>
+            <div class="post-title pc-click" onclick="window.viewPost('${post.id}')">${escapeHtml(post.title || 'Tanpa judul')}</div>
+            <div class="post-body pc-click" onclick="window.viewPost('${post.id}')">${escapeHtml(post.content || '')}</div>
             <div class="pc-foot">
               <span class="pc-author">✍️ ${escapeHtml(post.author || 'anonim')}</span>
               ${showActions ? `
@@ -823,7 +836,7 @@
       const { data } = await supabase.from('news_posts').select('*').eq('status', 'approved').order('created_at', { ascending: false });
       const container = document.getElementById('approvedList');
       if (!data?.length) { container.innerHTML = '<div class="empty-state">✅ Belum ada post disetujui</div>'; return; }
-      container.innerHTML = data.map(p => renderPostCard(p, false)).join('');
+      container.innerHTML = data.map(p => renderPostCard(p, true)).join('');
     }
 
     window.approvePost = async (id) => {
@@ -845,6 +858,34 @@
       loadPendingPosts();
       loadApprovedPosts();
       loadPreviewPending();
+    };
+
+    function closePostModal() { document.getElementById('postModal').classList.remove('active'); }
+    window.closePostModal = closePostModal;
+    document.getElementById('closePostModalBtn')?.addEventListener('click', closePostModal);
+    document.getElementById('postModal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'postModal') closePostModal();
+    });
+
+    window.viewPost = async (id) => {
+      const { data, error } = await supabase.from('news_posts').select('*').eq('id', id).single();
+      if (error || !data) { showToast('Gagal memuat post'); return; }
+      document.getElementById('postModalTitle').textContent = data.title || 'Detail Post';
+      document.getElementById('postModalBody').innerHTML = `
+        <div class="post-meta">
+          <span class="badge ${getCategoryBadge(data.category)}">${escapeHtml(data.category || 'Berita')}</span>
+          ${data.status === 'pending' ? '<span class="badge badge-pending">Pending</span>' : '<span class="badge badge-approved">Disetujui</span>'}
+          <span class="pc-date">${formatDate(data.created_at)}</span>
+        </div>
+        ${data.image_url ? `<img src="${escapeHtml(data.image_url)}" style="width:100%; border-radius:var(--radius-sm); margin:0.75rem 0; border:1px solid var(--gray-200);" alt="" />` : ''}
+        <p style="white-space:pre-wrap; line-height:1.7; color:var(--gray-700); font-size:0.9rem;">${escapeHtml(data.content || '')}</p>
+        <p style="margin-top:0.85rem; color:var(--gray-500); font-size:0.8rem;">✍️ ${escapeHtml(data.author || 'anonim')}</p>
+        <div class="actions">
+          ${data.status === 'pending' ? `<button class="btn-sm btn-approve" onclick="window.approvePost('${data.id}'); window.closePostModal();">✓ Approve</button>` : ''}
+          <button class="btn-sm btn-delete" onclick="window.deletePost('${data.id}'); window.closePostModal();">🗑 Hapus</button>
+        </div>
+      `;
+      document.getElementById('postModal').classList.add('active');
     };
 
     // ========== KEGIATAN (CRUD) ==========
