@@ -574,6 +574,7 @@
         <button class="nav-btn" data-tab="approved">✅ Approved Posts</button>
         <button class="nav-btn" data-tab="activities">🎯 Kelola Kegiatan</button>
         <button class="nav-btn" data-tab="youtube">📺 YouTube Videos</button>
+        <button class="nav-btn" data-tab="kegiatanlap">📂 Laporan Kegiatan</button>
         <button class="nav-btn" data-tab="keuangan">💰 Keuangan</button>
         <button class="nav-btn" data-tab="settings" data-super-only>⚙️ Pengaturan</button>
         <button class="nav-btn logout" id="logoutBtn">🚪 Keluar</button>
@@ -640,6 +641,28 @@
       </section>
 
       <!-- SETTINGS TAB -->
+      <section id="tabKegiatanlap" class="view-section">
+        <div class="card-item">
+          <h3 id="kegLapFormTitle" style="margin-bottom: 0.4rem;">Tambah Laporan Kegiatan</h3>
+          <p style="font-size: 0.82rem; color: var(--gray-500); margin-bottom: 1rem;">File PDF tetap di Google Drive (cukup paste link). Pastikan file di-share <b>Anyone with the link can view</b>.</p>
+          <input type="hidden" id="kegLapId">
+          <input type="text" id="kegLapTitle" placeholder="Judul kegiatan (mis. HUT RI ke-81)" style="width:100%; padding:0.55rem 0.8rem; border:1px solid var(--gray-300); border-radius:var(--radius-sm); font-size:0.88rem; margin-bottom:0.6rem;">
+          <div style="display:grid; grid-template-columns:1fr 2fr; gap:0.6rem; margin-bottom:0.6rem;">
+            <input type="date" id="kegLapDate" style="padding:0.55rem 0.8rem; border:1px solid var(--gray-300); border-radius:var(--radius-sm); font-size:0.88rem;">
+            <input type="text" id="kegLapDesc" placeholder="Deskripsi singkat (opsional)" style="padding:0.55rem 0.8rem; border:1px solid var(--gray-300); border-radius:var(--radius-sm); font-size:0.88rem;">
+          </div>
+          <input type="url" id="kegLapUrl" placeholder="https://drive.google.com/file/d/.../view" style="width:100%; padding:0.55rem 0.8rem; border:1px solid var(--gray-300); border-radius:var(--radius-sm); font-size:0.88rem; margin-bottom:0.6rem;">
+          <div style="display:flex; gap:0.5rem;">
+            <button class="btn-sm" id="saveKegLapBtn" style="background:var(--primary); color:white;">💾 Simpan & Terbitkan</button>
+            <button class="btn-sm" id="cancelKegLapBtn" style="background:var(--gray-200); color:var(--gray-700); display:none;">Batal</button>
+          </div>
+        </div>
+        <div class="card-item" style="margin-top:1rem;">
+          <h3 style="margin-bottom:0.5rem;">Arsip Laporan Kegiatan</h3>
+          <div id="kegLapArchive" class="media-list"></div>
+        </div>
+      </section>
+
       <section id="tabKeuangan" class="view-section">
         <div class="card-item">
           <h3 style="margin-bottom: 0.4rem;">Unggah Laporan Keuangan (PDF)</h3>
@@ -1145,6 +1168,93 @@
     });
 
     // Tab switching
+    // ========== LAPORAN KEGIATAN (link Google Drive) ==========
+    function extractDriveIdAdmin(url) {
+      if (!url) return null;
+      const m1 = url.match(/\/file\/d\/([a-zA-Z0-9_-]{10,})/);
+      if (m1) return m1[1];
+      const m2 = url.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
+      if (m2) return m2[1];
+      return null;
+    }
+
+    function resetKegLapForm() {
+      document.getElementById('kegLapId').value = '';
+      document.getElementById('kegLapTitle').value = '';
+      document.getElementById('kegLapDate').value = '';
+      document.getElementById('kegLapDesc').value = '';
+      document.getElementById('kegLapUrl').value = '';
+      document.getElementById('kegLapFormTitle').textContent = 'Tambah Laporan Kegiatan';
+      document.getElementById('saveKegLapBtn').textContent = '💾 Simpan & Terbitkan';
+      document.getElementById('cancelKegLapBtn').style.display = 'none';
+    }
+
+    async function loadKegLapArchive() {
+      const el = document.getElementById('kegLapArchive');
+      if (!el) return;
+      const { data, error } = await supabase.from('kegiatan_reports').select('*').order('event_date', { ascending: false });
+      if (error) { el.innerHTML = `<div class="empty-state">Gagal memuat: ${escapeHtml(error.message)}</div>`; return; }
+      if (!data || !data.length) { el.innerHTML = '<div class="empty-state">Belum ada laporan kegiatan.</div>'; return; }
+      el.innerHTML = data.map(r => {
+        const id = extractDriveIdAdmin(r.drive_url);
+        const dateStr = r.event_date ? formatDate(r.event_date) : formatDate(r.created_at);
+        return `
+          <div class="media-row">
+            <div class="media-info">
+              <strong>${escapeHtml(r.title || 'Kegiatan')}</strong>
+              <p>${dateStr}${r.description ? ' · ' + escapeHtml(r.description) : ''}</p>
+            </div>
+            ${id ? `<a class="btn-sm btn-edit" href="https://drive.google.com/file/d/${id}/view" target="_blank" rel="noreferrer" style="text-decoration:none;">Buka</a>` : ''}
+            <button class="btn-sm btn-edit" onclick="window.editKegLap('${r.id}')">Edit</button>
+            <button class="btn-sm btn-delete" onclick="window.deleteKegLap('${r.id}')">Hapus</button>
+          </div>`;
+      }).join('');
+    }
+
+    window.editKegLap = async (id) => {
+      const { data } = await supabase.from('kegiatan_reports').select('*').eq('id', id).single();
+      if (!data) { showToast('Tidak ditemukan'); return; }
+      document.getElementById('kegLapId').value = data.id;
+      document.getElementById('kegLapTitle').value = data.title || '';
+      document.getElementById('kegLapDate').value = data.event_date || '';
+      document.getElementById('kegLapDesc').value = data.description || '';
+      document.getElementById('kegLapUrl').value = data.drive_url || '';
+      document.getElementById('kegLapFormTitle').textContent = 'Edit Laporan Kegiatan';
+      document.getElementById('saveKegLapBtn').textContent = '💾 Simpan Perubahan';
+      document.getElementById('cancelKegLapBtn').style.display = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.deleteKegLap = async (id) => {
+      if (!confirm('Hapus laporan ini? (file di Drive tidak ikut terhapus)')) return;
+      const { error } = await supabase.from('kegiatan_reports').delete().eq('id', id);
+      if (error) { showToast('Gagal hapus: ' + error.message); return; }
+      showToast('Laporan dihapus');
+      loadKegLapArchive();
+    };
+
+    document.getElementById('cancelKegLapBtn')?.addEventListener('click', resetKegLapForm);
+
+    document.getElementById('saveKegLapBtn')?.addEventListener('click', async () => {
+      const id = document.getElementById('kegLapId').value.trim();
+      const title = document.getElementById('kegLapTitle').value.trim();
+      const event_date = document.getElementById('kegLapDate').value || null;
+      const description = document.getElementById('kegLapDesc').value.trim() || null;
+      const drive_url = document.getElementById('kegLapUrl').value.trim();
+      if (!title) { showToast('Judul wajib diisi'); return; }
+      if (!drive_url) { showToast('Link Google Drive wajib diisi'); return; }
+      if (!extractDriveIdAdmin(drive_url)) { showToast('Link Drive tidak valid (harus berisi /file/d/<id>)'); return; }
+      const payload = { title, event_date, description, drive_url };
+      const op = id
+        ? supabase.from('kegiatan_reports').update(payload).eq('id', id)
+        : supabase.from('kegiatan_reports').insert([payload]);
+      const { error } = await op;
+      if (error) { showToast('Gagal: ' + error.message); return; }
+      showToast(id ? '✅ Laporan diperbarui' : '✅ Laporan diterbitkan');
+      resetKegLapForm();
+      loadKegLapArchive();
+    });
+
     // ========== LAPORAN KEUANGAN (PDF) ==========
     async function loadFinanceArchive() {
       const el = document.getElementById('financeArchive');
@@ -1313,7 +1423,7 @@
       document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
       const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(btn => btn.getAttribute('data-tab') === tabId);
       if (activeBtn) activeBtn.classList.add('active');
-      const titles = { dashboard:'Dashboard', pending:'Pending Posts', approved:'Approved Posts', activities:'Kelola Kegiatan', youtube:'YouTube Videos', keuangan:'Keuangan', settings:'Pengaturan' };
+      const titles = { dashboard:'Dashboard', pending:'Pending Posts', approved:'Approved Posts', activities:'Kelola Kegiatan', youtube:'YouTube Videos', kegiatanlap:'Laporan Kegiatan', keuangan:'Keuangan', settings:'Pengaturan' };
       document.getElementById('pageTitle').innerText = titles[tabId] || 'Admin';
       if (tabId === 'pending') loadPendingPosts();
       if (tabId === 'approved') loadApprovedPosts();
@@ -1322,6 +1432,7 @@
       if (tabId === 'dashboard') { loadDashboardStats(); loadPreviewPending(); }
       if (tabId === 'settings') loadSettingsMedia();
       if (tabId === 'keuangan') loadFinanceArchive();
+      if (tabId === 'kegiatanlap') loadKegLapArchive();
     }
 
     document.querySelectorAll('.nav-btn').forEach(btn => {
