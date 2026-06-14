@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 376 376" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="youtube-icon" transform="matrix(1,0,0,1,-3161.262876,538.806218)">
+        <rect x="3161.263" y="-538.806" width="375.063" height="375.063" style="fill:none;"/>
+        <g transform="matrix(0.92014,0,0,0.92014,180.058558,-657.987814)">
+            <path d="M3621.41,244.076C3617.14,228.111 3604.59,215.565 3588.63,211.291C3559.72,203.537 3443.75,203.537 3443.75,203.537C3443.75,203.537 3327.78,203.537 3298.88,211.291C3282.91,215.565 3270.36,228.111 3266.09,244.076C3258.34,272.984 3258.34,333.333 3258.34,333.333C3258.34,333.333 3258.34,393.683 3266.09,422.591C3270.36,438.556 3282.91,451.102 3298.88,455.375C3327.78,463.129 3443.75,463.129 3443.75,463.129C3443.75,463.129 3559.72,463.129 3588.63,455.375C3604.59,451.102 3617.14,438.556 3621.41,422.591C3629.17,393.683 3629.17,333.333 3629.17,333.333C3629.17,333.333 3629.13,272.984 3621.41,244.076Z" style="fill:rgb(238,48,45);fill-rule:nonzero;"/>
+            <path d="M3406.63,388.956L3502.97,333.339L3406.63,277.72L3406.63,388.956Z" style="fill:white;fill-rule:nonzero;"/>
+        </g>
+    </g>
+</svg>
