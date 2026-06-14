@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>GDR Admin Panel — RT 09</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -644,15 +641,15 @@
       <!-- SETTINGS TAB -->
       <section id="tabKeuangan" class="view-section">
         <div class="card-item">
-          <h3 style="margin-bottom: 0.4rem;">Laporan Keuangan Bulanan</h3>
-          <p style="font-size: 0.82rem; color: var(--gray-500); margin-bottom: 1rem;">Unduh template, isi oleh bendahara (Periode, Saldo Awal, dan rincian transaksi), lalu unggah di sini. Ringkasan & PDF dibuat otomatis dan langsung tampil di situs.</p>
-          <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center;">
-            <button class="btn-sm" id="downloadTemplateBtn" style="background: var(--gray-200); color: var(--gray-700);">⬇ Download Template Excel</button>
-            <label class="btn-sm" style="background: var(--primary); color: white; cursor: pointer;">⬆ Unggah Laporan (Excel)
-              <input type="file" id="financeFileInput" accept=".xlsx,.xls" style="display: none">
+          <h3 style="margin-bottom: 0.4rem;">Unggah Laporan Keuangan (PDF)</h3>
+          <p style="font-size: 0.82rem; color: var(--gray-500); margin-bottom: 1rem;">Isi periode lalu pilih file PDF. Laporan akan langsung tampil di situs untuk diunduh warga.</p>
+          <input type="text" id="financePeriod" placeholder='Periode (mis. "Juni 2026")' style="width:100%; padding:0.55rem 0.8rem; border:1px solid var(--gray-300); border-radius:var(--radius-sm); font-size:0.88rem; margin-bottom:0.6rem;">
+          <div style="display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center;">
+            <label class="btn-sm" style="background: var(--primary); color: white; cursor: pointer;">⬆ Pilih PDF & Unggah
+              <input type="file" id="financeFileInput" accept="application/pdf,.pdf" style="display: none">
             </label>
+            <span id="financeStatus" style="font-size:0.78rem; color:var(--gray-500);"></span>
           </div>
-          <div id="financePreview"></div>
         </div>
         <div class="card-item" style="margin-top: 1rem;">
           <h3 style="margin-bottom: 0.5rem;">Arsip Laporan</h3>
@@ -1135,111 +1132,7 @@
     });
 
     // Tab switching
-    // ========== LAPORAN KEUANGAN ==========
-    const FINANCE_TEMPLATE = [
-      ['LAPORAN KEUANGAN RT 09 RW 12'],
-      ['Periode', 'Juni 2026'],
-      ['Saldo Awal', 0],
-      [],
-      ['Tanggal', 'Keterangan', 'Pemasukan', 'Pengeluaran'],
-      ['2026-06-01', 'Iuran warga (contoh)', 500000, 0],
-      ['2026-06-05', 'Beli alat kebersihan (contoh)', 0, 150000],
-    ];
-    let parsedFinance = null;
-
-    function rupiah(n) { return 'Rp ' + Number(n || 0).toLocaleString('id-ID'); }
-
-    function financeCell(v) {
-      if (v == null) return '';
-      if (v instanceof Date) return v.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-      return String(v).trim();
-    }
-
-    function parseFinanceRows(rows) {
-      let label = 'Laporan', saldoAwal = 0, headerIdx = -1;
-      for (let i = 0; i < rows.length; i++) {
-        const r = rows[i] || [];
-        const key = String(r[0] || '').toLowerCase().trim();
-        if (key === 'periode') label = financeCell(r[1]) || label;
-        if (key === 'saldo awal') saldoAwal = Number(r[1]) || 0;
-        if (String(r[0] || '').toLowerCase().includes('tanggal')) { headerIdx = i; break; }
-      }
-      const rincian = [];
-      if (headerIdx >= 0) {
-        for (let i = headerIdx + 1; i < rows.length; i++) {
-          const r = rows[i] || [];
-          const tanggal = financeCell(r[0]);
-          const keterangan = financeCell(r[1]);
-          const masuk = Number(r[2]) || 0;
-          const keluar = Number(r[3]) || 0;
-          if (!tanggal && !keterangan && !masuk && !keluar) continue;
-          rincian.push({ tanggal, keterangan, masuk, keluar });
-        }
-      }
-      const totalMasuk = rincian.reduce((s, x) => s + x.masuk, 0);
-      const totalKeluar = rincian.reduce((s, x) => s + x.keluar, 0);
-      return { label, saldoAwal, totalMasuk, totalKeluar, saldoAkhir: saldoAwal + totalMasuk - totalKeluar, rincian };
-    }
-
-    function renderFinancePreview(d) {
-      document.getElementById('financePreview').innerHTML = `
-        <div style="border:1px solid var(--gray-200);border-radius:var(--radius-sm);padding:1rem;margin-top:1rem;">
-          <strong>${escapeHtml(d.label)}</strong>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin:0.75rem 0;font-size:0.78rem;">
-            <div>Saldo Awal<br><b>${rupiah(d.saldoAwal)}</b></div>
-            <div>Pemasukan<br><b style="color:#059669">${rupiah(d.totalMasuk)}</b></div>
-            <div>Pengeluaran<br><b style="color:#dc2626">${rupiah(d.totalKeluar)}</b></div>
-            <div>Saldo Akhir<br><b>${rupiah(d.saldoAkhir)}</b></div>
-          </div>
-          <p style="font-size:0.78rem;color:var(--gray-500)">${d.rincian.length} baris transaksi terbaca.</p>
-          <button class="btn-sm" id="saveFinanceBtn" style="background:var(--primary);color:white;margin-top:0.5rem;">💾 Simpan & Terbitkan</button>
-        </div>`;
-      document.getElementById('saveFinanceBtn')?.addEventListener('click', saveFinanceReport);
-    }
-
-    function buildFinancePdf(d) {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.setFontSize(14); doc.text('Laporan Keuangan RT 09 RW 12', 14, 18);
-      doc.setFontSize(10);
-      doc.text('Periode: ' + d.label, 14, 27);
-      doc.text('Saldo Awal: ' + rupiah(d.saldoAwal), 14, 34);
-      doc.text('Pemasukan: ' + rupiah(d.totalMasuk), 14, 40);
-      doc.text('Pengeluaran: ' + rupiah(d.totalKeluar), 14, 46);
-      doc.setFont(undefined, 'bold');
-      doc.text('Saldo Akhir: ' + rupiah(d.saldoAkhir), 14, 52);
-      doc.setFont(undefined, 'normal');
-      doc.autoTable({
-        startY: 58,
-        head: [['Tanggal', 'Keterangan', 'Pemasukan', 'Pengeluaran']],
-        body: d.rincian.map(r => [r.tanggal, r.keterangan, r.masuk ? rupiah(r.masuk) : '-', r.keluar ? rupiah(r.keluar) : '-']),
-        styles: { fontSize: 9 },
-        headStyles: { fillColor: [15, 59, 44] },
-      });
-      return doc.output('blob');
-    }
-
-    async function saveFinanceReport() {
-      if (!parsedFinance) return;
-      showToast('Menyimpan…', 6000);
-      try {
-        const stamp = Date.now();
-        const pdfBlob = buildFinancePdf(parsedFinance);
-        const pdfPath = `finance/${stamp}-laporan.pdf`;
-        const up = await supabase.storage.from(MEDIA_BUCKET).upload(pdfPath, pdfBlob, { contentType: 'application/pdf', upsert: true });
-        if (up.error) throw up.error;
-        const pdfUrl = supabase.storage.from(MEDIA_BUCKET).getPublicUrl(pdfPath).data.publicUrl;
-        const { error } = await supabase.from('finance_reports').insert([{ period: parsedFinance.label, data: parsedFinance, pdf_url: pdfUrl }]);
-        if (error) throw error;
-        parsedFinance = null;
-        document.getElementById('financePreview').innerHTML = '';
-        showToast('✅ Laporan diterbitkan');
-        loadFinanceArchive();
-      } catch (err) {
-        showToast('Gagal: ' + (err.message || err));
-      }
-    }
-
+    // ========== LAPORAN KEUANGAN (PDF) ==========
     async function loadFinanceArchive() {
       const el = document.getElementById('financeArchive');
       if (!el) return;
@@ -1247,8 +1140,8 @@
       if (!data || !data.length) { el.innerHTML = '<div class="empty-state">Belum ada laporan.</div>'; return; }
       el.innerHTML = data.map(r => `
         <div class="media-row">
-          <div class="media-info"><strong>${escapeHtml((r.data && r.data.label) || 'Laporan')}</strong><p>Saldo akhir: ${rupiah(r.data && r.data.saldoAkhir)}</p></div>
-          ${r.pdf_url ? `<a class="btn-sm btn-edit" href="${escapeHtml(r.pdf_url)}" target="_blank" style="text-decoration:none;">PDF</a>` : ''}
+          <div class="media-info"><strong>${escapeHtml(r.period || 'Laporan')}</strong><p>${formatDate(r.created_at)}</p></div>
+          ${r.pdf_url ? `<a class="btn-sm btn-edit" href="${escapeHtml(r.pdf_url)}" target="_blank" rel="noreferrer" style="text-decoration:none;">Buka PDF</a>` : ''}
           <button class="btn-sm btn-delete" onclick="window.deleteFinanceReport('${r.id}')">Hapus</button>
         </div>`).join('');
     }
@@ -1256,32 +1149,36 @@
     window.deleteFinanceReport = async (id) => {
       if (!confirm('Hapus laporan ini?')) return;
       const { error } = await supabase.from('finance_reports').delete().eq('id', id);
-      if (error) { showToast('Gagal hapus'); return; }
+      if (error) { showToast('Gagal hapus: ' + error.message); return; }
       showToast('Laporan dihapus');
       loadFinanceArchive();
     };
 
-    document.getElementById('downloadTemplateBtn')?.addEventListener('click', () => {
-      if (typeof XLSX === 'undefined') { showToast('Library belum termuat, coba lagi'); return; }
-      const ws = XLSX.utils.aoa_to_sheet(FINANCE_TEMPLATE);
-      ws['!cols'] = [{ wch: 16 }, { wch: 34 }, { wch: 14 }, { wch: 14 }];
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Laporan');
-      XLSX.writeFile(wb, 'template-laporan-keuangan.xlsx');
-    });
-
     document.getElementById('financeFileInput')?.addEventListener('change', async (e) => {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
+      const period = (document.getElementById('financePeriod').value || '').trim();
+      if (!period) { showToast('Isi periode dulu (mis. "Juni 2026")'); e.target.value = ''; return; }
+      if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+        showToast('File harus PDF'); e.target.value = ''; return;
+      }
+      const statusEl = document.getElementById('financeStatus');
+      statusEl.textContent = 'Mengunggah…';
       try {
-        const buf = await file.arrayBuffer();
-        const wb = XLSX.read(buf, { type: 'array', cellDates: true });
-        const ws = wb.Sheets[wb.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false });
-        parsedFinance = parseFinanceRows(rows);
-        renderFinancePreview(parsedFinance);
+        const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-');
+        const path = `finance/${Date.now()}-${safeName}`;
+        const up = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, { contentType: 'application/pdf', upsert: true });
+        if (up.error) throw up.error;
+        const pdfUrl = supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path).data.publicUrl;
+        const { error } = await supabase.from('finance_reports').insert([{ period, pdf_url: pdfUrl }]);
+        if (error) throw error;
+        statusEl.textContent = '';
+        document.getElementById('financePeriod').value = '';
+        showToast('✅ Laporan diterbitkan');
+        loadFinanceArchive();
       } catch (err) {
-        showToast('Gagal baca Excel: ' + (err.message || err));
+        statusEl.textContent = '';
+        showToast('Gagal: ' + (err.message || err));
       }
       e.target.value = '';
     });
