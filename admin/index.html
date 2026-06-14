@@ -444,6 +444,29 @@
     .pc-click { cursor: pointer; }
     .post-compact .post-title.pc-click:hover { color: var(--primary); }
 
+    /* Media manager (Pengaturan) */
+    .media-list { display: grid; gap: 0.75rem; }
+    .media-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+    }
+    .media-thumb {
+      width: 80px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 6px;
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      flex-shrink: 0;
+    }
+    .media-info { flex: 1; min-width: 0; }
+    .media-info strong { font-size: 0.88rem; display: block; }
+    .media-info p { font-size: 0.74rem; color: var(--gray-500); margin-top: 2px; }
+
     /* Empty state */
     .empty-state {
       text-align: center;
@@ -620,6 +643,18 @@
           <h3>Pengaturan Umum</h3>
           <p style="margin: 0.5rem 0">Role: Administrator</p>
           <button id="changePasswordBtn" class="btn-sm" style="background: var(--primary); color: white;">Ganti Password</button>
+        </div>
+
+        <div class="card-item" style="margin-top: 1rem;">
+          <h3 style="margin-bottom: 0.25rem;">Foto Situs</h3>
+          <p style="font-size: 0.8rem; color: var(--gray-500); margin-bottom: 1rem;">Ganti gambar bagian utama situs. Perubahan tampil setelah homepage dimuat ulang.</p>
+          <div id="siteMediaList" class="media-list"></div>
+        </div>
+
+        <div class="card-item" style="margin-top: 1rem;">
+          <h3 style="margin-bottom: 0.25rem;">Foto Fasilitas</h3>
+          <p style="font-size: 0.8rem; color: var(--gray-500); margin-bottom: 1rem;">Ganti foto tiap fasilitas yang tampil di homepage.</p>
+          <div id="facilityMediaList" class="media-list"></div>
         </div>
       </section>
     </div>
@@ -1078,6 +1113,113 @@
     });
 
     // Tab switching
+    // ========== KELOLA FOTO (site_settings) ==========
+    const MEDIA_BUCKET = 'gdr-media';
+    const DEFAULT_SETTINGS = {
+      heroImage: './assets/site-hero.jpg',
+      aboutImage: './assets/site-about.jpg',
+      activitiesImage: './assets/site-activities.jpg',
+      musholaImage: './assets/site-mushola.jpg',
+      qrisImage: './assets/qris-kotakamal.jpg',
+      facilities: [
+        { id: 'security', title: 'Pos keamanan', desc: 'Pemantauan lingkungan dan akses masuk warga.', image: './assets/facility-security.jpg' },
+        { id: 'mushola', title: 'Mushola', desc: 'Ruang ibadah dan kegiatan keagamaan warga.', image: './assets/facility-mushola.jpg' },
+        { id: 'playground', title: 'Area bermain', desc: 'Ruang terbuka untuk anak dan keluarga.', image: './assets/facility-playground.jpg' },
+        { id: 'field', title: 'Lapangan', desc: 'Tempat olahraga, senam, dan acara warga.', image: './assets/facility-field.jpg' },
+        { id: 'waste', title: 'Bank sampah', desc: 'Program kebersihan dan pemilahan sampah lingkungan.', image: './assets/facility-waste.jpg' },
+        { id: 'hall', title: 'Balai warga', desc: 'Rapat RT, koordinasi, dan kegiatan komunitas.', image: './assets/facility-hall.jpg' },
+        { id: 'park', title: 'Taman hijau', desc: 'Area teduh untuk bersantai dan bertemu tetangga.', image: './assets/facility-park.jpg' },
+        { id: 'channel', title: 'Kanal warga', desc: 'Ruang berbagi kabar yang bisa dikurasi pengurus.', image: './assets/facility-channel.jpg' },
+      ],
+    };
+    const SITE_IMAGE_FIELDS = [
+      { key: 'heroImage', label: 'Hero (gambar utama atas)' },
+      { key: 'aboutImage', label: 'Tentang' },
+      { key: 'activitiesImage', label: 'Kegiatan' },
+      { key: 'musholaImage', label: 'Mushola' },
+      { key: 'qrisImage', label: 'QRIS Kotak Amal' },
+    ];
+    let siteSettings = null;
+
+    // Path './assets/x' relatif ke root situs; di /admin/ perlu jadi '/assets/x' utk preview
+    function displaySrc(url) {
+      if (!url) return '';
+      return url.startsWith('./') ? url.replace('./', '/') : url;
+    }
+
+    function mediaThumb(url) {
+      const src = displaySrc(url);
+      return src
+        ? `<img src="${escapeHtml(src)}" class="media-thumb" alt="" onerror="this.style.visibility='hidden'">`
+        : `<div class="media-thumb"></div>`;
+    }
+
+    function uploadBtn(type, key) {
+      return `<label class="btn-sm btn-edit" style="cursor:pointer; flex-shrink:0;">Ganti Foto
+        <input type="file" accept="image/*" style="display:none" onchange="window.changeImage('${type}','${key}',this)">
+      </label>`;
+    }
+
+    async function loadSettingsMedia() {
+      const { data } = await supabase.from('site_settings').select('data').eq('id', 'default').maybeSingle();
+      const stored = (data && data.data && Object.keys(data.data).length) ? data.data : {};
+      siteSettings = {
+        ...DEFAULT_SETTINGS,
+        ...stored,
+        facilities: (Array.isArray(stored.facilities) && stored.facilities.length) ? stored.facilities : DEFAULT_SETTINGS.facilities,
+      };
+      renderSettingsMedia();
+    }
+
+    function renderSettingsMedia() {
+      if (!siteSettings) return;
+      document.getElementById('siteMediaList').innerHTML = SITE_IMAGE_FIELDS.map(f => `
+        <div class="media-row">
+          ${mediaThumb(siteSettings[f.key])}
+          <div class="media-info"><strong>${f.label}</strong></div>
+          ${uploadBtn('site', f.key)}
+        </div>
+      `).join('');
+      document.getElementById('facilityMediaList').innerHTML = siteSettings.facilities.map((fac, idx) => `
+        <div class="media-row">
+          ${mediaThumb(fac.image)}
+          <div class="media-info"><strong>${escapeHtml(fac.title)}</strong><p>${escapeHtml(fac.desc || '')}</p></div>
+          ${uploadBtn('facility', idx)}
+        </div>
+      `).join('');
+    }
+
+    async function uploadSiteMedia(file) {
+      const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-');
+      const path = `site/${Date.now()}-${safeName}`;
+      const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, { cacheControl: '3600', upsert: true });
+      if (error) throw error;
+      return supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path).data.publicUrl;
+    }
+
+    async function saveSiteSettings() {
+      const { error } = await supabase.from('site_settings').upsert({ id: 'default', data: siteSettings });
+      if (error) throw error;
+    }
+
+    window.changeImage = async (type, keyOrIdx, input) => {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) { showToast('File harus berupa gambar'); input.value = ''; return; }
+      showToast('Mengunggah…', 5000);
+      try {
+        const url = await uploadSiteMedia(file);
+        if (type === 'site') siteSettings[keyOrIdx] = url;
+        else siteSettings.facilities[Number(keyOrIdx)].image = url;
+        await saveSiteSettings();
+        renderSettingsMedia();
+        showToast('✅ Foto diperbarui. Muat ulang homepage untuk melihat.');
+      } catch (err) {
+        showToast('Gagal: ' + (err.message || err));
+      }
+      input.value = '';
+    };
+
     function switchTab(tabId) {
       document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
       document.getElementById(`tab${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`).classList.add('active');
@@ -1091,6 +1233,7 @@
       if (tabId === 'activities') loadActivities();
       if (tabId === 'youtube') loadYoutubeVideos();
       if (tabId === 'dashboard') { loadDashboardStats(); loadPreviewPending(); }
+      if (tabId === 'settings') loadSettingsMedia();
     }
 
     document.querySelectorAll('.nav-btn').forEach(btn => {

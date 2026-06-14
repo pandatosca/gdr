@@ -1293,7 +1293,7 @@
       };
 
       function openQrisDialog() {
-        const qrisImage = './assets/qris-kotakamal.jpg';
+        const qrisImage = getSettings().qrisImage || './assets/qris-kotakamal.jpg';
         document.getElementById("qris-dialog").innerHTML = `
               <div class="w-full max-w-md rounded-3xl bg-white p-6 text-center shadow-2xl">
                 <div class="flex justify-end">
