@@ -1220,6 +1220,27 @@
       }
       window.loadFinanceReports = loadFinanceReports;
 
+      // Panggil mandiri agar tidak tergantung urutan boot di app.js.
+      // Retry sampai window.supabaseClient siap (maks ~6 detik).
+      (function bootFinance() {
+        let tries = 0;
+        const tick = () => {
+          if (window.supabaseClient) {
+            loadFinanceReports().catch((e) => {
+              const el = document.getElementById("finance-card");
+              if (el) el.innerHTML = `<div class="rounded-3xl border border-rose-200 bg-rose-50 p-6 text-center text-sm text-rose-700">Gagal memuat laporan: ${String(e.message || e)}</div>`;
+            });
+            return;
+          }
+          if (++tries < 30) setTimeout(tick, 200);
+        };
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", tick);
+        } else {
+          tick();
+        }
+      })();
+
       function renderActivities() {
         const list = document.getElementById("activities-list");
         list.innerHTML = getActivities()
