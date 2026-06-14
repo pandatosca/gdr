@@ -279,6 +279,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     console.log("GDR app initialized");
 
+    // Auto-buka detail post jika dibuka dari link share (?post=<id>)
+    const sharedPostId = new URLSearchParams(window.location.search).get("post");
+    if (sharedPostId && typeof window.openDetailDialog === "function") {
+      window.openDetailDialog(sharedPostId);
+    }
+
     // ✅ storage check awal
     setTimeout(() => {
       checkStorageUsage();
