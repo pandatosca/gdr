@@ -285,6 +285,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       window.openDetailDialog(sharedPostId);
     }
 
+    // Laporan keuangan
+    if (typeof window.loadFinanceReports === "function") {
+      window.loadFinanceReports();
+    }
+
     // ✅ storage check awal
     setTimeout(() => {
       checkStorageUsage();
